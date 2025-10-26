@@ -14,12 +14,12 @@ const SignUp = () => {
     const [userInfo, setUserInfo] = useState({
         firstName: '',
         lastName: '',
-        username: '',
+        designation: '',
         email: '',
         phoneNumber: '',
         password: '',
         // confirmPassword: '',
-        isVendor: false,
+        estateId: '',
     });
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -121,21 +121,6 @@ const SignUp = () => {
                 <div className="p-8 rounded-lg max-w-4xl">
                     <h1 className="text-[30px] font-bold text-center mb-1">Create a new account</h1>
                     <p className="text-center text-gray-600 mb-10">Fill in your details & get started!</p>
-                    <div className="flex justify-center mb-6">
-                        <div className="flex items-center">
-                            <span className="mr-2 text-[16px]">As a Vendor</span>
-                            <label className="switch">
-                                <input
-                                    type="checkbox"
-                                    name="isVendor"
-                                    checked={userInfo.isVendor}
-                                    onChange={handleChange}
-                                />
-                                <span className="slider round"></span>
-                            </label>
-                            <span className="ml-2 text-gray-400">As a Customer</span>
-                        </div>
-                    </div>
                     <form onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 gap-[2rem] md:grid-cols-2 mb-8">
                             <div>
@@ -143,7 +128,7 @@ const SignUp = () => {
                                 <input
                                     type="text"
                                     name="firstName"
-                                    placeholder="First Name"
+                                    placeholder="firstName"
                                     value={userInfo.firstName}
                                     onChange={handleChange}
                                     required
@@ -165,18 +150,6 @@ const SignUp = () => {
                         </div>
                         <div className="grid grid-cols-1 gap-[2rem] md:grid-cols-2 mb-8">
                             <div>
-                                <label className="block text-gray-700">Username</label>
-                                <input
-                                    type="text"
-                                    name="username"
-                                    placeholder="Username"
-                                    value={userInfo.username}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem]"
-                                />
-                            </div>
-                            <div>
                                 <label className="block text-gray-700">Email Address</label>
                                 <input
                                     type="email"
@@ -188,8 +161,56 @@ const SignUp = () => {
                                     className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem]"
                                 />
                             </div>
+                            <div>
+                                <label className="block text-gray-700">Estate</label>
+                                <input
+                                    type="text"
+                                    name="estateId"
+                                    placeholder="estateId"
+                                    value={userInfo.estateId}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem]"
+                                />
+                            </div>
                         </div>
+
+                        <div className="grid grid-cols-1 gap-[2rem] md:grid-cols-1 mb-8">
+                            <div>
+                                <label className="block text-gray-700">Designation</label>
+                                <input
+                                    type="text"
+                                    name="designation"
+                                    placeholder="Designation"
+                                    value={userInfo.designation}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem]"
+                                />
+                                {/* <select name="designation" id="" className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem]"
+                                    value={userInfo.designation}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="">TENANT</option>
+                                    <option value="">Land Lord</option>
+                                </select> */}
+                            </div>
+                        </div>
+
                         <div className="grid grid-cols-1 gap-[2rem] md:grid-cols-2 mb-8">
+                            <div>
+                                <label className="block text-gray-700">Phone Number</label>
+                                <input
+                                    type="phoneNumber"
+                                    name="phoneNumber"
+                                    placeholder="Phone Number"
+                                    value={userInfo.phoneNumber}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem]"
+                                />
+                            </div>
                             <div className="relative">
                                 <label className="block text-gray-700">Password</label>
                                 <div className="flex items-center border border-gray-300 rounded mt-1">
@@ -214,43 +235,6 @@ const SignUp = () => {
                                     <p className="text-xs text-gray-500">Password should be at least <span className="font-bold">8 Characters</span> and must contain at least a <span className="font-bold">Capital Letter</span>, a <span className="font-bold">Number</span> and a <span className="font-bold">Special Character</span>.</p>
                                 </div>
                             </div>
-
-                            <div>
-                                <label className="block text-gray-700">Phone Number</label>
-                                <input
-                                    type="phoneNumber"
-                                    name="phoneNumber"
-                                    placeholder="Phone Number"
-                                    value={userInfo.phoneNumber}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem]"
-                                />
-                            </div>
-                            {/* <div className="relative">
-                                <label className="block text-gray-700">Confirm Password</label>
-                                <div className="flex items-center border border-gray-300 rounded mt-1">
-                                    <input
-                                        type={isConfirmPasswordVisible ? 'text' : 'password'}
-                                        name="confirmPassword"
-                                        placeholder="Confirm Password"
-                                        value={userInfo.confirmPassword}
-                                        onChange={handleChange}
-                                        required
-                                        className="w-full p-2 py-[0.8rem] bg-transparent outline-none"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={toggleConfirmPasswordVisibility}
-                                        className="px-3 text-gray-400 cursor-pointer"
-                                    >
-                                        {isConfirmPasswordVisible ? '🙈' : '👁️'}
-                                    </button>
-                                </div>
-                                <div className="md:grid-cols-2 gap-4 my-3">
-                                    <p className="text-xs text-gray-500">Password should be at least <span className="font-bold">8 Characters</span> and must contain at least a <span className="font-bold">Capital Letter</span>, a <span className="font-bold">Number</span> and a <span className="font-bold">Special Character</span>.</p>
-                                </div>
-                            </div> */}
                         </div>
                         <button 
                             type="submit" 

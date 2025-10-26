@@ -13,14 +13,14 @@ export const HomePage = () => {
 
     return (
         <>
-            <Header/>
+            {/* <Header/>
             <Products/>
             <LandingBanner/>
             <ProductCategories/>
             <LandingBanner/>
             <Tailors/>
             <Blogs/>
-            <Footer/>
+            <Footer/> */}
         </>
     )
 }
