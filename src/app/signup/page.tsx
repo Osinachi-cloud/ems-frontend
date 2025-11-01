@@ -7,6 +7,42 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
 
+interface Estate {
+    country: string;
+    state: string | null;
+    city: string;
+    name: string | null;
+    postalCode: string | null;
+    estateId: string;
+    estateAdminUserId: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    phone: string | null;
+    email: string | null;
+    designation: string | null;
+}
+
+interface EstatesResponse {
+    message: string;
+    statusCode: number;
+    error: string | null;
+    timestamp: string;
+    data: {
+        page: number;
+        size: number;
+        total: number;
+        data: Estate[];
+    };
+}
+
+// Enum values for designation
+enum Designation {
+    LANDLORD = "LANDLORD",
+    TENANT = "TENANT",
+    EXTERNAL = "EXTERNAL",
+    DEFAULT = "DEFAULT",
+}
+
 const SignUp = () => {
     const router = useRouter();
     
@@ -18,16 +54,45 @@ const SignUp = () => {
         email: '',
         phoneNumber: '',
         password: '',
-        // confirmPassword: '',
         estateId: '',
     });
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [estates, setEstates] = useState<Estate[]>([]);
+    const [isLoadingEstates, setIsLoadingEstates] = useState(false);
     
     // API configuration
     const signupUrl = `${baseUrL}/create-customer`;
+    const estatesUrl = `${baseUrL}/get-estates`;
+
+    // Fetch estates on component mount
+    useEffect(() => {
+        const fetchEstates = async () => {
+            try {
+                setIsLoadingEstates(true);
+                console.log('Fetching estates from:', estatesUrl);
+                
+                const response = await fetch(estatesUrl);
+                const data: EstatesResponse = await response.json();
+                
+                if (response.ok && data.data?.data) {
+                    setEstates(data.data.data);
+                    console.log('Estates fetched successfully:', data.data.data);
+                } else {
+                    console.error('Failed to fetch estates:', data.message);
+                    errorToast('Failed to load estates list');
+                }
+            } catch (error) {
+                console.error('Error fetching estates:', error);
+                errorToast('Error loading estates list');
+            } finally {
+                setIsLoadingEstates(false);
+            }
+        };
+
+        fetchEstates();
+    }, [estatesUrl]);
 
     // Handle input change
     const handleChange = (e: any) => {
@@ -43,22 +108,22 @@ const SignUp = () => {
         e.preventDefault();
         console.log("Submitting form with data:", userInfo);
 
-        // Basic validation
-        // if (userInfo.password !== userInfo.confirmPassword) {
-        //     errorToast("Passwords don't match");
-        //     return;
-        // }
-
         if (userInfo.password.length < 8) {
             errorToast("Password must be at least 8 characters long");
             return;
         }
 
-        // Remove confirmPassword from the data sent to API
-        // const { confirmPassword, ...signupData } = userInfo;
+        if (!userInfo.estateId) {
+            errorToast("Please select an estate");
+            return;
+        }
+
+        if (!userInfo.designation) {
+            errorToast("Please select a designation");
+            return;
+        }
 
         const { ...signupData } = userInfo;
-
 
         try {
             setIsLoading(true);
@@ -78,12 +143,11 @@ const SignUp = () => {
 
             if (apiResponse.ok) {
                 successToast('Account created successfully!');
-                // Wait a bit for the toast to show before redirecting
                 setTimeout(() => {
                     router.push('/login');
                 }, 2000);
             } else {
-                errorToast(apiResponseData.message || 'Signup failed');
+                errorToast(apiResponseData.error || 'Signup failed');
             }
         } catch (error) {
             console.error('Signup error:', error);
@@ -97,13 +161,39 @@ const SignUp = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
-    const toggleConfirmPasswordVisibility = () => {
-        setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+    // Function to generate display name for estate
+    const getEstateDisplayName = (estate: Estate): string => {
+        if (estate.name) {
+            return estate.name;
+        }
+        
+        const locationParts = [
+            estate.city,
+            estate.state,
+            estate.country
+        ].filter(part => part !== null && part !== undefined && part !== '');
+        
+        return locationParts.join(', ') || `Estate ${estate.estateId}`;
+    };
+
+    // Function to format designation for display
+    const formatDesignationDisplay = (designation: Designation): string => {
+        switch (designation) {
+            case Designation.LANDLORD:
+                return 'Landlord';
+            case Designation.TENANT:
+                return 'Tenant';
+            case Designation.EXTERNAL:
+                return 'External';
+            case Designation.DEFAULT:
+                return 'Default';
+            default:
+                return designation;
+        }
     };
 
     return (
         <div>
-            {/* Toast Container - This is essential for toasts to work */}
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
@@ -118,7 +208,7 @@ const SignUp = () => {
             />
             
             <div className="flex items-center justify-center min-h-screen ">
-                <div className="p-8 rounded-lg max-w-4xl">
+                <div className="p-8 rounded-lg max-w-3xl">
                     <h1 className="text-[30px] font-bold text-center mb-1">Create a new account</h1>
                     <p className="text-center text-gray-600 mb-10">Fill in your details & get started!</p>
                     <form onSubmit={handleSubmit}>
@@ -128,7 +218,7 @@ const SignUp = () => {
                                 <input
                                     type="text"
                                     name="firstName"
-                                    placeholder="firstName"
+                                    placeholder="First Name"
                                     value={userInfo.firstName}
                                     onChange={handleChange}
                                     required
@@ -163,38 +253,44 @@ const SignUp = () => {
                             </div>
                             <div>
                                 <label className="block text-gray-700">Estate</label>
-                                <input
-                                    type="text"
+                                <select
                                     name="estateId"
-                                    placeholder="estateId"
                                     value={userInfo.estateId}
                                     onChange={handleChange}
                                     required
-                                    className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem]"
-                                />
+                                    disabled={isLoadingEstates}
+                                    className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem] disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <option value="">Select an Estate</option>
+                                    {estates.map((estate) => (
+                                        <option key={estate.estateId} value={estate.estateId}>
+                                            {getEstateDisplayName(estate)}
+                                        </option>
+                                    ))}
+                                </select>
+                                {isLoadingEstates && (
+                                    <p className="text-sm text-gray-500 mt-1">Loading estates...</p>
+                                )}
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 gap-[2rem] md:grid-cols-1 mb-8">
                             <div>
                                 <label className="block text-gray-700">Designation</label>
-                                <input
-                                    type="text"
-                                    name="designation"
-                                    placeholder="Designation"
+                                <select 
+                                    name="designation" 
                                     value={userInfo.designation}
                                     onChange={handleChange}
                                     required
                                     className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem]"
-                                />
-                                {/* <select name="designation" id="" className="w-full p-2 border border-gray-300 rounded mt-1 py-[0.8rem]"
-                                    value={userInfo.designation}
-                                    onChange={handleChange}
-                                    required
                                 >
-                                    <option value="">TENANT</option>
-                                    <option value="">Land Lord</option>
-                                </select> */}
+                                    <option value="">Select Designation</option>
+                                    {Object.values(Designation).map((designation) => (
+                                        <option key={designation} value={designation}>
+                                            {formatDesignationDisplay(designation)}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
 
@@ -202,7 +298,7 @@ const SignUp = () => {
                             <div>
                                 <label className="block text-gray-700">Phone Number</label>
                                 <input
-                                    type="phoneNumber"
+                                    type="tel"
                                     name="phoneNumber"
                                     placeholder="Phone Number"
                                     value={userInfo.phoneNumber}
@@ -238,7 +334,7 @@ const SignUp = () => {
                         </div>
                         <button 
                             type="submit" 
-                            disabled={isLoading}
+                            disabled={isLoading || isLoadingEstates}
                             className="w-full bg-gray-800 text-white p-2 rounded py-[1rem] mt-[2rem] flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading ? (
