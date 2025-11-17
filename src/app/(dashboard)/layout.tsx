@@ -16,7 +16,7 @@ export default function DashboardLayout({
           href="/"
           className="flex items-center justify-center lg:justify-start gap-2"
         >
-          <Image src="/images/T-Logo.png" alt="logo" width={150} height={90} />
+          <Image src="/images/ems_logo.png" alt="EMS logo" width={150} height={90} />
         </Link>
         <Menu />
       </div>

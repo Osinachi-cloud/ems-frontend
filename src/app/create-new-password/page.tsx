@@ -3,13 +3,14 @@ import React, { useEffect, useState } from 'react'
 import type { ReactElement } from 'react'
 import { useRouter } from 'next/navigation'
 import { baseUrL } from '@/env/URLs';
-import { getAuthResponse } from '@/redux/features/authSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/stores/store';
 import { errorToast } from '@/hooks/UseToast';
 import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
 import { useFetch } from '@/hooks/useFetch'
+import { loginSuccess } from '@/redux/features/authSlice';
+import { usePost } from '@/hooks/usePost';
 
 
 type LoginForm = {
@@ -33,16 +34,16 @@ const LoginPage = () => {
   const loginUrl = `${baseUrL}/admin/auth/login`;
   const router = useRouter();
 
-  const { data: loginResponseData, isLoading, setIsLoading, callApi } = useFetch('POST', authDetails, loginUrl);
-  console.log(loginResponseData);
-  errorToast(loginResponseData?.message);
+  const { data: loginResponseData, isLoading, setIsLoading, callApi } = usePost('POST', authDetails, loginUrl, "admin");
+
+  // console.log(loginResponseData);
+  // errorToast(loginResponseData?.message);
 
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
     handlePost();
-    console.log({ loginResponseData });
-
+    // console.log({ loginResponseData });
 
 
     // window.location.replace("/dashboard")
@@ -86,7 +87,7 @@ const LoginPage = () => {
         errorToast(apiResponseData.message);
       }
 
-      dispatch(getAuthResponse(apiResponseData.data))
+      dispatch(loginSuccess(apiResponseData.data))
 
     } catch (e) {
       console.log(e);
@@ -95,12 +96,6 @@ const LoginPage = () => {
       errorToast("Error login in");
     }
   }
-
-  useEffect(() => {
-
-  }, []);
-
-
 
   return (
     <>

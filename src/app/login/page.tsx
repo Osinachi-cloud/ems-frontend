@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react'
 import type { FormEventHandler, ReactElement } from 'react'
 import { useRouter } from 'next/navigation'
 import { baseUrL } from '@/env/URLs';
-import { getAuthResponse } from '@/redux/features/authSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/stores/store';
 import { errorToast } from '@/hooks/UseToast';
 import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
+import { loginSuccess } from '@/redux/features/authSlice';
 
 type LoginForm = {
   email: string
@@ -65,19 +65,26 @@ const LoginPage = () => {
       })
 
       let apiResponseData: any = await apiResponse.json();
-      console.log({apiResponseData});
-      
+      console.log({ apiResponseData });
+
       if (apiResponse.ok) {
+        const transformedUserDetails = {
+          access_token: apiResponseData.accessToken,
+          refresh_token: apiResponseData.refreshToken,
+          permissions: [],
+          roles: [apiResponseData.role]
+        };
+
+        console.log("Transformed user details:", transformedUserDetails);
+        dispatch(loginSuccess(transformedUserDetails));
         router.push('/admin');
+
       } else {
         errorToast(apiResponseData.error || 'Login failed');
       }
-
-      dispatch(getAuthResponse(apiResponseData.data))
-
     } catch (e) {
       console.log(e);
-      // errorToast('An error occurred during login');
+      errorToast('An error occurred or Poor Internet');
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +109,7 @@ const LoginPage = () => {
                 name="email"
                 value={authDetails.email}
                 onChange={handleChange}
-                placeholder="Email Address" 
+                placeholder="Email Address"
                 required
               />
             </div>
@@ -148,7 +155,7 @@ const LoginPage = () => {
               {isLoading && <span className="spinner"></span>}
             </button>
           </div>
-          
+
           <div className='text-center mt-[1rem] text-[14px]'>
             <a href="/signup">You do not have an account? Create Account</a>
           </div>
