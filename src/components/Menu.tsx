@@ -8,8 +8,8 @@ const menuItems = [
     items: [
       {
         icon: "/Vector.png",
-        label: "Account Overview",
-        href: "/Account-Overview",
+        label: "My Profile",
+        href: "/my-profile",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
