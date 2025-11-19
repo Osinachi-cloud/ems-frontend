@@ -1,27 +1,4 @@
 
-export interface Product {
-  id: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  price: number;
-  currency: string;
-  inStock: boolean;
-  deliveryTime: string;
-  images: string[];
-  features: string[];
-  colors: ColorOption[];
-  sizes: SizeOption[];
-  sleeveLengths: SleeveOption[];
-  reviews: Review[];
-  relatedProducts: RelatedProduct[];
-  mobileSpecific: {
-    title: string;
-    subtitle: string;
-    colorDescription: string;
-    tags: string[];
-  };
-}
 
 export interface ColorOption {
   id: string;
@@ -60,4 +37,14 @@ export interface RelatedProduct {
 export interface ProductVariation {
   color: string;
   sleeveType: string;
+}
+
+export interface Product {
+  productId: string;
+  name: string;
+  description: string;
+  code: string ;
+  productImage: string | null;
+  price: number;
+  designation: string;
 }

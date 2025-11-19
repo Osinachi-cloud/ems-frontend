@@ -9,6 +9,8 @@ import { errorToast } from '@/hooks/UseToast';
 import 'react-toastify/dist/ReactToastify.css';
 import './page.css';
 import { loginSuccess } from '@/redux/features/authSlice';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { ILoginResponse } from '@/types/user';
 
 type LoginForm = {
   email: string
@@ -16,6 +18,8 @@ type LoginForm = {
 }
 
 const LoginPage = () => {
+
+  const  { value , getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
 
   const initialState: LoginForm = {
     email: "",
@@ -64,17 +68,18 @@ const LoginPage = () => {
         body: JSON.stringify(authDetails)
       })
 
-      let apiResponseData: any = await apiResponse.json();
+      let apiResponseData: ILoginResponse = await apiResponse.json();
       console.log({ apiResponseData });
+
+      setStoredValue(apiResponseData.data);
 
       if (apiResponse.ok) {
         const transformedUserDetails = {
-          access_token: apiResponseData.accessToken,
-          refresh_token: apiResponseData.refreshToken,
-          permissions: [],
-          roles: [apiResponseData.role]
+          access_token: apiResponseData.data.accessToken,
+          refresh_token: apiResponseData.data.refreshToken,
+          role: apiResponseData.data.roleDto
         };
-
+        
         console.log("Transformed user details:", transformedUserDetails);
         dispatch(loginSuccess(transformedUserDetails));
         router.push('/admin');

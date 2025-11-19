@@ -1,4 +1,6 @@
 "use client";
+import { baseUrL } from "@/env/URLs";
+import { useFetch } from "@/hooks/useFetch";
 import { Shield, UserCheck, Users, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom"; // Import createPortal for true modal overlay
@@ -37,15 +39,15 @@ const UserDetailModal = ({ user, onClose }: any) => {
 
                 {/* User Info */}
                 <div className="space-y-4 text-gray-700">
-                    <p className="text-xl font-extrabold">{user.name}</p>
-                    <span className={`px-3 py-1 text-sm font-bold rounded-full inline-block ${user.role === 'Tenant' ? 'bg-blue-500 text-white' : user.role === 'Occupant' ? 'bg-green-500 text-white' : 'bg-yellow-500 text-white'}`}>
-                        {user.role}
+                    <p className="text-xl font-extrabold">{user.firstName + " " + user.lastName} </p>
+                    <span className={`px-3 py-1 text-sm font-bold rounded-full inline-block ${user.designation === 'TENANT' ? 'bg-green-500 text-white' : user.designation === 'OCCUPANT' && 'bg-yellow-500 text-white'}`}>
+                        {user.designation}
                     </span>
                     
                     <div className="border-t pt-4 space-y-3">
-                        <DetailItem label="ID" value={user.id} mono />
+                        <DetailItem label="ID" value={user.userId} mono />
                         <DetailItem label="Email" value={user.email} />
-                        <DetailItem label="Estate ID" value={user.estateId} />
+                        <DetailItem label="Estate ID" value={user.estate} />
                         {user.landlordId && <DetailItem label="Managed by Landlord ID" value={user.landlordId} mono />}
                         {user.tenantId && <DetailItem label="Under Tenant ID" value={user.tenantId} mono />}
                     </div>
@@ -63,7 +65,6 @@ const DetailItem = ({ label, value, mono = false }:any) => (
         <p className={`font-semibold ${mono ? 'font-mono text-sm bg-gray-100 p-2 rounded break-all' : 'text-base'}`}>{value || 'N/A'}</p>
     </div>
 );
-// -------------------------------------------------------------------
 
 
 export default function MyProfile() {
@@ -84,19 +85,17 @@ export default function MyProfile() {
         { id: 'o-002', name: 'Hannah Occupant', role: 'Occupant', email: 'o2@app.com', landlordId: 'll-001', tenantId: 't-001', estateId: 'E001' },
     ];
 
-    // State is initialized to 'Ethan Tenant' (t-001)
-    const [userId, setUserId] = useState(MOCK_USERS_DATA[4].id);
-    const [userProfile, setUserProfile] = useState(MOCK_USERS_DATA[2]); // This is 'Chris Landlord' (ll-001) in the original code, but I'll update it to be consistent with the userId.
-    
-    // Let's ensure the profile matches the ID for a clear example:
-    const initialProfile = MOCK_USERS_DATA.find(u => u.id === userId) || MOCK_USERS_DATA[4];
-    // To match the userProfile state in the original code (MOCK_USERS_DATA[2] = 'Chris Landlord'):
-    const [currentUserProfile, setCurrentUserProfile] = useState(MOCK_USERS_DATA[2]); 
-    const currentUserId = currentUserProfile.id; // Use the ID from the profile state
-    
-    const [allMockUsers, setAllMockUsers] = useState(MOCK_USERS_DATA);
-    
-    // --- NEW MODAL STATE AND HANDLERS ---
+        const {
+        data: userData,
+        isLoading: userDetailsLoading,
+        error: userDetailError,
+        callApi: refetchUserDetailNavbar
+    } = useFetch("GET", null, `${baseUrL}/customer-details?email=appadmin@ems.com`);
+
+    const currentUserProfile = userData?.data;
+    const [userProfile, setUserProfile] = useState(MOCK_USERS_DATA[2]);
+    const currentUserId = currentUserProfile?.userId;
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUserDetail, setSelectedUserDetail] = useState(null);
 
@@ -109,41 +108,6 @@ export default function MyProfile() {
         setIsModalOpen(false);
         setSelectedUserDetail(null);
     }
-    // -------------------------------------
-
-
-    const filteredUsers = useMemo(() => {
-        if (!currentUserProfile) return [];
-
-        const role = currentUserProfile.role;
-
-        if (role === 'SuperAdmin' || role === 'Admin') {
-            // Admins see everyone
-            return allMockUsers;
-        } else if (role === 'Landlord') {
-            // Landlord sees themselves, their direct tenants, and occupants under those tenants
-            const tenantIds = allMockUsers
-                .filter(u => u.landlordId === currentUserId && u.role === 'Tenant')
-                .map(u => u.id);
-
-            return allMockUsers.filter(u =>
-                u.id === currentUserId ||
-                u.landlordId === currentUserId || // Direct tenants and occupants
-                tenantIds.includes(u.tenantId === null ? "" : u.tenantId) // Occupants whose tenant belongs to this landlord
-            );
-        } else if (role === 'Tenant') {
-            // Tenant sees themselves and their direct occupants
-            return allMockUsers.filter(u => u.id === currentUserId || u.tenantId === currentUserId);
-        } else if (role === 'Occupant') {
-            // Occupants only see themselves
-            return allMockUsers.filter(u => u.id === currentUserId);
-        }
-        return [];
-    }, [allMockUsers, currentUserId, currentUserProfile]);
-
-
-    // Users subordinate to the current user (Tenants/Occupants for Landlord; Occupants for Tenant)
-    const subordinates = filteredUsers.filter(u => u.id !== currentUserId);
 
     return (
         <div className="p-6 bg-gray-100 flex-grow rounded-lg min-h-screen">
@@ -156,8 +120,8 @@ export default function MyProfile() {
                     <div className="flex items-center space-x-4 mb-6">
                         <UserCheck className="w-10 h-10 text-teal-600 bg-teal-100 p-2 rounded-full" />
                         <div>
-                            <p className="text-2xl font-bold text-gray-900">{currentUserProfile?.name || 'User Name'}</p>
-                            <p className="text-sm font-semibold text-yellow-600">{currentUserProfile?.role}</p>
+                            <p className="text-2xl font-bold text-gray-900">{currentUserProfile?.firstName || 'User Name'}</p>
+                            <p className="text-sm font-semibold text-yellow-600">{currentUserProfile?.role?.name}</p>
                         </div>
                     </div>
 
@@ -168,15 +132,15 @@ export default function MyProfile() {
                         </div>
                         <div className="border-b pb-3">
                             <p className="text-xs uppercase text-gray-500 mb-1">Primary Email (Mock)</p>
-                            <p className="font-semibold">{currentUserProfile?.email || 'N/A'}</p>
+                            <p className="font-semibold">{userData?.data?.email || 'N/A'}</p>
                         </div>
                         <div className="border-b pb-3">
                             <p className="text-xs uppercase text-gray-500 mb-1">Estate</p>
-                            <p className="font-semibold">{currentUserProfile?.estateId || 'N/A'}</p>
+                            <p className="font-semibold">{currentUserProfile?.estate || 'N/A'}</p>
                         </div>
 
                         {/* Relationship Details */}
-                        {(currentUserProfile?.landlordId || currentUserProfile?.tenantId) && (
+                        {
                             <div className="pt-2">
                                 <p className="text-xs uppercase text-gray-500 mb-2">My Direct Relationships</p>
                                 {currentUserProfile?.landlordId && (
@@ -192,32 +156,32 @@ export default function MyProfile() {
                                     </div>
                                 )}
                             </div>
-                        )}
+                        }
                     </div>
                 </div>
 
                 {/* 2. Subordinate Users List (Right Column) */}
-                {(currentUserProfile?.role === 'Landlord' || currentUserProfile?.role === 'Tenant') ? (
+                {(currentUserProfile?.subUsersList && currentUserProfile.subUsersList.length > 0) ? (
                     <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-xl border-t-4 border-blue-500">
                         <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
                             <Users className="w-6 h-6 mr-3 text-teal-600" />
-                            Subordinate Users ({subordinates.length})
+                            Subordinate Users ({currentUserProfile?.subUsersList?.length})
                         </h3>
                         <p className="text-sm text-gray-600 mb-4">
-                            {currentUserProfile.role === 'Landlord'
+                            {currentUserProfile.designation === 'Landlord'
                                 ? 'This list includes all your direct Tenants and the Occupants managed by those Tenants.'
                                 : 'This list includes all Occupants registered under your tenancy.'}
                         </p>
 
-                        {subordinates.length > 0 ? (
+                        {currentUserProfile?.subUsersList?.length > 0 ? (
                             <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
-                                {subordinates.map(sub => (
+                                {currentUserProfile?.subUsersList?.map((sub: any) => (
                                     <div
-                                        key={sub.id}
-                                        className={`p-4 rounded-lg shadow-md border transition transform hover:scale-[1.01] cursor-pointer ${sub.role === 'Tenant' ? 'bg-blue-50 border-blue-200' : 'bg-green-50 border-green-200'}`}
+                                        key={sub.userId}
+                                        className={`p-4 rounded-lg shadow-md border transition transform hover:scale-[1.01] cursor-pointer ${sub.designation === 'Tenant' ? 'bg-blue-50 border-blue-200' : 'bg-green-50 border-green-200'}`}
                                     >
                                         <div className="flex justify-between items-center mb-1">
-                                            <p className="font-semibold text-lg">{sub.name}</p>
+                                            <p className="font-semibold text-lg">{sub.firstName + " "}   {sub.lastName}</p>
                                             
                                             {/* --- MODAL TRIGGER: The span is now a button-like element --- */}
                                             <span
@@ -225,17 +189,18 @@ export default function MyProfile() {
                                                     e.stopPropagation(); // Prevent any parent click handlers
                                                     openModal(sub); // Open modal with this user's details
                                                 }}
-                                                className={`px-3 py-1 text-xs font-bold rounded-full cursor-pointer transition hover:opacity-80 ${sub.role === 'Tenant' ? 'bg-blue-500 text-white' : 'bg-green-500 text-white'}`}
+                                                className={`px-3 py-1 text-xs font-bold rounded-full cursor-pointer transition hover:opacity-80 ${sub.designation === 'TENANT' ? 'bg-green-500 text-white' : 'bg-yellow-500 text-white'}`}
                                                 role="button"
                                                 aria-label={`View details for ${sub.name}`}
                                             >
-                                                {sub.role}
+                                                {sub.designation}
                                             </span>
-                                            {/* ----------------------------------------------------------- */}
+
                                         </div>
                                         <p className="text-sm text-gray-500">Email: {sub.email}</p>
-                                        <p className="text-xs text-gray-400">ID: {sub.id}</p>
+                                        <p className="text-xs text-gray-400">ID: {sub.userId}</p>
                                         {sub.tenantId && <p className="text-xs text-gray-500 mt-1">Managed by Tenant: {sub.tenantId}</p>}
+                                    
                                     </div>
                                 ))}
                             </div>
@@ -250,7 +215,7 @@ export default function MyProfile() {
                     <div className="lg:col-span-2 p-6 bg-white border border-dashed border-gray-300 rounded-xl text-center flex items-center justify-center">
                         <p className="text-xl text-gray-500">
                             <Shield className="inline-block w-5 h-5 mr-2" />
-                            As an **{currentUserProfile?.role}**, you do not manage other users in the hierarchy.
+                            As an **{currentUserProfile?.designation}**, you do not manage other users in the hierarchy.
                         </p>
                     </div>
                 )}

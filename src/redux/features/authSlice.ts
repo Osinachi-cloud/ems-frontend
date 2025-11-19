@@ -3,9 +3,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 type UserDetails = {
   access_token: string;
   refresh_token: string;
-  permissions: string[];
-  roles: string[];
+  role: IRole | null;
 };
+
+type IRole = {
+  name: string;
+  description:string;
+  permissionNames: string []
+}
 
 type AuthState = {
   userDetails: UserDetails;
@@ -18,8 +23,7 @@ const initialState: AuthState = {
   userDetails: {
     access_token: "",
     refresh_token: "",
-    permissions: [],
-    roles: []
+    role: null
   },
   isAuthenticated: false,
   isLoading: false,
@@ -51,8 +55,7 @@ export const authSlice = createSlice({
       state.userDetails = {
         access_token: "",
         refresh_token: "",
-        permissions: [],
-        roles: []
+        role: null
       };
       state.isAuthenticated = false;
       state.isLoading = false;

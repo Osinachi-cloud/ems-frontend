@@ -16,6 +16,8 @@ export const useFetch = (methodType: string, body: any, url: string) => {
 
     const token = getUserDetails()?.accessToken
 
+    console.log("user detail ====>", getUserDetails());
+
     console.log("token ====>", token);
     
     const apiFetchOnRender = async() => {

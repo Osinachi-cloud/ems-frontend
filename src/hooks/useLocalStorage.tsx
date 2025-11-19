@@ -1,4 +1,4 @@
-import { User } from '@/types/user';
+import { User, ILoginResponse, IUserData } from '@/types/user';
 import { useState, useEffect } from 'react';
 
 export const useLocalStorage = <T,>(key: string, initialValue?: T) => {
@@ -16,7 +16,11 @@ export const useLocalStorage = <T,>(key: string, initialValue?: T) => {
     }
   });
 
-  const getUserDetails = (): User | null=> {
+  const getUserDetails = (): IUserData  | null=> {
+    if (typeof window === 'undefined') {
+        return null; // Return null if running on the server
+    }
+
     const str = window.localStorage.getItem(key);
     console.log("str --->>> ", str);
     if(str != null){
@@ -25,7 +29,7 @@ export const useLocalStorage = <T,>(key: string, initialValue?: T) => {
     return null;
   } 
 
-  const setStoredValue = (value: T) => {
+  const setStoredValue = (value: any) => {
     try {
       setValue(value);
       if (typeof window !== 'undefined') {

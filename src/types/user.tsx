@@ -37,3 +37,39 @@ export interface AuthResponse {
   role: string;
   saveCard: boolean;
 }
+
+export interface IUserData {
+    customerId: string | null;
+    vendorId: string | null;
+    tier: string | null;
+    country: string | null;
+    password: string | null; // Likely always null or should be omitted in a secure client
+    firstName: string;
+    lastName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    hasPin: boolean;
+    roleDto: IRoleDto;
+    saveCard: boolean;
+    enablePush: boolean;
+    accessToken: string;
+    refreshToken: string;
+    profileImage: string | null;
+}
+
+export interface ILoginResponse {
+    message: string;
+    statusCode: number;
+    error: string | null;
+    timestamp: string; // ISO 8601 date string
+    data: IUserData;
+}
+
+export interface IRoleDto {
+    name: string;
+    description: string;
+    dateCreated: string; // ISO 8601 date string
+    lastUpdated: string; // ISO 8601 date string
+    permissionNames: string[];
+    permissionsDto: any | null; // Based on the example, it's null, but could be another object type
+}
