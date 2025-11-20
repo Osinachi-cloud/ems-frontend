@@ -18,10 +18,16 @@ const menuItems = [
         href: "/transaction",
         visible: ["admin", "teacher"],
       },
+            {
+        icon: "/Bag.png",
+        label: "Users Management",
+        href: "/manage-users",
+        visible: ["admin", "teacher"],
+      },
       {
         icon: "/folder.png",
         label: "Inventory",
-        href: "/list/Inventory",
+        href: "/inventory",
         visible: ["admin", "teacher"],
       },
       {
