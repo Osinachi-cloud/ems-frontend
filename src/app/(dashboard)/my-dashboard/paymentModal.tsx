@@ -1,3 +1,4 @@
+
 "use client";
 
 import { formatNumberToNaira } from "@/app/utils/moneyUtils";
@@ -212,49 +213,52 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                   </div>
                 </div>
                 
-                <div className="space-y-2 max-h-60 overflow-y-auto grid grid-cols-3 gap-2">
-                  {availableMonths.map((month, index) => {
-                    const isSelected = selectedMonths.some(d => d.getTime() === month.date.getTime());
-                    const isSelectable = index === 0 || 
-                      selectedMonths.some(d => 
-                        d.getTime() === availableMonths[index - 1].date.getTime()
-                      );
+                <div className="max-h-60 overflow-y-auto">
+                  <div className="grid grid-cols-3 gap-2">
+                    {availableMonths.map((month, index) => {
+                      const isSelected = selectedMonths.some(d => d.getTime() === month.date.getTime());
+                      const isSelectable = index === 0 || 
+                        selectedMonths.some(d => 
+                          d.getTime() === availableMonths[index - 1].date.getTime()
+                        );
 
-                    return (
-                      <button
-                        key={month.month}
-                        onClick={() => isSelectable && toggleMonthSelection(month.date)}
-                        disabled={!isSelectable && selectedMonths.length > 0}
-                        className={`col-span-1 h-[50px] w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center justify-between group 
-                          ${
-                          isSelected
-                            ? 'border-teal-500 bg-teal-50 text-teal-700'
-                            : 'border-gray-200 hover:border-teal-300'
-                        } ${
-                          !isSelectable && selectedMonths.length > 0
-                            ? 'opacity-50 cursor-not-allowed'
-                            : 'hover:bg-teal-25 cursor-pointer'
-                        }
-                        `}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                            isSelected 
-                              ? 'bg-teal-500 border-teal-500' 
-                              : 'border-gray-300 group-hover:border-teal-400'
-                          }`}>
-                            {isSelected && (
-                              <CheckCircle className="w-3 h-3 text-white" />
-                            )}
+                      return (
+                        <button
+                          key={month.month}
+                          onClick={() => isSelectable && toggleMonthSelection(month.date)}
+                          disabled={!isSelectable && selectedMonths.length > 0}
+                          className={`
+                            h-[50px] w-full p-2 rounded-xl border-2 transition-all duration-200 
+                            flex flex-col items-center justify-center group
+                            ${
+                            isSelected
+                              ? 'border-teal-500 bg-teal-50 text-teal-700'
+                              : 'border-gray-200 hover:border-teal-300'
+                          } ${
+                            !isSelectable && selectedMonths.length > 0
+                              ? 'opacity-50 cursor-not-allowed'
+                              : 'hover:bg-teal-25 cursor-pointer'
+                          }
+                          `}
+                        >
+                          <div className="flex items-center space-x-1 mb-1">
+                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                              isSelected 
+                                ? 'bg-teal-500 border-teal-500' 
+                                : 'border-gray-300 group-hover:border-teal-400'
+                            }`}>
+                              {isSelected && (
+                                <CheckCircle className="w-2.5 h-2.5 text-white" />
+                              )}
+                            </div>
                           </div>
-                          <span className="font-medium text-[12px]">{month.month}</span>
-                        </div>
-                        <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform ${
-                          isSelected ? 'text-teal-500 rotate-90' : 'group-hover:text-teal-500'
-                        }`} />
-                      </button>
-                    );
-                  })}
+                          <span className="font-medium text-[10px] leading-tight text-center">
+                            {month.month}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {/* Selection info */}
