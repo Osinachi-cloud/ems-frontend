@@ -12,29 +12,51 @@ import UserCard from "@/components/UserCard";
 import Image from "next/image";
 import { useState } from "react";
 import PaymentModal from "./paymentModal";
-// Import the new PaymentModal component
-// import PaymentModal from "@/components/PaymentModal"; 
+import { useFetch } from "@/hooks/useFetch";
+import { baseUrL } from "@/env/URLs";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import "./page.css"
 
 export const AdminPage = () => {
   const [feeAmount, setFeeAmount] = useState<number>(10);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null); // Add this state
 
-  // 🌟 MOCK DATA for last paid date - Replace this with actual backend fetch
-  const lastPaidDate = new Date("2025-06-01"); // Example: Last paid in June 2025
+  const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+  const email = getUserDetails()?.emailAddress
+  const designation = getUserDetails()?.designation
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const lastPaidDate = new Date("2025-01-01");
+
+  const openModal = (product: any) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const fetchUrl = `${baseUrL}/get-products?designation=${designation}&page=${0}&size=${100}`;
+
+  const {
+    data: productsResponse,
+    isLoading: productsLoading,
+    error: productsError,
+    callApi: refetchproducts
+  } = useFetch("GET", null, fetchUrl);
 
   const handlePayment = (months: Date[]) => {
+    if (!selectedProduct) return;
+
     // 💡 Implement your actual payment logic here
-    console.log("Initiating payment for the following months:", months);
-    // Calculate total amount: months.length * feeAmount
-    const totalAmount = months.length * feeAmount;
+    console.log("Initiating payment for product:", selectedProduct);
+    console.log("Payment for months:", months);
+
+    const totalAmount = months.length * selectedProduct.price;
     console.log(`Total amount due: ${formatNumberToNaira(totalAmount)}`);
 
-    // After successful payment:
-    // 1. Update the lastPaidDate state/backend.
-    // 2. Close the modal.
     closeModal();
   };
 
@@ -48,31 +70,44 @@ export const AdminPage = () => {
             <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, Alex SuperAdmin!</h1>
             <h6 className="text-xl text-teal-600 mb-4">Role: SuperAdmin</h6>
           </div>
+          <div>
+          </div>
           <div className="grid md:grid-cols-5 gap-2">
             <UserCard country="My Total Paid" customerCount={120000} />
             <UserCard country="Nigeria" customerCount={12} />
             <UserCard country="Canada" customerCount={1000} />
             <UserCard country="China" customerCount={2000} />
 
-            {feeAmount > 0 && (
-              <div className="bg-white px-6 py-4 rounded-xl shadow-lg border border-teal-200 hover:shadow-xl transition duration-300 transform hover:scale-[1.02]">
-                <h2 className="text-sm font-semibold text-gray-700 mb-4 whitespace-nowrap">Monthly Fee</h2>
-                <div className="mb-4 text-gray-600">
-                  <p>Your fee: <span className="font-bold text-teal-600">{formatNumberToNaira(feeAmount)}</span></p>
-                  <p className="text-xs text-gray-400">Last paid: {lastPaidDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-                </div>
-                <button
-                  onClick={openModal} // 👈 Opens the modal
-                  className="w-full px-6 py-2 bg-gradient-to-r from-teal-500 to-cyan-600 text-sm text-white font-bold rounded-lg shadow-lg hover:shadow-teal-400/50 transition duration-300 transform hover:scale-[1.05]"
-                >
-                  Pay Now
-                </button>
+            <div className="col-span-full mt-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Available Plans</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                {productsResponse?.data?.data?.map((product: any) => (
+                  <div
+                    key={product.productId}
+                    className="bg-white p-4 rounded-lg shadow-md border border-teal-100 hover:shadow-lg transition duration-200"
+                  >
+                    <h2 className="text-xs font-semibold text-gray-700 mb-2 line-clamp-1">
+                      {product.name}
+                    </h2>
+                    <div className="mb-3 text-gray-600">
+                      <p className="font-bold text-teal-600 text-sm">
+                        {formatNumberToNaira(product.price)}
+                      </p>
+                      <p className="text-xs mt-1 line-clamp-2">{product.description}</p>
+                      <p className="text-xs text-gray-400 mt-1">Code: {product.code}</p>
+                    </div>
+                    <button
+                      onClick={() => openModal(product)}
+                      className="w-full px-3 py-1.5 bg-gradient-to-r from-teal-500 to-cyan-600 text-xs text-white font-semibold rounded-md shadow hover:shadow-teal-400/50 transition duration-200"
+                    >
+                      Subscribe
+                    </button>
+                  </div>
+                ))}
               </div>
-            )}
-            {/* ... other UserCard components ... */}
+            </div>
           </div>
-          {/* ... other charts and tables (omitted for brevity) ... */}
-          
+
           <div className="w-full h-[350px] grid md:grid-cols-5 gap-[2rem]">
             <div className="col-span-2 px-[2rem] py-[2rem] h-fit bg-[#fff] rounded-[8px]">
               <div className="flex justify-between">
@@ -100,18 +135,17 @@ export const AdminPage = () => {
             <TransactionTable />
           </div>
         </div>
-        {/* ... RIGHT section (omitted for brevity) ... */}
       </div>
 
-      {/* 🔮 Payment Modal Component */}
       <PaymentModal
-
-      
         isOpen={isModalOpen}
         onClose={closeModal}
-        feeAmount={feeAmount}
+        feeAmount={selectedProduct?.price || 0} // Use selected product price
         lastPaidDate={lastPaidDate}
         onPayment={handlePayment}
+        transaction_charge={100} // You can keep this fixed or make it dynamic
+        productId={selectedProduct?.productId?.toString()} // Use selected product ID
+        productName={selectedProduct?.name} // Pass product name if needed
       />
     </>
   );

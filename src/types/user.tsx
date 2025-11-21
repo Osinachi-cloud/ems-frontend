@@ -54,6 +54,7 @@ export interface IUserData {
     enablePush: boolean;
     accessToken: string;
     refreshToken: string;
+    designation: string;
     profileImage: string | null;
 }
 
