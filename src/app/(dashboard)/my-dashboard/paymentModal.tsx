@@ -1,4 +1,3 @@
-
 "use client";
 
 import { formatNumberToNaira } from "@/app/utils/moneyUtils";
@@ -62,38 +61,36 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       const isSelected = prev.some(d => d.getTime() === monthDate.getTime());
       
       if (isSelected) {
-        // Remove the month if already selected
-        return prev.filter(d => d.getTime() !== monthDate.getTime());
+        // If deselecting, remove this month and all months after it
+        const monthIndex = availableMonths.findIndex(m => m.date.getTime() === monthDate.getTime());
+        return prev.filter(d => {
+          const dIndex = availableMonths.findIndex(m => m.date.getTime() === d.getTime());
+          return dIndex < monthIndex;
+        });
       } else {
-        // Add the month and ensure consecutive selection
-        const newSelection = [...prev, monthDate];
-        return sortAndEnsureConsecutive(newSelection, availableMonths);
+        // Get the index of the clicked month
+        const clickedIndex = availableMonths.findIndex(m => m.date.getTime() === monthDate.getTime());
+        
+        // Get the index of the last selected month
+        const lastSelectedIndex = prev.length > 0 
+          ? Math.max(...prev.map(d => 
+              availableMonths.findIndex(m => m.date.getTime() === d.getTime())
+            ))
+          : -1;
+        
+        // Only allow selection if it's the next consecutive month
+        if (clickedIndex === lastSelectedIndex + 1) {
+          return [...prev, monthDate];
+        }
+        
+        // If no months selected yet, allow selecting the first one
+        if (prev.length === 0 && clickedIndex === 0) {
+          return [monthDate];
+        }
+        
+        return prev;
       }
     });
-  };
-
-  const sortAndEnsureConsecutive = (selected: Date[], allMonths: {month: string, date: Date}[]): Date[] => {
-    if (selected.length === 0) return [];
-    
-    // Sort selected dates
-    const sorted = selected.sort((a, b) => a.getTime() - b.getTime());
-    
-    // Get indices of selected months in the available months array
-    const indices = sorted.map(date => 
-      allMonths.findIndex(m => m.date.getTime() === date.getTime())
-    );
-    
-    // Ensure all indices are consecutive
-    const minIndex = Math.min(...indices);
-    const maxIndex = Math.max(...indices);
-    
-    // Fill in any gaps
-    const consecutiveSelection = [];
-    for (let i = minIndex; i <= maxIndex; i++) {
-      consecutiveSelection.push(allMonths[i].date);
-    }
-    
-    return consecutiveSelection;
   };
 
   const selectAllMonths = () => {
@@ -134,9 +131,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all duration-300 scale-100">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] flex flex-col transform transition-all duration-300 scale-100">
         {/* Header */}
-        <div className="bg-gradient-to-r from-teal-500 to-emerald-600 rounded-t-2xl p-6 text-white relative">
+        <div className="bg-gradient-to-r from-teal-500 to-emerald-600 rounded-t-2xl p-6 text-white relative flex-shrink-0">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-1 hover:bg-white/20 rounded-full transition-colors"
@@ -150,13 +147,13 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             </div>
             <div>
               <h2 className="text-xl font-bold">Pay Monthly Fee</h2>
-              <p className="text-teal-100 text-sm">Select months to pay</p>
+              <p className="text-teal-100 text-sm">Select consecutive months to pay</p>
             </div>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="p-6">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-6">
           {paymentSuccess ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -195,7 +192,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <label className="block text-sm font-semibold text-gray-700">
-                    Select months to pay:
+                    Select consecutive months:
                   </label>
                   <div className="flex space-x-2">
                     <button
@@ -213,31 +210,37 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                   </div>
                 </div>
                 
-                <div className="max-h-60 overflow-y-auto">
+                <div className="max-h-[200px] overflow-y-auto pr-2">
                   <div className="grid grid-cols-3 gap-2">
                     {availableMonths.map((month, index) => {
                       const isSelected = selectedMonths.some(d => d.getTime() === month.date.getTime());
-                      const isSelectable = index === 0 || 
-                        selectedMonths.some(d => 
-                          d.getTime() === availableMonths[index - 1].date.getTime()
-                        );
+                      
+                      // A month is selectable if:
+                      // 1. It's the first month and no months are selected yet, OR
+                      // 2. It's the very next month after the last selected month
+                      const lastSelectedIndex = selectedMonths.length > 0 
+                        ? Math.max(...selectedMonths.map(d => 
+                            availableMonths.findIndex(m => m.date.getTime() === d.getTime())
+                          ))
+                        : -1;
+                      
+                      const isSelectable = (selectedMonths.length === 0 && index === 0) || 
+                                         (index === lastSelectedIndex + 1);
 
                       return (
                         <button
                           key={month.month}
                           onClick={() => isSelectable && toggleMonthSelection(month.date)}
-                          disabled={!isSelectable && selectedMonths.length > 0}
+                          disabled={!isSelectable}
                           className={`
                             h-[50px] w-full p-2 rounded-xl border-2 transition-all duration-200 
                             flex flex-col items-center justify-center group
                             ${
                             isSelected
                               ? 'border-teal-500 bg-teal-50 text-teal-700'
-                              : 'border-gray-200 hover:border-teal-300'
-                          } ${
-                            !isSelectable && selectedMonths.length > 0
-                              ? 'opacity-50 cursor-not-allowed'
-                              : 'hover:bg-teal-25 cursor-pointer'
+                              : isSelectable
+                                ? 'border-gray-200 hover:border-teal-300 hover:bg-teal-25 cursor-pointer'
+                                : 'border-gray-200 opacity-40 cursor-not-allowed'
                           }
                           `}
                         >
@@ -245,7 +248,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                             <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
                               isSelected 
                                 ? 'bg-teal-500 border-teal-500' 
-                                : 'border-gray-300 group-hover:border-teal-400'
+                                : isSelectable
+                                  ? 'border-gray-300 group-hover:border-teal-400'
+                                  : 'border-gray-300'
                             }`}>
                               {isSelected && (
                                 <CheckCircle className="w-2.5 h-2.5 text-white" />
@@ -277,55 +282,70 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                     </div>
                   </div>
                 )}
-              </div>
 
-              {/* Payment Summary */}
-              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4 mb-6 border border-purple-200">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-gray-600">Monthly fee:</span>
-                  <span className="font-medium">{formatNumberToNaira(feeAmount)}</span>
-                </div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-gray-600">Months selected:</span>
-                  <span className="font-medium">{selectedMonths.length}</span>
-                </div>
-                <div className="border-t border-purple-200 pt-2 mt-2">
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold text-gray-800">Total amount:</span>
-                    <span className="text-lg font-bold text-purple-600">
-                      {formatNumberToNaira(totalAmount)}
-                    </span>
+                {/* Help text */}
+                {availableMonths.length > 0 && (
+                  <div className="mt-3 text-xs text-gray-500 text-center">
+                    {selectedMonths.length === 0 
+                      ? "Click the first month to start selection"
+                      : "You can only select consecutive months starting from the first unpaid month"
+                    }
                   </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex space-x-3">
-                <button
-                  onClick={onClose}
-                  disabled={isProcessing}
-                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handlePayment}
-                  disabled={isProcessing || selectedMonths.length === 0}
-                  className="flex-1 px-4 py-3 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                >
-                  {isProcessing ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                      Processing...
-                    </>
-                  ) : (
-                    `Pay ${formatNumberToNaira(totalAmount)}`
-                  )}
-                </button>
+                )}
               </div>
             </>
           )}
         </div>
+
+        {/* Fixed Bottom Section */}
+        {!paymentSuccess && (
+          <div className="flex-shrink-0 border-t border-gray-200 p-6 bg-white">
+            {/* Payment Summary */}
+            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4 mb-4 border border-purple-200">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-600">Monthly fee:</span>
+                <span className="font-medium">{formatNumberToNaira(feeAmount)}</span>
+              </div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-600">Months selected:</span>
+                <span className="font-medium">{selectedMonths.length}</span>
+              </div>
+              <div className="border-t border-purple-200 pt-2 mt-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold text-gray-800">Total amount:</span>
+                  <span className="text-lg font-bold text-purple-600">
+                    {formatNumberToNaira(totalAmount)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex space-x-3">
+              <button
+                onClick={onClose}
+                disabled={isProcessing}
+                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePayment}
+                disabled={isProcessing || selectedMonths.length === 0}
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {isProcessing ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    Processing...
+                  </>
+                ) : (
+                  `Pay ${formatNumberToNaira(totalAmount)}`
+                )}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
