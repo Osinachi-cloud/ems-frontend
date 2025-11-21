@@ -9,6 +9,7 @@ import { InputFieldProps, Response, SearchFilters, UserDto } from '@/types/repon
 import { initialFilters, SearchFilterComponent } from './search';
 import { baseUrL } from '@/env/URLs';
 import { UserEditForm } from './userEdit';
+import { UserStatistics } from './userStatistics';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -85,6 +86,8 @@ const UserManagementPage: React.FC = () => {
                     <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">User Management</h1>
                 </div>
             </div>
+
+            <UserStatistics />
 
             <SearchFilterComponent
                 filters={filters}

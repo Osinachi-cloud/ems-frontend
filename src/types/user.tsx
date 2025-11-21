@@ -68,8 +68,17 @@ export interface ILoginResponse {
 export interface IRoleDto {
     name: string;
     description: string;
-    dateCreated: string; // ISO 8601 date string
-    lastUpdated: string; // ISO 8601 date string
+    dateCreated: string; 
+    lastUpdated: string;
     permissionNames: string[];
-    permissionsDto: any | null; // Based on the example, it's null, but could be another object type
+    permissionsDto: any | null; 
+}
+
+export interface UserStatistics {
+    totalUsersCount: number;
+    activeUsersCount: number;
+    inactiveUsersCount: number;
+    landLordUsersCount: number;
+    tenantUsersCount: number;
+    occupantUsersCount: number;
 }

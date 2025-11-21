@@ -262,8 +262,8 @@ const Orders = () => {
                 </tr>
               </thead>
               <tbody>
-                {customersOrder.map((order) => (
-                  <tr key={order.orderId} className="text-[#6E7079] bg-white border-b hover:bg-gray-50">
+                {customersOrder.map((order, index) => (
+                  <tr key={index} className="text-[#6E7079] bg-white border-b hover:bg-gray-50">
                     <td className="w-4 p-4">
                       <div className="flex items-center">
                         <input

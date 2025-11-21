@@ -1,6 +1,6 @@
 import { SearchFilters } from "@/types/reponse";
-import { Search } from "lucide-react";
-import React from "react";
+import { Search, Filter, X } from "lucide-react";
+import React, { useState } from "react";
 
 export const initialFilters: SearchFilters = {
     firstName: '',
@@ -14,64 +14,128 @@ export const SearchFilterComponent: React.FC<{
     filters: SearchFilters;
     handleFilterChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     applySearch: (e: React.FormEvent) => void;
-}> = React.memo(({ filters, handleFilterChange, applySearch }) => (
-    <form onSubmit={applySearch} className="bg-white p-4 rounded-xl shadow-md mb-6 border border-gray-100">
-        <h2 className="text-lg font-semibold text-gray-800 mb-3">User Search Filters</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+}> = React.memo(({ filters, handleFilterChange, applySearch }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
 
-            <input
-                type="text"
-                name="firstName"
-                placeholder="First Name"
-                value={filters.firstName}
-                onChange={handleFilterChange}
-                className="px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
-            />
-            <input
-                type="text"
-                name="lastName"
-                placeholder="Last Name"
-                value={filters.lastName}
-                onChange={handleFilterChange}
-                className="px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
-            />
-            <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={filters.email.replace("%40", "")}
-                onChange={handleFilterChange}
-                className="px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
-            />
-
-            <select
-                name="isActive"
-                value={filters.isActive}
-                onChange={handleFilterChange}
-                className="px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 appearance-none"
+    return (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6 overflow-hidden">
+            {/* Compact Header */}
+            <div 
+                className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                onClick={() => setIsExpanded(!isExpanded)}
             >
-                <option value="">Active Status (All)</option>
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
-            </select>
+                <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-teal-50 rounded-lg">
+                        <Filter className="w-4 h-4 text-teal-600" />
+                    </div>
+                    <div>
+                        <h2 className="text-sm font-semibold text-gray-800">Search Users</h2>
+                        <p className="text-xs text-gray-500">Filter and find specific users</p>
+                    </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <div className={`w-2 h-2 rounded-full ${isExpanded ? 'bg-teal-500' : 'bg-gray-300'}`} />
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsExpanded(!isExpanded);
+                        }}
+                        className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                        <div className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}>
+                            <X className="w-4 h-4 text-gray-500" />
+                        </div>
+                    </button>
+                </div>
+            </div>
 
-            <input
-                type="text"
-                name="roleId"
-                placeholder="Role ID"
-                value={filters.roleId}
-                onChange={handleFilterChange}
-                className="px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500"
-            />
+            {isExpanded && (
+                <form onSubmit={applySearch} className="border-t border-gray-100">
+                    <div className="p-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                            <div className="space-y-1">
+                                <label className="text-xs font-medium text-gray-600">First Name</label>
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    placeholder="Enter first name..."
+                                    value={filters.firstName}
+                                    onChange={handleFilterChange}
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                />
+                            </div>
+                            
+                            <div className="space-y-1">
+                                <label className="text-xs font-medium text-gray-600">Last Name</label>
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    placeholder="Enter last name..."
+                                    value={filters.lastName}
+                                    onChange={handleFilterChange}
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                />
+                            </div>
+                            
+                            <div className="space-y-1">
+                                <label className="text-xs font-medium text-gray-600">Email</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="user@example.com"
+                                    value={filters.email.replace("%40", "")}
+                                    onChange={handleFilterChange}
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                />
+                            </div>
+                            
+                            <div className="space-y-1">
+                                <label className="text-xs font-medium text-gray-600">Status</label>
+                                <select
+                                    name="isActive"
+                                    value={filters.isActive}
+                                    onChange={handleFilterChange}
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors appearance-none bg-white"
+                                >
+                                    <option value="">All Status</option>
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="text-xs font-medium text-gray-600">Role ID</label>
+                                <input
+                                    type="text"
+                                    name="roleId"
+                                    placeholder="Enter role ID..."
+                                    value={filters.roleId}
+                                    onChange={handleFilterChange}
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                            <button
+                                type="button"
+                                onClick={() => setIsExpanded(false)}
+                                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="flex items-center space-x-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
+                            >
+                                <Search className="w-4 h-4" />
+                                <span>Apply Filters</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            )}
         </div>
-        <div className="mt-4 text-right">
-            <button
-                type="submit"
-                className="flex items-center ml-auto px-4 py-2 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition duration-300"
-            >
-                <Search className="w-5 h-5 mr-2" />
-                Search Users
-            </button>
-        </div>
-    </form>
-));
+    );
+});
