@@ -1,5 +1,7 @@
+
+
 import { Product } from "@/types/product";
-import { AlertTriangle, CheckCircle, Edit, Loader2, PlusCircle } from "lucide-react";
+import { AlertTriangle, Edit, Loader2, PlusCircle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FormInput } from "./formInput";
 import { usePost } from "@/hooks/usePost";
@@ -24,6 +26,8 @@ const initialProductState: Omit<Product, 'productId' | 'estate' | 'productImage'
     code: '',
     price: 0,
     designation: '',
+    publishStatus: false,
+    transactionCharge: 0,
 };
 
 export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialProduct}) => {
@@ -62,10 +66,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, in
 
 
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
+        const { name, value, type } = e.target;
         setProduct(prev => ({
             ...prev,
-            [name]: name === 'price' ? parseFloat(value) : value,
+            [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : 
+                    (name === 'price' || name === 'transactionCharge') ? parseFloat(value) : value,
         }));
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
@@ -77,6 +82,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, in
         if (!data.name.trim()) newErrors.name = "Product name is required.";
         if (!data.code.trim()) newErrors.code = "Product code is required.";
         if (data.price === null || isNaN(data.price as number) || (data.price as number) < 0) newErrors.price = "Price must be a non-negative number.";
+        if (data.transactionCharge === null || isNaN(data.transactionCharge as number) || (data.transactionCharge as number) < 0) newErrors.transactionCharge = "Transaction charge must be a non-negative number.";
         if (!data.designation.trim()) newErrors.designation = "Designation is required.";
         return newErrors;
     };
@@ -102,9 +108,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, in
                 apiResponse = await createProductApi();
             }
 
-            console.log("apiResponse 1====>", apiResponse); // This should have your data
-
-
             if (apiResponse?.success) {
                 setResponse({ success: apiResponse.success, message: apiResponse.message });
                 
@@ -121,9 +124,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, in
     };
     
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
             {response && <FeedbackMessage success={response.success} message={response.message} />}
 
+            {/* Compact grid layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <FormInput
                     label="Product Name"
@@ -132,6 +136,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, in
                     product={product} 
                     handleChange={handleChange} 
                     loading={loading} 
+                    compact
                 />
                 <FormInput
                     label="Product Code"
@@ -140,6 +145,30 @@ export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, in
                     product={product} 
                     handleChange={handleChange} 
                     loading={loading} 
+                    compact
+                />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <FormInput
+                    label="Price"
+                    name="price"
+                    type="number"
+                    error={errors.price}
+                    product={product} 
+                    handleChange={handleChange} 
+                    loading={loading} 
+                    compact
+                />
+                <FormInput
+                    label="Transaction Charge"
+                    name="transactionCharge"
+                    type="number"
+                    error={errors.transactionCharge}
+                    product={product} 
+                    handleChange={handleChange} 
+                    loading={loading} 
+                    compact
                 />
             </div>
 
@@ -151,17 +180,30 @@ export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, in
                 product={product} 
                 handleChange={handleChange} 
                 loading={loading} 
+                compact
             />
             
-            <FormInput
-                label="Price (Min 0)"
-                name="price"
-                type="number"
-                error={errors.price}
-                product={product} 
-                handleChange={handleChange} 
-                loading={loading} 
-            />
+            {/* Compact Publish Status */}
+            <div className="flex items-center space-x-2 py-1">
+                <input
+                    id="publishStatus"
+                    name="publishStatus"
+                    type="checkbox"
+                    checked={product.publishStatus}
+                    onChange={handleChange}
+                    disabled={loading}
+                    className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+                />
+                <label htmlFor="publishStatus" className="text-sm text-gray-700">
+                    Publish Product
+                </label>
+            </div>
+            {errors.publishStatus && (
+                <p className="text-xs text-red-500 flex items-center mt-1">
+                    <AlertTriangle className="w-3 h-3 mr-1" />
+                    {errors.publishStatus}
+                </p>
+            )}
 
             <FormInput
                 label="Description"
@@ -171,21 +213,22 @@ export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, in
                 product={product} 
                 handleChange={handleChange} 
                 loading={loading} 
+                compact
             />
 
             <button
                 type="submit"
-                className="w-full flex items-center justify-center px-4 py-3 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition duration-300 disabled:bg-teal-400 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center px-4 py-2 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition duration-300 disabled:bg-teal-400 disabled:cursor-not-allowed mt-2"
                 disabled={loading}
             >
                 {loading ? (
                     <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        {isEditMode ? 'Saving Changes...' : 'Creating Product...'}
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        {isEditMode ? 'Saving...' : 'Creating...'}
                     </>
                 ) : (
                     <>
-                        {isEditMode ? <Edit className="w-5 h-5 mr-2" /> : <PlusCircle className="w-5 h-5 mr-2" />}
+                        {isEditMode ? <Edit className="w-4 h-4 mr-2" /> : <PlusCircle className="w-4 h-4 mr-2" />}
                         {submitButtonText}
                     </>
                 )}

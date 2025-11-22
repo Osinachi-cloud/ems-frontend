@@ -146,13 +146,14 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   };
 
   const getRequestBody = () => {
-    const totalAmount = feeAmount * selectedMonths.length;
+  const totalAmount = (feeAmount  + transaction_charge) * selectedMonths.length;
 
     const paymentRequestBody = {
       amount: totalAmount,
       quantity: selectedMonths.length,
       transaction_charge: transaction_charge,
       channel: [selectedChannel],
+      price: feeAmount,
       subcriptionFor:selectedMonths,
       productId: productId
     };
@@ -203,7 +204,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     }
   };
 
-  const totalAmount = feeAmount * selectedMonths.length;
+  const totalAmount = (feeAmount  + transaction_charge) * selectedMonths.length;
 
   if (!isOpen) return null;
 

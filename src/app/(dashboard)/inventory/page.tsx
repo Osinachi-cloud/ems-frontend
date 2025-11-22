@@ -89,11 +89,13 @@ const InventoryPage: React.FC = () => {
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50 hidden sm:table-header-group">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">Product Name</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Product Name</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">Code</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">Price</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">Transaction Charge</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">Publish Status</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Designation</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-5/12">Description</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Description</th>
                                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">Actions</th>
                                 </tr>
                             </thead>
@@ -114,6 +116,17 @@ const InventoryPage: React.FC = () => {
                                         <td className="px-4 py-1 sm:py-4 sm:px-6 block sm:table-cell text-sm font-bold text-green-600">
                                             <span className="sm:hidden text-xs font-semibold text-gray-500 inline-block w-1/4">Price:</span>
                                             {formatNumberToNaira(product.price)}
+                                        </td>
+                                        <td className="px-4 py-1 sm:py-4 sm:px-6 block sm:table-cell text-sm font-bold text-blue-600">
+                                            <span className="sm:hidden text-xs font-semibold text-gray-500 inline-block w-1/4">Transaction Charge:</span>
+                                            {formatNumberToNaira(product.transactionCharge)}
+                                        </td>
+                                        <td className="px-4 py-1 sm:py-4 sm:px-6 block sm:table-cell whitespace-nowrap">
+                                            <span className="sm:hidden text-xs font-semibold text-gray-500 inline-block w-1/4">Publish Status:</span>
+                                            <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${product.publishStatus ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                                }`}>
+                                                {product.publishStatus ? 'Published' : 'Draft'}
+                                            </span>
                                         </td>
                                         <td className="px-4 py-1 sm:py-4 sm:px-6 block sm:table-cell whitespace-nowrap">
                                             <span className="sm:hidden text-xs font-semibold text-gray-500 inline-block w-1/4">Role:</span>
@@ -140,7 +153,7 @@ const InventoryPage: React.FC = () => {
                                 ))}
                                 {paginatedProducts.length === 0 && (
                                     <tr>
-                                        <td colSpan={6} className="text-center py-10 text-gray-500 text-lg block sm:table-cell">
+                                        <td colSpan={8} className="text-center py-10 text-gray-500 text-lg block sm:table-cell">
                                             {productCount === 0 ? "No products defined yet. Click \"Add Product\" to begin." : "No products found on this page."}
                                         </td>
                                     </tr>

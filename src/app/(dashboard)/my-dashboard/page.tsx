@@ -16,6 +16,7 @@ import { useFetch } from "@/hooks/useFetch";
 import { baseUrL } from "@/env/URLs";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import "./page.css"
+import TransactionsPage from "./transaction";
 
 export const AdminPage = () => {
   const [feeAmount, setFeeAmount] = useState<number>(10);
@@ -38,7 +39,7 @@ export const AdminPage = () => {
     setSelectedProduct(null);
   };
 
-  const fetchUrl = `${baseUrL}/get-products?designation=${designation}&page=${0}&size=${100}`;
+  const fetchUrl = `${baseUrL}/get-products-published?designation=${designation}&page=${0}&size=${100}`;
 
   const {
     data: productsResponse,
@@ -108,7 +109,10 @@ export const AdminPage = () => {
             </div>
           </div>
 
-          <div className="w-full h-[350px] grid md:grid-cols-5 gap-[2rem]">
+          <TransactionsPage />
+
+
+          {/* <div className="w-full h-[350px] grid md:grid-cols-5 gap-[2rem]">
             <div className="col-span-2 px-[2rem] py-[2rem] h-fit bg-[#fff] rounded-[8px]">
               <div className="flex justify-between">
                 <div className="flex items-center">
@@ -128,12 +132,13 @@ export const AdminPage = () => {
               </div>
             </div>
             <div className="col-span-3">
+              
               <FinanceChart />
             </div>
           </div>
           <div>
             <TransactionTable />
-          </div>
+          </div> */}
         </div>
       </div>
 

@@ -40,11 +40,14 @@ export interface ProductVariation {
 }
 
 export interface Product {
-  productId: string;
-  name: string;
-  description: string;
-  code: string ;
-  productImage: string | null;
-  price: number;
-  designation: string;
+    productId: string;
+    name: string;
+    description: string;
+    code: string;
+    price: number;
+    designation: string;
+    estate?: any; 
+    productImage?: any;
+    publishStatus: boolean;
+    transactionCharge: number;
 }

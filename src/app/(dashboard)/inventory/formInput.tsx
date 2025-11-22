@@ -1,3 +1,4 @@
+
 import { Product } from "@/types/product";
 import { AlertTriangle } from "lucide-react";
 import React from "react";
@@ -11,11 +12,25 @@ interface FormInputProps {
     product: Omit<Product, 'productId' | 'estate' | 'productImage'>;
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
     loading: boolean;
+    compact?: boolean;
 }
 
-export const FormInput: React.FC<FormInputProps> = React.memo(({ label, name, type = 'text', error, options, product, handleChange, loading }) => {
+export const FormInput: React.FC<FormInputProps> = React.memo(({ 
+    label, 
+    name, 
+    type = 'text', 
+    error, 
+    options, 
+    product, 
+    handleChange, 
+    loading,
+    compact = false 
+}) => {
     
-    const inputClasses = `w-full px-4 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150 shadow-sm ${error ? 'border-red-500' : 'border-gray-300'}`;
+    const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150 shadow-sm text-sm ${
+        error ? 'border-red-500' : 'border-gray-300'
+    } ${compact ? 'text-sm' : ''}`;
+    
     const value = product[name] as any;
 
     let inputElement;
@@ -66,10 +81,17 @@ export const FormInput: React.FC<FormInputProps> = React.memo(({ label, name, ty
     }
 
     return (
-        <div className="flex flex-col space-y-1 ">
-            <label htmlFor={name} className="text-[12px] font-medium text-gray-700">{label}</label>
+        <div className={`flex  flex-col ${compact ? 'space-y-1' : 'space-y-1.5'}`}>
+            <label htmlFor={name} className={`font-medium text-gray-700 ${compact ? 'text-xs' : 'text-[12px]'}`}>
+                {label}
+            </label>
             {inputElement}
-            {error && <p className="text-xs text-red-500 mt-1 flex items-center"><AlertTriangle className="w-3 h-3 mr-1" />{error}</p>}
+            {error && (
+                <p className="text-xs text-red-500 flex items-center">
+                    <AlertTriangle className="w-3 h-3 mr-1" />
+                    {error}
+                </p>
+            )}
         </div>
     );
 });
