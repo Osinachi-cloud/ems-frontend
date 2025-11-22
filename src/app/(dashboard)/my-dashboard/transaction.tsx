@@ -8,10 +8,11 @@ import { Transaction, TransactionFilters, TransactionStatus } from '@/types/tran
 import { formatDate } from '@/app/utils/dateUtils';
 import { Modal } from '../inventory/modal';
 import { PaginationControls } from './pagination';
+import { formatNumberToNaira } from '@/app/utils/moneyUtils';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const ITEMS_PER_PAGE = 10;
 
-// --- Compact Receipt Modal Component ---
 interface CompactReceiptModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -47,7 +48,6 @@ const CompactReceiptModal: React.FC<CompactReceiptModalProps> = ({
     }
   }, [transaction?.status]);
 
-  // Close modal when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -75,7 +75,7 @@ const CompactReceiptModal: React.FC<CompactReceiptModalProps> = ({
         ref={modalRef}
         className="bg-white rounded-xl shadow-2xl border border-gray-200 max-w-md w-full mx-auto transform transition-all"
       >
-        {/* Header */}
+
         <div className={`p-4 ${colorClass} rounded-t-xl`}>
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
@@ -91,14 +91,12 @@ const CompactReceiptModal: React.FC<CompactReceiptModalProps> = ({
           </div>
         </div>
 
-        {/* Amount Section */}
         <div className="p-4 border-b border-gray-100">
           <p className="text-sm text-gray-600">Total Amount</p>
-          <p className="text-2xl font-bold text-gray-900">{formattedAmount}</p>
+          <p className="text-2xl font-bold text-gray-900">{formatNumberToNaira(transaction.amount)}</p>
           <p className="text-xs text-gray-500 mt-1">{formattedDate}</p>
         </div>
 
-        {/* Details */}
         <div className="p-4 space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-gray-600">Product</span>
@@ -115,14 +113,13 @@ const CompactReceiptModal: React.FC<CompactReceiptModalProps> = ({
           {transaction.description && (
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium text-gray-600">Description</span>
-              <span className="text-sm text-gray-900 text-right max-w-[200px] break-words">
+              <span className="text-[10px] text-gray-900 text-right max-w-[200px] break-words">
                 {transaction.description}
               </span>
             </div>
           )}
         </div>
 
-        {/* Subscription Details */}
         {(transaction.subscribeFrom || transaction.subscribeTo) && (
           <div className="p-4 border-t border-gray-100">
             <p className="text-sm font-semibold text-gray-700 mb-2">Subscription Period</p>
@@ -139,7 +136,6 @@ const CompactReceiptModal: React.FC<CompactReceiptModalProps> = ({
           </div>
         )}
 
-        {/* Actions */}
         <div className="p-4 border-t border-gray-100">
           <button
             onClick={() => downloadTransaction(transaction)}
@@ -154,7 +150,6 @@ const CompactReceiptModal: React.FC<CompactReceiptModalProps> = ({
   );
 };
 
-// Function to generate PDF receipt
 const generatePDFReceipt = (transaction: Transaction) => {
   const formattedAmount = `$${transaction.amount ? transaction.amount.toFixed(2) : '0.00'}`;
   const formattedDate = formatDate(transaction.createdAt);
@@ -213,9 +208,13 @@ const TransactionsPage: React.FC = () => {
   const [filters, setFilters] = useState<TransactionFilters>({});
   const [tempFilters, setTempFilters] = useState<TransactionFilters>({});
 
+  const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+  
+
   // Build URL with filters and pagination
   const buildFetchUrl = () => {
     const params = new URLSearchParams();
+    params.append('userId', getUserDetails()?.emailAddress.toString() + "");
     params.append('page', (currentPage - 1).toString());
     params.append('size', ITEMS_PER_PAGE.toString());
 
@@ -241,7 +240,6 @@ const TransactionsPage: React.FC = () => {
   const transactionCount = transactionsResponse?.data?.total || 0;
   const totalPages = Math.ceil(transactionCount / ITEMS_PER_PAGE) || 1;
 
-  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [filters]);
@@ -291,7 +289,7 @@ const TransactionsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+    <div className="min-h-screen bg-gray-50">
       {/* Page Header */}
       <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-4">
         <div className="flex items-center space-x-3">
@@ -457,7 +455,9 @@ const TransactionsPage: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S/N</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
@@ -466,13 +466,19 @@ const TransactionsPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
-                {paginatedTransactions.map((transaction: Transaction) => (
+                {paginatedTransactions.map((transaction: Transaction, index: number) => (
                   <tr
                     key={transaction.transactionId}
                     className="hover:bg-blue-50/50 transition duration-150"
                   >
                     <td className="px-4 py-3 text-sm text-gray-900 font-mono">
+                      {index + 1 + (currentPage - 1) * ITEMS_PER_PAGE}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-900 font-mono">
                       {transaction.reference}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-900 font-mono">
+                      {formatNumberToNaira(transaction.amount)}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">
                       {formatDate(transaction.createdAt)}
@@ -530,7 +536,6 @@ const TransactionsPage: React.FC = () => {
         </>
       )}
       
-      {/* Compact Receipt Modal */}
       <CompactReceiptModal
         isOpen={!!selectedTransaction}
         onClose={closeTransactionDetails}

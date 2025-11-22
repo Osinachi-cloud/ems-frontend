@@ -15,7 +15,7 @@ interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   feeAmount: number;
-  lastPaidDate: Date;
+  lastPaidDate: Date | null;
   onPayment: (months: Date[]) => void;
   transaction_charge: number;
   productId: string;

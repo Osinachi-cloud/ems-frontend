@@ -1,16 +1,8 @@
 "use client";
 
 import { formatNumberToNaira } from "@/app/utils/moneyUtils";
-// Importing components that were already in your original file
-import Announcements from "@/components/Announcements";
-import AttendanceChart from "@/components/AttendanceChart";
-import CountChart from "@/components/CountChart";
-import EventCalendar from "@/components/EventCalendar";
-import FinanceChart from "@/components/FinanceChart";
-import { TransactionTable } from "@/components/TransactionTable";
 import UserCard from "@/components/UserCard";
-import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PaymentModal from "./paymentModal";
 import { useFetch } from "@/hooks/useFetch";
 import { baseUrL } from "@/env/URLs";
@@ -19,15 +11,36 @@ import "./page.css"
 import TransactionsPage from "./transaction";
 
 export const AdminPage = () => {
-  const [feeAmount, setFeeAmount] = useState<number>(10);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null); // Add this state
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  
+  // Date filter state - initially empty to use backend defaults
+  const [dateRange, setDateRange] = useState({
+    fromDate: "",
+    toDate: ""
+  });
 
-  const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
-  const email = getUserDetails()?.emailAddress
-  const designation = getUserDetails()?.designation
+  const { getUserDetails } = useLocalStorage("userDetails", null);
+  const email = getUserDetails()?.emailAddress;
+  const designation = getUserDetails()?.designation;
 
-  const lastPaidDate = new Date("2025-01-01");
+  // Build the API URL with current date range (only include dates if they exist)
+  const buildTransactionStatsUrl = () => {
+    let url = `${baseUrL}/get-user-transaction-stats?email=${email}`;
+    if (dateRange.fromDate) url += `&fromDate=${dateRange.fromDate}`;
+    if (dateRange.toDate) url += `&toDate=${dateRange.toDate}`;
+    return url;
+  };
+
+  // Use the useFetch hook for transaction stats
+  const {
+    data: transactionStats,
+    isLoading: statsLoading,
+    error: statsError,
+    callApi: refetchStats
+  } = useFetch("GET", null, buildTransactionStatsUrl());
+
+  const lastPaidDate = transactionStats?.data?.lastPaid ? new Date(transactionStats.data.lastPaid) : null;
 
   const openModal = (product: any) => {
     setSelectedProduct(product);
@@ -45,13 +58,11 @@ export const AdminPage = () => {
     data: productsResponse,
     isLoading: productsLoading,
     error: productsError,
-    callApi: refetchproducts
   } = useFetch("GET", null, fetchUrl);
 
   const handlePayment = (months: Date[]) => {
     if (!selectedProduct) return;
 
-    // 💡 Implement your actual payment logic here
     console.log("Initiating payment for product:", selectedProduct);
     console.log("Payment for months:", months);
 
@@ -60,6 +71,25 @@ export const AdminPage = () => {
 
     closeModal();
   };
+
+  // Handle date filter changes
+  const handleDateFilterChange = (field: 'fromDate' | 'toDate', value: string) => {
+    setDateRange(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Clear date filters
+  const clearDateFilters = () => {
+    setDateRange({
+      fromDate: "",
+      toDate: ""
+    });
+  };
+
+  // Check if any date filter is active
+  const isDateFilterActive = dateRange.fromDate || dateRange.toDate;
 
   return (
     <>
@@ -71,35 +101,132 @@ export const AdminPage = () => {
             <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, Alex SuperAdmin!</h1>
             <h6 className="text-xl text-teal-600 mb-4">Role: SuperAdmin</h6>
           </div>
-          <div>
+          
+          {/* Elegant Date Filter */}
+          <div className="bg-gradient-to-r from-teal-50 to-cyan-50 p-4 rounded-lg border border-teal-200 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-4">
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-teal-800 mb-3 flex items-center">
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Filter Transactions by Date
+                </h3>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium text-gray-600 mb-1">From Date</label>
+                    <input
+                      type="date"
+                      value={dateRange.fromDate}
+                      onChange={(e) => handleDateFilterChange('fromDate', e.target.value)}
+                      className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium text-gray-600 mb-1">To Date</label>
+                    <input
+                      type="date"
+                      value={dateRange.toDate}
+                      onChange={(e) => handleDateFilterChange('toDate', e.target.value)}
+                      className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                    />
+                  </div>
+                  {isDateFilterActive && (
+                    <div className="sm:self-end">
+                      <button
+                        onClick={clearDateFilters}
+                        className="px-4 py-2 text-xs bg-white border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {isDateFilterActive && (
+                  <div className="mt-2 text-xs text-teal-600">
+                    {dateRange.fromDate && dateRange.toDate 
+                      ? `Showing transactions from ${new Date(dateRange.fromDate).toLocaleDateString()} to ${new Date(dateRange.toDate).toLocaleDateString()}`
+                      : dateRange.fromDate 
+                        ? `Showing transactions from ${new Date(dateRange.fromDate).toLocaleDateString()} onwards`
+                        : `Showing transactions up to ${new Date(dateRange.toDate).toLocaleDateString()}`
+                    }
+                  </div>
+                )}
+                {!isDateFilterActive && (
+                  <div className="mt-2 text-xs text-gray-500">
+                    Showing all transactions (using backend default date range)
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="grid md:grid-cols-5 gap-2">
-            <UserCard country="My Total Paid" customerCount={120000} />
-            <UserCard country="Nigeria" customerCount={12} />
-            <UserCard country="Canada" customerCount={1000} />
-            <UserCard country="China" customerCount={2000} />
+
+          <div className="grid md:grid-cols-5 gap-4">
+            {/* Transaction Stats Cards */}
+            {statsLoading ? (
+              <>
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-1/2 mb-3"></div>
+                  <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+                </div>
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-1/2 mb-3"></div>
+                  <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+                </div>
+              </>
+            ) : statsError ? (
+              <>
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-red-100">
+                  <p className="text-red-600 text-sm">Error loading stats</p>
+                </div>
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-red-100">
+                  <p className="text-red-600 text-sm">Error loading stats</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <UserCard 
+                  label="Total Amount Paid" 
+                  value={transactionStats?.data?.totalAmountPaid || 0} 
+                  isAmount={true}
+                />
+                <UserCard 
+                  label="Last Payment Date" 
+                  value={transactionStats?.data?.lastPaid ? 
+                    new Date(transactionStats.data.lastPaid).toLocaleDateString() : 
+                    "No payments"
+                  }
+                  isDate={true}
+                />
+              </>
+            )}
+            
+            {/* Existing country cards */}
+            {/* <UserCard label="Nigeria" value={12} />
+            <UserCard label="Canada" value={1000} />
+            <UserCard label="China" value={2000} /> */}
 
             <div className="col-span-full mt-4">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Available Plans</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {productsResponse?.data?.data?.map((product: any) => (
                   <div
                     key={product.productId}
-                    className="bg-white p-4 rounded-lg shadow-md border border-teal-100 hover:shadow-lg transition duration-200"
+                    className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-teal-200 transition-all duration-200"
                   >
-                    <h2 className="text-xs font-semibold text-gray-700 mb-2 line-clamp-1">
+                    <h2 className="text-sm font-semibold text-gray-800 mb-2 line-clamp-1">
                       {product.name}
                     </h2>
                     <div className="mb-3 text-gray-600">
                       <p className="font-bold text-teal-600 text-sm">
                         {formatNumberToNaira(product.price)}
                       </p>
-                      <p className="text-xs mt-1 line-clamp-2">{product.description}</p>
+                      <p className="text-xs mt-1 line-clamp-2 text-gray-500">{product.description}</p>
                       <p className="text-xs text-gray-400 mt-1">Code: {product.code}</p>
                     </div>
                     <button
                       onClick={() => openModal(product)}
-                      className="w-full px-3 py-1.5 bg-gradient-to-r from-teal-500 to-cyan-600 text-xs text-white font-semibold rounded-md shadow hover:shadow-teal-400/50 transition duration-200"
+                      className="w-full px-3 py-2 bg-gradient-to-r from-teal-500 to-cyan-600 text-xs text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                     >
                       Subscribe
                     </button>
@@ -110,47 +237,18 @@ export const AdminPage = () => {
           </div>
 
           <TransactionsPage />
-
-
-          {/* <div className="w-full h-[350px] grid md:grid-cols-5 gap-[2rem]">
-            <div className="col-span-2 px-[2rem] py-[2rem] h-fit bg-[#fff] rounded-[8px]">
-              <div className="flex justify-between">
-                <div className="flex items-center">
-                  <Image src="/trans-icon.png" height={10} width={30} alt="Transaction Icon" />
-                  <p>Total Transaction</p>
-                </div>
-                <div>
-                  <select className="bg-[#F6F8FF]" name="" id="">
-                    <option value="">Month</option>
-                    <option value="">Year</option>
-                  </select>
-                </div>
-              </div>
-              <div className="flex justify-between mt-[3rem]">
-                <h1 className="text-[40px] font-bold">N5,000,000</h1>
-                <Image src="/trans-icon.png" height={50} width={150} alt="Transaction Icon" />
-              </div>
-            </div>
-            <div className="col-span-3">
-              
-              <FinanceChart />
-            </div>
-          </div>
-          <div>
-            <TransactionTable />
-          </div> */}
         </div>
       </div>
 
       <PaymentModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        feeAmount={selectedProduct?.price || 0} // Use selected product price
+        feeAmount={selectedProduct?.price || 0}
         lastPaidDate={lastPaidDate}
         onPayment={handlePayment}
-        transaction_charge={100} // You can keep this fixed or make it dynamic
-        productId={selectedProduct?.productId?.toString()} // Use selected product ID
-        productName={selectedProduct?.name} // Pass product name if needed
+        transaction_charge={100}
+        productId={selectedProduct?.productId?.toString()}
+        productName={selectedProduct?.name}
       />
     </>
   );
