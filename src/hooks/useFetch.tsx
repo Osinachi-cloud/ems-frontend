@@ -6,8 +6,8 @@ import { useLocalStorage } from "./useLocalStorage";
 
 
 export const useFetch = (methodType: string, body: any, url: string) => {
-    const  { value , getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
-    
+    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+
     console.log(methodType, body, url);
 
     const [data, setData] = useState<any>();
@@ -19,8 +19,8 @@ export const useFetch = (methodType: string, body: any, url: string) => {
     console.log("user detail ====>", getUserDetails());
 
     console.log("token ====>", token);
-    
-    const apiFetchOnRender = async() => {
+
+    const apiFetchOnRender = async () => {
         setIsLoading(true);
         try {
             const headers: Record<string, string> = {
@@ -52,18 +52,23 @@ export const useFetch = (methodType: string, body: any, url: string) => {
             setIsLoading(false);
             console.log(dataResponse);
 
-        } catch (e: any){
+        } catch (e: any) {
             console.log(e);
             setIsLoading(false);
             setError(e.message || "An error occurred while fetching data")
         }
     }
 
-    useEffect(() => {
-        apiFetchOnRender();
-    }, [url, methodType, JSON.stringify(body)]) 
+    // useEffect(() => {
+    //     apiFetchOnRender();
+    // }, [url, methodType, JSON.stringify(body)]) 
 
-    const callApi = async() => {
+    useEffect(() => {
+        if (!url) return; // Don't fetch if no URL
+        apiFetchOnRender();
+    }, [url, methodType, body]);
+
+    const callApi = async () => {
         console.log("call Api for me");
         try {
             const headers: Record<string, string> = {
@@ -97,7 +102,7 @@ export const useFetch = (methodType: string, body: any, url: string) => {
             setIsLoading(false);
             console.log(dataResponse);
 
-        } catch (e: any){
+        } catch (e: any) {
             console.log(e);
             setIsLoading(false);
             // Ensure error is a string, not an Error object
@@ -105,5 +110,5 @@ export const useFetch = (methodType: string, body: any, url: string) => {
         }
     }
 
-    return {data, isLoading, setIsLoading, callApi, error};
+    return { data, isLoading, setIsLoading, callApi, error };
 }

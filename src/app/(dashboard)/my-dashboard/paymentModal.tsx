@@ -4,7 +4,7 @@ import { formatNumberToNaira } from "@/app/utils/moneyUtils";
 import { baseUrL } from "@/env/URLs";
 import { usePost } from "@/hooks/usePost";
 import { Calendar, X, CreditCard, CheckCircle, ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FeedbackMessage } from "../inventory/feedback";
 import { Response } from "@/types/reponse";
 import { useRouter } from "next/navigation";
@@ -167,6 +167,28 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     `${baseUrL}/initialize-payment`,
     null
   );
+
+
+  // ✅ FIX: Memoize the request body
+// const requestBody = useMemo(() => {
+//   const totalAmount = (feeAmount + transaction_charge) * selectedMonths.length;
+//   return {
+//     amount: totalAmount,
+//     quantity: selectedMonths.length,
+//     transaction_charge: transaction_charge,
+//     channel: [selectedChannel],
+//     price: feeAmount,
+//     subcriptionFor: selectedMonths,
+//     productId: productId
+//   };
+// }, [feeAmount, transaction_charge, selectedMonths.length, selectedChannel, productId]);
+
+// const { callApi: initializePayment } = usePost(
+//   "POST", 
+//   requestBody, // Stable reference
+//   `${baseUrL}/initialize-payment`,
+//   null
+// );
 
   const handlePayment = async ():Promise<any> => {
     if (!selectedChannel) {

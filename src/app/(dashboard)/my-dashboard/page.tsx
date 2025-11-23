@@ -2,7 +2,7 @@
 
 import { formatNumberToNaira } from "@/app/utils/moneyUtils";
 import UserCard from "@/components/UserCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import PaymentModal from "./paymentModal";
 import { useFetch } from "@/hooks/useFetch";
 import { baseUrL } from "@/env/URLs";
@@ -13,7 +13,7 @@ import TransactionsPage from "./transaction";
 export const AdminPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  
+
   // Date filter state - initially empty to use backend defaults
   const [dateRange, setDateRange] = useState({
     fromDate: "",
@@ -25,20 +25,59 @@ export const AdminPage = () => {
   const designation = getUserDetails()?.designation;
 
   // Build the API URL with current date range (only include dates if they exist)
-  const buildTransactionStatsUrl = () => {
+  // const buildTransactionStatsUrl = () => {
+  //   let url = `${baseUrL}/get-user-transaction-stats?email=${email}`;
+  //   if (dateRange.fromDate) url += `&fromDate=${dateRange.fromDate}`;
+  //   if (dateRange.toDate) url += `&toDate=${dateRange.toDate}`;
+  //   return url;
+  // };
+
+  // // Use the useFetch hook for transaction stats
+  // const {
+  //   data: transactionStats,
+  //   isLoading: statsLoading,
+  //   error: statsError,
+  //   callApi: refetchStats
+  // } = useFetch("GET", null, buildTransactionStatsUrl());
+
+  // const fetchUrl = `${baseUrL}/get-products-published?designation=${designation}&page=${0}&size=${100}`;
+
+  // const {
+  //   data: productsResponse,
+  //   isLoading: productsLoading,
+  //   error: productsError,
+  // } = useFetch("GET", null, fetchUrl);
+
+
+
+
+  // ✅ FIX: Memoize the URLs
+  const transactionStatsUrl = useMemo(() => {
     let url = `${baseUrL}/get-user-transaction-stats?email=${email}`;
     if (dateRange.fromDate) url += `&fromDate=${dateRange.fromDate}`;
     if (dateRange.toDate) url += `&toDate=${dateRange.toDate}`;
     return url;
-  };
+  }, [email, dateRange.fromDate, dateRange.toDate]); // Only changes when these change
 
-  // Use the useFetch hook for transaction stats
+  const productsUrl = useMemo(() =>
+    `${baseUrL}/get-products-published?designation=${designation}&page=${0}&size=${100}`,
+    [designation]
+  );
+
+  // Now use the memoized URLs
   const {
     data: transactionStats,
     isLoading: statsLoading,
     error: statsError,
     callApi: refetchStats
-  } = useFetch("GET", null, buildTransactionStatsUrl());
+  } = useFetch("GET", null, transactionStatsUrl);
+
+
+  const {
+    data: productsResponse,
+    isLoading: productsLoading,
+    error: productsError,
+  } = useFetch("GET", null, productsUrl);
 
   const lastPaidDate = transactionStats?.data?.lastPaid ? new Date(transactionStats.data.lastPaid) : null;
 
@@ -52,13 +91,7 @@ export const AdminPage = () => {
     setSelectedProduct(null);
   };
 
-  const fetchUrl = `${baseUrL}/get-products-published?designation=${designation}&page=${0}&size=${100}`;
 
-  const {
-    data: productsResponse,
-    isLoading: productsLoading,
-    error: productsError,
-  } = useFetch("GET", null, fetchUrl);
 
   const handlePayment = (months: Date[]) => {
     if (!selectedProduct) return;
@@ -101,7 +134,7 @@ export const AdminPage = () => {
             <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, Alex SuperAdmin!</h1>
             <h6 className="text-xl text-teal-600 mb-4">Role: SuperAdmin</h6>
           </div>
-          
+
           {/* Elegant Date Filter */}
           <div className="bg-gradient-to-r from-teal-50 to-cyan-50 p-4 rounded-lg border border-teal-200 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-end gap-4">
@@ -144,9 +177,9 @@ export const AdminPage = () => {
                 </div>
                 {isDateFilterActive && (
                   <div className="mt-2 text-xs text-teal-600">
-                    {dateRange.fromDate && dateRange.toDate 
+                    {dateRange.fromDate && dateRange.toDate
                       ? `Showing transactions from ${new Date(dateRange.fromDate).toLocaleDateString()} to ${new Date(dateRange.toDate).toLocaleDateString()}`
-                      : dateRange.fromDate 
+                      : dateRange.fromDate
                         ? `Showing transactions from ${new Date(dateRange.fromDate).toLocaleDateString()} onwards`
                         : `Showing transactions up to ${new Date(dateRange.toDate).toLocaleDateString()}`
                     }
@@ -185,16 +218,16 @@ export const AdminPage = () => {
               </>
             ) : (
               <>
-                <UserCard 
-                  label="Total Amount Paid" 
-                  value={formatNumberToNaira(transactionStats?.data?.totalAmountPaid) || 0} 
+                <UserCard
+                  label="Total Amount Paid"
+                  value={formatNumberToNaira(transactionStats?.data?.totalAmountPaid) || 0}
                   isAmount={true}
                   bgColor={"teal"}
                 />
-                <UserCard 
-                  label="Last Payment Date" 
-                  value={transactionStats?.data?.lastPaid ? 
-                    new Date(transactionStats.data.lastPaid).toLocaleDateString() : 
+                <UserCard
+                  label="Last Payment Date"
+                  value={transactionStats?.data?.lastPaid ?
+                    new Date(transactionStats.data.lastPaid).toLocaleDateString() :
                     "No payments"
                   }
                   isDate={true}
@@ -202,7 +235,7 @@ export const AdminPage = () => {
                 />
               </>
             )}
-            
+
             {/* Existing country cards */}
             {/* <UserCard label="Nigeria" value={12} />
             <UserCard label="Canada" value={1000} />

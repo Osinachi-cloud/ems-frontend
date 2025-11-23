@@ -212,23 +212,42 @@ const TransactionsPage: React.FC = () => {
   
 
   // Build URL with filters and pagination
-  const buildFetchUrl = () => {
-    const params = new URLSearchParams();
-    params.append('userId', getUserDetails()?.emailAddress.toString() + "");
-    params.append('estateId', getUserDetails()?.estateId.toString() + "");
-    params.append('page', (currentPage - 1).toString());
-    params.append('size', ITEMS_PER_PAGE.toString());
+  // const buildFetchUrl = () => {
+  //   const params = new URLSearchParams();
+  //   params.append('userId', getUserDetails()?.emailAddress.toString() + "");
+  //   params.append('estateId', getUserDetails()?.estateId.toString() + "");
+  //   params.append('page', (currentPage - 1).toString());
+  //   params.append('size', ITEMS_PER_PAGE.toString());
 
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value) {
-        params.append(key, value.toString());
-      }
-    });
+  //   Object.entries(filters).forEach(([key, value]) => {
+  //     if (value) {
+  //       params.append(key, value.toString());
+  //     }
+  //   });
 
-    return `${baseUrL}/get-transactions?${params.toString()}`;
-  };
+  //   return `${baseUrL}/get-transactions?${params.toString()}`;
+  // };
 
-  const fetchUrl = buildFetchUrl();
+  // const fetchUrl = buildFetchUrl();
+
+
+
+  // ✅ FIX: Memoize the URL
+const fetchUrl = useMemo(() => {
+  const params = new URLSearchParams();
+  params.append('userId', getUserDetails()?.emailAddress.toString() + "");
+  params.append('estateId', getUserDetails()?.estateId.toString() + "");
+  params.append('page', (currentPage - 1).toString());
+  params.append('size', ITEMS_PER_PAGE.toString());
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value) {
+      params.append(key, value.toString());
+    }
+  });
+
+  return `${baseUrL}/get-transactions?${params.toString()}`;
+}, [currentPage, filters, getUserDetails]); // Dependencies that affect the URL
 
   const {
     data: transactionsResponse,
