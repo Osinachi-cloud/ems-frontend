@@ -10,6 +10,7 @@ import { initialFilters, SearchFilterComponent } from './search';
 import { baseUrL } from '@/env/URLs';
 import { UserEditForm } from './userEdit';
 import { UserStatistics } from './userStatistics';
+import { useRouter } from 'next/navigation';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -19,6 +20,7 @@ const UserManagementPage: React.FC = () => {
     const [editingUser, setEditingUser] = useState<UserDto | undefined>(undefined);
     const [filters, setFilters] = useState<SearchFilters>(initialFilters);
     const [searchQuery, setSearchQuery] = useState<SearchFilters>(initialFilters);
+    const router = useRouter();
 
     const queryParams = useMemo(() => {
         const params = new URLSearchParams();
@@ -77,14 +79,26 @@ const UserManagementPage: React.FC = () => {
         ? { label: 'Active', classes: 'bg-green-100 text-green-800' }
         : { label: 'Inactive', classes: 'bg-red-100 text-red-800' };
 
+    const goToRoleManagementPage = () => {
+        router.push('/role');
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
 
             <div className="flex justify-between items-center mb-6 border-b pb-4">
-                <div className="flex items-center space-x-3">
-                    <Users className="w-8 h-8 text-teal-600" />
-                    <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">User Management</h1>
+                <div className='w-full'>
+                    <div className="flex items-center justify-between space-x-3 mb-2">
+                        <div className="flex items-center space-x-3">
+                            <Users className="w-8 h-8 text-teal-600" />
+                            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">User Management</h1>
+                        </div>
+                        <div onClick={goToRoleManagementPage} className='bg-blue-500 text-[white] p-2 rounded-[8px] cursor-pointer'>
+                            Manage Roles
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <UserStatistics />

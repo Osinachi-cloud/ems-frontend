@@ -91,6 +91,7 @@ export const usePost = (methodType: string, body: any, url: string, route:string
 
         if (body && methodType !== 'GET') {
             fetchOptions.body = JSON.stringify(body);
+            console.log("Request Body ===>:", fetchOptions.body);
         }
 
         const apiResponse = await fetch(url, fetchOptions);

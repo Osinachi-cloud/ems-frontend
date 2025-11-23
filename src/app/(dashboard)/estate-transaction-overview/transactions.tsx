@@ -7,9 +7,10 @@ import { baseUrL } from '@/env/URLs';
 import { Transaction, TransactionFilters, TransactionStatus } from '@/types/transaction';
 import { formatDate } from '@/app/utils/dateUtils';
 import { Modal } from '../inventory/modal';
-import { PaginationControls } from './pagination';
+// import { PaginationControls } from './pagination';
 import { formatNumberToNaira } from '@/app/utils/moneyUtils';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { PaginationControls } from '../my-dashboard/pagination';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -214,7 +215,6 @@ const TransactionsPage: React.FC = () => {
   // Build URL with filters and pagination
   const buildFetchUrl = () => {
     const params = new URLSearchParams();
-    params.append('userId', getUserDetails()?.emailAddress.toString() + "");
     params.append('estateId', getUserDetails()?.estateId.toString() + "");
     params.append('page', (currentPage - 1).toString());
     params.append('size', ITEMS_PER_PAGE.toString());

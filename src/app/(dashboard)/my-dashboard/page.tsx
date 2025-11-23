@@ -187,8 +187,9 @@ export const AdminPage = () => {
               <>
                 <UserCard 
                   label="Total Amount Paid" 
-                  value={transactionStats?.data?.totalAmountPaid || 0} 
+                  value={formatNumberToNaira(transactionStats?.data?.totalAmountPaid) || 0} 
                   isAmount={true}
+                  bgColor={"teal"}
                 />
                 <UserCard 
                   label="Last Payment Date" 
@@ -197,6 +198,7 @@ export const AdminPage = () => {
                     "No payments"
                   }
                   isDate={true}
+                  bgColor={"cyan"}
                 />
               </>
             )}

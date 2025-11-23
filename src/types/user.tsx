@@ -56,6 +56,7 @@ export interface IUserData {
     refreshToken: string;
     designation: string;
     profileImage: string | null;
+    estateId: string ;
 }
 
 export interface ILoginResponse {

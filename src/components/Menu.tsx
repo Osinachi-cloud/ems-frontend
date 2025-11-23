@@ -8,6 +8,12 @@ const menuItems = [
     items: [
       {
         icon: "/Vector.png",
+        label: "My Dashboard",
+        href: "/my-dashboard",
+        visible: ["admin", "teacher", "student", "parent"],
+      },
+      {
+        icon: "/Vector.png",
         label: "My Profile",
         href: "/my-profile",
         visible: ["admin", "teacher", "student", "parent"],
@@ -18,7 +24,13 @@ const menuItems = [
         href: "/transaction",
         visible: ["admin", "teacher"],
       },
-            {
+      {
+        icon: "/Bag.png",
+        label: "Estate Transactions",
+        href: "/estate-transaction-overview",
+        visible: ["admin", "teacher"],
+      },
+      {
         icon: "/Bag.png",
         label: "Users Management",
         href: "/manage-users",
@@ -81,7 +93,7 @@ const Menu = () => {
                 >
                   <Image src={item.icon} alt="" width={20} height={20} />
                   {/* <i className= {`${item.icon} `}></i> */}
-                  <i className= {`fa fa-user`}></i>
+                  <i className={`fa fa-user`}></i>
                   <span className="hidden lg:block">{item.label}</span>
                 </Link>
               );

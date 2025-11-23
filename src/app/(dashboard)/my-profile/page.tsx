@@ -1,4 +1,5 @@
 "use client";
+import { formatNumberToNaira } from "@/app/utils/moneyUtils";
 import { baseUrL } from "@/env/URLs";
 import { useFetch } from "@/hooks/useFetch";
 import { Shield, UserCheck, Users, X } from "lucide-react";
@@ -14,11 +15,11 @@ const UserDetailModal = ({ user, onClose }: any) => {
     if (typeof document === 'undefined') return null; // Server-side check
 
     return createPortal(
-        <div 
+        <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300"
             onClick={onClose} // Close when clicking the overlay
         >
-            <div 
+            <div
                 className="bg-white rounded-xl shadow-2xl w-full max-w-md m-4 p-6 transform transition-all duration-300 scale-100 opacity-100"
                 onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
             >
@@ -28,8 +29,8 @@ const UserDetailModal = ({ user, onClose }: any) => {
                         <UserCheck className="w-6 h-6 mr-2 text-teal-600" />
                         User Details
                     </h2>
-                    <button 
-                        onClick={onClose} 
+                    <button
+                        onClick={onClose}
                         className="text-gray-400 hover:text-gray-600 transition"
                         aria-label="Close modal"
                     >
@@ -43,7 +44,18 @@ const UserDetailModal = ({ user, onClose }: any) => {
                     <span className={`px-3 py-1 text-sm font-bold rounded-full inline-block ${user.designation === 'TENANT' ? 'bg-green-500 text-white' : user.designation === 'OCCUPANT' && 'bg-yellow-500 text-white'}`}>
                         {user.designation}
                     </span>
-                    
+
+                    <div className="flex justify-between">
+                        <div>
+                            <span className="text-[12px] font-bold">Last Paid: </span>
+                            <span>{user.lastPaid}</span>
+                        </div>
+                        <div>
+                            <span className="text-[12px] font-bold">Amount Paid in Current year: </span>
+                            <span>{formatNumberToNaira(user.amountPaid)}</span>
+                        </div>
+                    </div>
+
                     <div className="border-t pt-4 space-y-3">
                         <DetailItem label="ID" value={user.userId} mono />
                         <DetailItem label="Email" value={user.email} />
@@ -59,7 +71,7 @@ const UserDetailModal = ({ user, onClose }: any) => {
 };
 
 // Helper component for cleaner display
-const DetailItem = ({ label, value, mono = false }:any) => (
+const DetailItem = ({ label, value, mono = false }: any) => (
     <div>
         <p className="text-xs uppercase text-gray-500 mb-0.5">{label}</p>
         <p className={`font-semibold ${mono ? 'font-mono text-sm bg-gray-100 p-2 rounded break-all' : 'text-base'}`}>{value || 'N/A'}</p>
@@ -85,7 +97,7 @@ export default function MyProfile() {
         { id: 'o-002', name: 'Hannah Occupant', role: 'Occupant', email: 'o2@app.com', landlordId: 'll-001', tenantId: 't-001', estateId: 'E001' },
     ];
 
-        const {
+    const {
         data: userData,
         isLoading: userDetailsLoading,
         error: userDetailError,
@@ -99,7 +111,7 @@ export default function MyProfile() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUserDetail, setSelectedUserDetail] = useState(null);
 
-    const openModal = (user:any) => {
+    const openModal = (user: any) => {
         setSelectedUserDetail(user);
         setIsModalOpen(true);
     }
@@ -182,7 +194,7 @@ export default function MyProfile() {
                                     >
                                         <div className="flex justify-between items-center mb-1">
                                             <p className="font-semibold text-lg">{sub.firstName + " "}   {sub.lastName}</p>
-                                            
+
                                             {/* --- MODAL TRIGGER: The span is now a button-like element --- */}
                                             <span
                                                 onClick={(e) => {
@@ -200,7 +212,7 @@ export default function MyProfile() {
                                         <p className="text-sm text-gray-500">Email: {sub.email}</p>
                                         <p className="text-xs text-gray-400">ID: {sub.userId}</p>
                                         {sub.tenantId && <p className="text-xs text-gray-500 mt-1">Managed by Tenant: {sub.tenantId}</p>}
-                                    
+
                                     </div>
                                 ))}
                             </div>

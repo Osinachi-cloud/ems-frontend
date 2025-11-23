@@ -82,7 +82,7 @@ const LoginPage = () => {
         
         console.log("Transformed user details:", transformedUserDetails);
         dispatch(loginSuccess(transformedUserDetails));
-        router.push('/admin');
+        router.push('/my-dashboard');
 
       } else {
         errorToast(apiResponseData.error || 'Login failed');
