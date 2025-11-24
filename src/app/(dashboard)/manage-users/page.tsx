@@ -93,7 +93,7 @@ const UserManagementPage: React.FC = () => {
                             <Users className="w-8 h-8 text-teal-600" />
                             <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">User Management</h1>
                         </div>
-                        <div onClick={goToRoleManagementPage} className='bg-blue-500 text-[white] p-2 rounded-[8px] cursor-pointer'>
+                        <div onClick={goToRoleManagementPage} className='bg-blue-500 text-[white] p-2 rounded-[8px] cursor-pointer text-[10px] whitespace-nowrap mr-[50px] sm:text-[14px]'>
                             Manage Roles
                         </div>
                     </div>

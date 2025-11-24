@@ -44,7 +44,15 @@ const Navbar = () => {
                 <span className="text-xs leading-3 font-medium">{getUserDetails()?.firstName + " " + getUserDetails()?.lastName}</span>
                 <span className="text-[10px] text-gray-500 text-right">{getUserDetails()?.roleDto.name}</span>
               </div>
-              <Image src="/avatar.png" alt="" width={36} height={36} className="rounded-full" />
+              {
+                getUserDetails()?.profileImage ?
+                  <Image src="/avatar.png" alt="" width={36} height={36} className="rounded-full" />
+
+                  :
+                  <div className='rounded-full w-[45px] h-[45px] text-[#ffb700] flex justify-center items-center text-[25px] font-bold border'
+                    style={{ backgroundColor: "#" + getUserDetails()?.customerId?.slice(1, 7) }}
+                  >{getUserDetails()?.firstName.slice(0, 1).toUpperCase()}{getUserDetails()?.lastName.slice(0, 1).toUpperCase()}</div>
+              }
             </div>
           </div>
       }
