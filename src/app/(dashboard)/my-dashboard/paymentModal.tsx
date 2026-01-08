@@ -8,6 +8,7 @@ import { useState, useEffect, useMemo } from "react";
 import { FeedbackMessage } from "../inventory/feedback";
 import { Response } from "@/types/reponse";
 import { useRouter } from "next/navigation";
+import { Product } from "@/types/product";
 
 
 // In your PaymentModal component props interface
@@ -20,6 +21,7 @@ interface PaymentModalProps {
   transaction_charge: number;
   productId: string;
   productName?: string; // Add this
+  product: Product;
 }
 
 // Then in your PaymentModal component, you can use productName
@@ -31,7 +33,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   lastPaidDate,
   onPayment,
   transaction_charge,
-  productId
+  productId,
+  product
 }: any) => {
   const [selectedMonths, setSelectedMonths] = useState<Date[]>([]);
   const [availableMonths, setAvailableMonths] = useState<{ month: string, date: Date }[]>([]);
@@ -280,7 +283,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                     <div>
                       <p className="text-sm font-medium text-blue-800">Last payment</p>
                       <p className="text-xs text-blue-600">
-                        {lastPaidDate.toLocaleDateString('en-US', {
+                        {new Date(product.lastPaid)?.toLocaleDateString('en-US', {
                           month: 'long',
                           year: 'numeric'
                         })}

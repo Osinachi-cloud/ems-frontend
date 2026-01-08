@@ -28,6 +28,7 @@ const initialProductState: Omit<Product, 'productId' | 'estate' | 'productImage'
     designation: '',
     publishStatus: false,
     transactionCharge: 0,
+    
 };
 
 export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialProduct}) => {

@@ -60,7 +60,7 @@ export const AdminPage = () => {
   }, [email, dateRange.fromDate, dateRange.toDate]); // Only changes when these change
 
   const productsUrl = useMemo(() =>
-    `${baseUrL}/get-products-published?designation=${designation}&page=${0}&size=${100}`,
+    `${baseUrL}/get-published-products-payments-by-users?designation=${designation}&page=${0}&size=${100}`,
     [designation]
   );
 
@@ -71,7 +71,6 @@ export const AdminPage = () => {
     error: statsError,
     callApi: refetchStats
   } = useFetch("GET", null, transactionStatsUrl);
-
 
   const {
     data: productsResponse,
@@ -279,11 +278,12 @@ export const AdminPage = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         feeAmount={selectedProduct?.price || 0}
-        lastPaidDate={lastPaidDate}
+        lastPaidDate={selectedProduct?.lastPaid}
         onPayment={handlePayment}
         transaction_charge={100}
         productId={selectedProduct?.productId?.toString()}
         productName={selectedProduct?.name}
+        product={selectedProduct}
       />
     </>
   );
