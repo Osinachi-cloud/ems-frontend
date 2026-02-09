@@ -133,6 +133,7 @@ const SignUp = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIrMjM0MDk4NzY1NDEiLCJlbWFpbCI6ImFwcGFkbWluQGVtcy5jb20iLCJyb2xlIjoiUk9MRV9BUFBfQURNSU4iLCJwZXJtaXNzaW9ucyI6WyJDUkVBVEVfU1VQRVJfQURNSU4iLCJPTkJPQVJEX0VTVEFURSIsIkZFVENIX0FMTF9DVVNUT01FUlMiXSwiaWF0IjoxNzcwNTcyMzE5LCJleHAiOjE3NzA3NTIzMTl9.3ECtaK5HfgwXBSCEFEE8yB1QkPoxU5VBv8GiuPqsEAAbnAPC8eyW-5fYrwJosbWZcOHDd0bjoVQs1xo9yzH6gg`
                 },
                 body: JSON.stringify(signupData)
             });
