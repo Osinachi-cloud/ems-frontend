@@ -19,12 +19,12 @@ const menuItems = [
         href: "/my-profile",
         visible: ["APP_ADMIN", "teacher", "student", "parent", "TENANT"],
       },
-      {
-        icon: "/Bag.png",
-        label: "Transactions",
-        href: "/transaction",
-        visible: ["APP_ADMIN", "teacher", "TENANT"],
-      },
+      // {
+      //   icon: "/Bag.png",
+      //   label: "Transactions",
+      //   href: "/transaction",
+      //   visible: ["APP_ADMIN", "teacher", "TENANT"],
+      // },
       {
         icon: "/Bag.png",
         label: "Estate Transactions",

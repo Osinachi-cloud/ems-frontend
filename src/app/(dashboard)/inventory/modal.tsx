@@ -2,7 +2,7 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
 
-export const Modal: React.FC<{ children: React.ReactNode; onClose: () => void; title: string; isModalOpen:boolean }> = ({ children, onClose, title, isModalOpen }) => {
+export const Modal: React.FC<{ children: React.ReactNode; onClose: () => void; title: string; isModalOpen:boolean; size?:string }> = ({ children, onClose, title, isModalOpen }) => {
         const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             if (e.target === e.currentTarget) {
                 onClose();

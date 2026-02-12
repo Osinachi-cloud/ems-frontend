@@ -22,7 +22,9 @@ export interface SearchFilters {
     lastName: string;
     email: string;
     roleId: string;
+    roleName?: string; 
     isActive: string;
+    designation:string;
 }
 
 export interface RoleDto { name: string; 
@@ -42,6 +44,9 @@ export interface UserDto {
     landlordId: string | null; 
     tenantId: string | null;
     color: string | null;
+    dateCreated: string | null | any;
+    estate: string | null;
+    country: string | null;
 }
 
 export interface BaseResponse<T> { 
