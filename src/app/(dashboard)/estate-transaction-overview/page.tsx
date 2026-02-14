@@ -101,7 +101,7 @@ export const AdminPage = () => {
                     {/* USER CARDS */}
                     <div>
                         <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, Alex SuperAdmin!</h1>
-                        <h6 className="text-xl text-teal-600 mb-4">Role: SuperAdmin</h6>
+                        <h6 className="text-xl text-teal-600 mb-4">Role: {getUserDetails()?.designation}</h6>
                     </div>
 
                     {/* Elegant Date Filter */}

@@ -130,8 +130,8 @@ export const AdminPage = () => {
         <div className="w-full flex flex-col gap-8">
           {/* USER CARDS */}
           <div>
-            <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, Alex SuperAdmin!</h1>
-            <h6 className="text-xl text-teal-600 mb-4">Role: SuperAdmin</h6>
+            <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, {getUserDetails()?.firstName} {getUserDetails()?.lastName}</h1>
+            <h6 className="text-xl text-teal-600 mb-4">Role: {getUserDetails()?.roleDto?.name}</h6>
           </div>
 
           {/* Elegant Date Filter */}
