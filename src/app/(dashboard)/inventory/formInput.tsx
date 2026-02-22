@@ -15,7 +15,7 @@ interface FormInputProps {
     compact?: boolean;
 }
 
-export const FormInput: React.FC<FormInputProps> = React.memo(({ 
+const FormInput: React.FC<FormInputProps> = React.memo(({ 
     label, 
     name, 
     type = 'text', 
@@ -95,3 +95,5 @@ export const FormInput: React.FC<FormInputProps> = React.memo(({
         </div>
     );
 });
+
+export default FormInput;
