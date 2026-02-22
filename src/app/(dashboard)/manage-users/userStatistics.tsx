@@ -174,11 +174,21 @@
 
 import { baseUrL } from '@/env/URLs';
 import { useFetch } from '@/hooks/useFetch';
-import { UserStatistics } from '@/types/user';
+// import { UserStatistics } from '@/types/user';
+// import { UserStatistics } from '@/types/user';
 import React from 'react';
 
 interface UserStatisticsProps {
   onStatClick?: (filterType: string, filterValue: any) => void;
+}
+
+interface UserStatistics {
+    totalUsersCount: number;
+    activeUsersCount: number;
+    inactiveUsersCount: number;
+    landLordUsersCount: number;
+    tenantUsersCount: number;
+    occupantUsersCount: number;
 }
 
 export function UserStatistics({ onStatClick }: UserStatisticsProps) {
