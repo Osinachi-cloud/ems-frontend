@@ -26,8 +26,6 @@ export const Blog = ({ id, image, header, body, price, buttonText}: any) => {
                             <Image src="/icons/Arrow-right.png" alt="" width={30} height={20} />
                         </div>
                     </div>
-
-
                 </div>
 
             </div>

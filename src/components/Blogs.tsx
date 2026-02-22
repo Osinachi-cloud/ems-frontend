@@ -16,35 +16,35 @@ const blogs = [
         header: "Gals",
         body: "Short description of product",
         price: "₦140,000",
-        image: "/images/Agbada.png", // Replace with actual path
+        image: "/images/Agbada.png",
     },
     {
         id: 3,
         header: "Couples",
         body: "Short description of product",
         price: "₦140,000",
-        image: "/images/Agbada.png", // Replace with actual path
+        image: "/images/Agbada.png",
     },
     {
         id: 4,
         header: "Kids",
         body: "Short description of product",
         price: "₦140,000",
-        image: "/images/Agbada.png", // Replace with actual path
+        image: "/images/Agbada.png", 
     },
     {
         id: 5,
         header: "Family",
         body: "Short description of product",
         price: "₦140,000",
-        image: "/images/Agbada.png", // Replace with actual path
+        image: "/images/Agbada.png",
     },
     {
         id: 6,
         header: "Aso ebi",
         body: "Short description of product",
         price: "₦140,000",
-        image: "/images/Agbada.png", // Replace with actual path
+        image: "/images/Agbada.png",
     },
 ];
 

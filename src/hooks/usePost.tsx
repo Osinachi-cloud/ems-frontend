@@ -1,15 +1,109 @@
-import { useCallback, useEffect, useState } from "react"
+// import { useCallback, useEffect, useState } from "react"
+// import { RootState, useAppSelector } from "@/redux/store";
+// import { useLocalStorage } from "./useLocalStorage";
+// import { errorToast, successToast } from "./UseToast";
+// import { useRouter } from 'next/navigation';
+
+
+
+// export const usePost = (methodType: string, body: any, url: string, route:string | null) => {
+//     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+
+//     console.log(methodType, body, url);
+
+//     const [data, setData] = useState<any>();
+//     const [isLoading, setIsLoading] = useState(false);
+//     const [error, setError] = useState<string | null>(null);
+
+//     const token = getUserDetails()?.accessToken;
+//     const router = useRouter();
+
+//     console.log("token ====>", token);
+
+//     const callApi = async () => {
+//     console.log("call Api for me");
+//     try {
+//         const headers: Record<string, string> = {
+//             'Content-Type': 'application/json',
+//         };
+
+//         if (token) {
+//             headers.Authorization = `Bearer ${token}`;
+//         }
+
+//         const fetchOptions: RequestInit = {
+//             method: methodType,
+//             headers: headers,
+//         };
+
+//         if (body && methodType !== 'GET') {
+//             fetchOptions.body = JSON.stringify(body);
+//             console.log("Request Body ===>:", fetchOptions.body);
+//         }
+
+//         const apiResponse = await fetch(url, fetchOptions);
+//         console.log("API Response ===>:", apiResponse);
+
+//         if (!apiResponse.ok) {
+//             console.log("API Response not ok", apiResponse.ok, apiResponse.statusText);
+//             const errorText =  apiResponse?.statusText;
+            
+//             // throw new Error(`HTTP error! status: ${apiResponse?.status}, message: ${errorText}`);
+//         }
+
+//         const dataResponse = await apiResponse?.json();
+//         successToast(dataResponse?.message); 
+//         setData(dataResponse);
+//         setIsLoading(false);
+//         console.log(dataResponse);
+        
+//         if(route === null){
+//             // window.location.reload();
+//         }else{
+//             // router.push(`/${route}`)
+//         }
+
+//         return dataResponse;
+
+//     } catch (e: any) {
+//         console.log(e.message);
+//         setIsLoading(false);
+//         const msg = e?.message || "Error processing request";
+//         errorToast(msg); 
+//         setError(msg);
+        
+//         // Re-throw the error so the caller can catch it
+//         throw e;
+//     }
+// }
+
+//     return { data, isLoading, setIsLoading, callApi, error };
+
+// }
+
+
+
+
+import { useEffect, useState, useRef } from "react"
 import { RootState, useAppSelector } from "@/redux/store";
 import { useLocalStorage } from "./useLocalStorage";
 import { errorToast, successToast } from "./UseToast";
 import { useRouter } from 'next/navigation';
 
-
-
-export const usePost = (methodType: string, body: any, url: string, route:string | null) => {
+export const usePost = (methodType: string, body: any, url: string, route: string | null) => {
     const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    
+    // Add instance tracking
+    const instanceId = useRef(Math.random().toString(36).substring(7));
+    const hasLoggedCreation = useRef(false);
+    
+    // Only log creation once
+    if (!hasLoggedCreation.current) {
+        console.log(`📝 Post Hook ${instanceId.current} CREATED for:`, url);
+        hasLoggedCreation.current = true;
+    }
 
-    console.log(methodType, body, url);
+    console.log(`📦 Post Instance ${instanceId.current} -`, methodType, body, url);
 
     const [data, setData] = useState<any>();
     const [isLoading, setIsLoading] = useState(false);
@@ -18,121 +112,137 @@ export const usePost = (methodType: string, body: any, url: string, route:string
     const token = getUserDetails()?.accessToken;
     const router = useRouter();
 
-    console.log("token ====>", token);
-
-
-    // const callApi = async () => {
-    //     console.log("call Api for me");
-    //     try {
-    //         const headers: Record<string, string> = {
-    //             'Content-Type': 'application/json',
-    //         };
-
-    //         // Add Authorization header only if token is provided
-    //         if (token) {
-    //             headers.Authorization = `Bearer ${token}`;
-    //         }
-
-    //         const fetchOptions: RequestInit = {
-    //             method: methodType,
-    //             headers: headers,
-    //         };
-
-    //         // Add body for non-GET requests
-    //         if (body && methodType !== 'GET') {
-    //             fetchOptions.body = JSON.stringify(body);
-    //         }
-
-    //         const apiResponse = await fetch(url, fetchOptions);
-
-    //         if (!apiResponse.ok) {
-    //             const errorText = await apiResponse.text();
-    //             throw new Error(`HTTP error! status: ${apiResponse.status}, message: ${errorText}`);
-    //         }
-
-    //         const dataResponse = await apiResponse.json();
-    //         successToast(dataResponse?.message); 
-    //         setData(dataResponse);
-    //         setIsLoading(false);
-    //         console.log(dataResponse);
-    //         if(route === null){
-    //             // window.location.reload();
-    //         }else{
-    //             // router.push(`/${route}`)
-
-    //         }
-
-    //     } catch (e: any) {
-    //         console.log(e.message);
-    //         setIsLoading(false);
-    //         const msg = e?.message || "Error processing request";
-    //         errorToast(msg); 
-
-    //         setError(msg);
-    //     }
-    // }
-
+    console.log(`🔑 Post Instance ${instanceId.current} token ====>`, token);
 
     const callApi = async () => {
-    console.log("call Api for me");
-    try {
-        const headers: Record<string, string> = {
-            'Content-Type': 'application/json',
-        };
-
-        if (token) {
-            headers.Authorization = `Bearer ${token}`;
+        // Prevent multiple simultaneous calls
+        if (isLoading) {
+            console.log(`⏭️ Post Instance ${instanceId.current} - Already loading, skipping`);
+            return;
         }
+        
+        console.log(`🚀 Post Instance ${instanceId.current} - Calling API:`, url);
+        setIsLoading(true);
+        
+        try {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+            };
 
-        const fetchOptions: RequestInit = {
-            method: methodType,
-            headers: headers,
-        };
+            if (token) {
+                headers.Authorization = `Bearer ${token}`;
+            }
 
-        if (body && methodType !== 'GET') {
-            fetchOptions.body = JSON.stringify(body);
-            console.log("Request Body ===>:", fetchOptions.body);
-        }
+            const fetchOptions: RequestInit = {
+                method: methodType,
+                headers: headers,
+            };
 
-        const apiResponse = await fetch(url, fetchOptions);
-        console.log("API Response ===>:", apiResponse);
+            if (body && methodType !== 'GET') {
+                fetchOptions.body = JSON.stringify(body);
+            }
 
-        if (!apiResponse.ok) {
-            console.log("API Response not ok", apiResponse.ok, apiResponse.statusText);
-            const errorText =  apiResponse?.statusText;
+            const apiResponse = await fetch(url, fetchOptions);
+
+            if (!apiResponse.ok) {
+                const errorText = await apiResponse.text();
+                throw new Error(`HTTP error! status: ${apiResponse.status}, message: ${errorText}`);
+            }
+
+            const dataResponse = await apiResponse.json();
+            successToast(dataResponse?.message); 
+            setData(dataResponse?.message);
+            console.log(`✅ Post Instance ${instanceId.current} - Success:`, dataResponse);
             
-            // throw new Error(`HTTP error! status: ${apiResponse?.status}, message: ${errorText}`);
+            if (route !== null && route !== undefined) {
+                router.push(`/${route}`);
+            }
+
+        } catch (e: any) {
+            console.log(`❌ Post Instance ${instanceId.current} - Error:`, e.message);
+            const msg = e?.message || "Error processing request";
+            errorToast(msg);
+            setError(msg);
+        } finally {
+            setIsLoading(false);
         }
-
-        const dataResponse = await apiResponse?.json();
-        successToast(dataResponse?.message); 
-        setData(dataResponse);
-        setIsLoading(false);
-        console.log(dataResponse);
-        
-        if(route === null){
-            // window.location.reload();
-        }else{
-            // router.push(`/${route}`)
-        }
-
-        return dataResponse;
-
-    } catch (e: any) {
-        console.log(e.message);
-        setIsLoading(false);
-        const msg = e?.message || "Error processing request";
-        errorToast(msg); 
-        setError(msg);
-        
-        // Re-throw the error so the caller can catch it
-        throw e;
     }
-}
 
     return { data, isLoading, setIsLoading, callApi, error };
-
 }
 
+export const usePostWithoutRouting = (methodType: string, body: any, url: string) => {
+    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+    
+    // Add instance tracking
+    const instanceId = useRef(Math.random().toString(36).substring(7));
+    const hasLoggedCreation = useRef(false);
+    
+    if (!hasLoggedCreation.current) {
+        console.log(`📝 Post Hook (no routing) ${instanceId.current} CREATED for:`, url);
+        hasLoggedCreation.current = true;
+    }
 
+    console.log(`📦 Post Instance ${instanceId.current} -`, methodType, body, url);
+
+    const [data, setData] = useState<any>();
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const token = getUserDetails()?.accessToken;
+
+    console.log(`🔑 Post Instance ${instanceId.current} token ====>`, token);
+
+    const callApi = async () => {
+        // Prevent multiple simultaneous calls
+        if (isLoading) {
+            console.log(`⏭️ Post Instance ${instanceId.current} - Already loading, skipping`);
+            return;
+        }
+        
+        console.log(`🚀 Post Instance ${instanceId.current} - Calling API:`, url);
+        setIsLoading(true);
+        
+        try {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+            };
+
+            if (token) {
+                headers.Authorization = `Bearer ${token}`;
+            }
+
+            const fetchOptions: RequestInit = {
+                method: methodType,
+                headers: headers,
+            };
+
+            if (body && methodType !== 'GET') {
+                fetchOptions.body = JSON.stringify(body);
+            }
+
+            const apiResponse = await fetch(url, fetchOptions);
+
+            if (!apiResponse.ok) {
+                const errorText = await apiResponse.text();
+                throw new Error(`HTTP error! status: ${apiResponse.status}, message: ${errorText}`);
+            }
+
+            const dataResponse = await apiResponse.json();
+            successToast(dataResponse?.message); 
+            setData(dataResponse?.message);
+            console.log(`✅ Post Instance ${instanceId.current} - Success:`, dataResponse);
+
+        } catch (e: any) {
+            console.log(`❌ Post Instance ${instanceId.current} - Error:`, e.message);
+            const msg = e?.message || "Error processing request";
+            errorToast(msg);
+            setError(msg);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return { data, isLoading, setIsLoading, callApi, error };
+}
 
