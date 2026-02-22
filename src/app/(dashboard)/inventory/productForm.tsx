@@ -31,7 +31,7 @@ const initialProductState: Omit<Product, 'productId' | 'estate' | 'productImage'
     
 };
 
-export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialProduct}) => {
+const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialProduct}) => {
 
     const cleanInitialProduct = initialProduct ? (({ productId, productImage, ...rest }) => rest)(initialProduct) : initialProductState;
     const [product, setProduct] = useState<Omit<Product, 'productId' | 'estate' | 'productImage'>>(cleanInitialProduct);
@@ -237,3 +237,5 @@ export const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, in
         </form>
     );
 };
+
+export default ProductForm

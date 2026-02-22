@@ -8,6 +8,7 @@ export const initialFilters: SearchFilters = {
     email: '',
     roleId: '',
     isActive: '',
+    designation:''
 };
 
 export const SearchFilterComponent: React.FC<{
@@ -139,3 +140,5 @@ export const SearchFilterComponent: React.FC<{
         </div>
     );
 });
+
+export default SearchFilterComponent

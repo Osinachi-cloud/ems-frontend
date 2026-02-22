@@ -2,7 +2,7 @@ import { InputFieldProps } from "@/types/reponse";
 import { AlertTriangle } from "lucide-react";
 import React from "react";
 
-export const InputField: React.FC<InputFieldProps> = React.memo(({ name, label, type = 'text', error, value, onChange, disabled }) => {
+const InputField: React.FC<InputFieldProps> = React.memo(({ name, label, type = 'text', error, value, onChange, disabled }) => {
 
     const inputClasses = `w-full px-4 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150 shadow-sm ${error ? 'border-red-500' : 'border-gray-300'}`;
 
@@ -47,3 +47,5 @@ export const InputField: React.FC<InputFieldProps> = React.memo(({ name, label, 
         </div>
     );
 });
+
+export default InputField;

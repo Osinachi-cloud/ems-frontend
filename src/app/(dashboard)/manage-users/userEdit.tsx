@@ -267,7 +267,7 @@ import { usePost } from "@/hooks/usePost";
 import { Response, UserDto } from "@/types/reponse";
 import { AlertTriangle, CheckCircle, Edit, Loader2, ChevronDown } from "lucide-react";
 import { useCallback, useMemo, useState, useEffect } from "react";
-import { InputField } from "./inputField";
+import  InputField  from "./inputField";
 import { FeedbackMessage } from "../inventory/feedback";
 import { useFetch } from "@/hooks/useFetch";
 
@@ -286,7 +286,7 @@ interface UserFormProps {
     initialUser: UserDto;
 }
 
-export const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser }) => {
+const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser }) => {
     const [user, setUser] = useState<{ 
         firstName: string, 
         lastName: string, 
@@ -675,3 +675,5 @@ export const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, init
         </form>
     );
 };
+
+export default UserEditForm
