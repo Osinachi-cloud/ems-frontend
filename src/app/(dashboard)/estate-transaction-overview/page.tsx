@@ -12,7 +12,7 @@ import TransactionsPage from "./transactions";
 // import TransactionsPage from "../my-dashboard/transaction";
 // import TransactionsPage from "./transaction";
 
-export const AdminPage = () => {
+const AdminPage = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
