@@ -10,7 +10,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import "./page.css"
 import TransactionsPage from "./transaction";
 
-export const AdminPage = () => {
+const AdminPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
