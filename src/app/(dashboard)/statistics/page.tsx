@@ -12,7 +12,7 @@ import UserCard from "@/components/UserCard";
 import Image from "next/image";
 import { useState } from "react";
 
-export const AdminPage = () => {
+const AdminPage = () => {
 
   const [feeAmount, setFeeAmount] = useState<number>(10)
   return (
