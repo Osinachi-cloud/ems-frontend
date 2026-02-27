@@ -25,10 +25,10 @@ const AdminPage = () => {
           <h6 className="text-xl text-teal-600 mb-4">Role: SuperAdmin</h6>
         </div>
         <div className="grid md:grid-cols-5 gap-2">
-          <UserCard country="My Total Paid" customerCount={120000} />
-          <UserCard country="Nigeria" customerCount={12} />
-          <UserCard country="Canada" customerCount={1000} />
-          <UserCard country="China" customerCount={2000} />
+          {/* <UserCard country="My Total Paid" customerCount={120000} /> */}
+          {/* <UserCard country="Nigeria" customerCount={12} /> */}
+          {/* <UserCard country="Canada" customerCount={1000} /> */}
+          {/* <UserCard country="China" customerCount={2000} /> */}
 
           {feeAmount > 0 && (
                     <div className="bg-white px-6 py-4 rounded-xl shadow-lg border border-teal-200">
