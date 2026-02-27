@@ -727,7 +727,7 @@ const initialFilters: SearchFilters = {
     designation:''
 };
 
-export const SearchFilterComponent: React.FC<{
+const SearchFilterComponent: React.FC<{
     filters: SearchFilters;
     handleFilterChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     applySearch: (e: React.FormEvent) => void;
