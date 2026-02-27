@@ -39,7 +39,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   const [selectedMonths, setSelectedMonths] = useState<Date[]>([]);
   const [availableMonths, setAvailableMonths] = useState<{ month: string, date: Date }[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [apiPaymentResponse, setApiPaymentResponse] = useState<Response | null | undefined>(undefined);
+  const [apiPaymentResponse, setApiPaymentResponse] = useState<Response | any | null | undefined>(undefined);
   const [payStackSuccess, setPayStackSuccess] = useState<boolean>(false);
 
   // const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -110,7 +110,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
           ))
           : -1;
 
-        // Only allow selection if it's the next consecutive month
+        // Only allow selection if its the next consecutive month
         if (clickedIndex === lastSelectedIndex + 1) {
           return [...prev, monthDate];
         }
@@ -207,14 +207,17 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
       console.log("Payment initialization response:", response);
 
-      if (response.success) {
+      // if (response?.success) {
+      if (paymentResponse?.success) {
         setTimeout(() => {
           onPayment(selectedMonths);
           onClose();
         }, 5000);
       }
 
-      const redirect = response?.data?.data?.authorization_url;
+      // const redirect = response?.data?.data?.authorization_url;
+      const redirect = paymentResponse?.data?.data?.authorization_url;
+
 
       console.log("redirect ====>", redirect);
 
@@ -269,7 +272,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">{apiPaymentResponse?.message}</h3>
               <p className="text-gray-600">
-                You've successfully paid for {selectedMonths.length} month{selectedMonths.length > 1 ? 's' : ''}
+                You&apos;ve successfully paid for {selectedMonths.length} month{selectedMonths.length > 1 ? 's' : ''}
               </p>
 
             </div>
@@ -325,9 +328,9 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                       const isSelected = selectedMonths.some(d => d.getTime() === month.date.getTime());
 
                       // A month is selectable if:
-                      // 1. It's the first month and no months are selected yet, OR
-                      // 2. It's the very next month after the last selected month
-                      // 3. OR it's already selected (so it can be deselected)
+                      // 1. It is the first month and no months are selected yet, OR
+                      // 2. It is the very next month after the last selected month
+                      // 3. OR it is already selected (so it can be deselected)
                       const lastSelectedIndex = selectedMonths.length > 0
                         ? Math.max(...selectedMonths.map(d =>
                           availableMonths.findIndex(m => m.date.getTime() === d.getTime())
@@ -337,7 +340,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                       const isSelectableForSelection = (selectedMonths.length === 0 && index === 0) ||
                         (index === lastSelectedIndex + 1);
 
-                      // A month is clickable if it's selectable for selection OR it's already selected (for deselection)
+                      // A month is clickable if it is selectable for selection OR it is already selected (for deselection)
                       const isClickable = isSelectableForSelection || isSelected;
 
                       return (

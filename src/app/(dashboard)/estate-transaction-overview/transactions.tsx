@@ -47,7 +47,7 @@ const CompactReceiptModal: React.FC<CompactReceiptModalProps> = ({
       default:
         return { icon: Zap, colorClass: 'text-gray-500 bg-gray-50' };
     }
-  }, [transaction?.status]);
+  }, [transaction]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
