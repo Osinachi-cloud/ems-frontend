@@ -189,7 +189,7 @@ interface UserStatistics {
     landLordUsersCount: number;
     tenantUsersCount: number;
     occupantUsersCount: number;
-}
+} 
 
 export function UserStatistics({ onStatClick }: UserStatisticsProps) {
 
