@@ -358,9 +358,12 @@
 
 
 
+
+
+
 "use client"
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Users, Loader2, ArrowLeft, Home, UsersRound, User as UserIcon, Mail, Phone, Calendar, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { useFetch } from '@/hooks/useFetch';
 import { baseUrL } from '@/env/URLs';
@@ -380,36 +383,93 @@ interface DetailedUserView {
     };
 }
 
-export default function UserDetailsPage({ params }: { params: Promise<{ userId: string }> }) {
+export default function UserDetailsPage({ params }: { params: Promise<{ userId: string }> | { userId: string } }) {
     const router = useRouter();
-    const [userId, setUserId] = useState<string | null>(null);
+    const paramsHook = useParams();
+    const [userId, setUserId] = useState<string | string[]>();
+    const [apiError, setApiError] = useState<string | null>(null);
     const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
         tenants: true,
         occupants: true,
         landlord: true
     });
 
-    // Unwrap params
+    // Get userId from multiple sources
     useEffect(() => {
-        params.then(resolvedParams => {
-            setUserId(resolvedParams.userId);
-        });
-    }, [params]);
+        const getUserId = async () => {
+            try {
+                // Try from params prop
+                if (params) {
+                    if (params instanceof Promise) {
+                        const resolvedParams = await params;
+                        if (resolvedParams.userId) {
+                            setUserId(resolvedParams.userId);
+                            return;
+                        }
+                    } else if (params.userId) {
+                        setUserId(params.userId);
+                        return;
+                    }
+                }
+                
+                // Try from useParams hook
+                if (paramsHook && paramsHook.userId) {
+                    setUserId(paramsHook.userId);
+                    return;
+                }
+                
+                // Try from window.location
+                if (typeof window !== 'undefined') {
+                    const pathParts = window.location.pathname.split('/');
+                    const possibleUserId = pathParts[pathParts.length - 1];
+                    if (possibleUserId && possibleUserId !== 'users' && possibleUserId !== 'user') {
+                        setUserId(possibleUserId);
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.error('Error getting userId:', error);
+                setApiError('Failed to get user ID');
+            }
+        };
+
+        getUserId();
+    }, [params, paramsHook]);
 
     const {
         data: userDetailsResponse,
         isLoading,
-        error,
-        callApi: fetchUserDetails
-    } = useFetch("GET", null, `${baseUrL}/get-user-detailed-view?userId=${userId}`);
+        error: fetchError,
+        callApi: fetchUserDetails,
+        // responseStatus
+    } = useFetch("GET", null, userId ? `${baseUrL}/get-user-detailed-view?userId=${userId}` : "");
 
+    // Log the response for debugging
     useEffect(() => {
-        if (userId) {
-            fetchUserDetails();
+        if (userDetailsResponse) {
+            console.log('API Response:', userDetailsResponse);
+            // console.log('Response Status:', responseStatus);
         }
-    }, [userId]);
+        if (fetchError) {
+            console.error('Fetch Error:', fetchError);
+            setApiError(typeof fetchError === 'string' ? fetchError : 'Failed to fetch user details');
+        }
+    }, [userDetailsResponse, fetchError]);
 
-    const detailedViewData: DetailedUserView = userDetailsResponse?.data;
+    // Safely access data with validation
+    const detailedViewData: DetailedUserView | null = React.useMemo(() => {
+        if (!userDetailsResponse?.data) return null;
+        
+        // Validate the data structure
+        const data = userDetailsResponse.data;
+        if (!data.user) {
+            console.error('Invalid data structure:', data);
+            setApiError('Invalid response format');
+            return null;
+        }
+        
+        return data;
+    }, [userDetailsResponse]);
 
     const toggleSection = (section: string) => {
         setExpandedSections(prev => ({
@@ -426,7 +486,26 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
         router.push(`/users/${userId}`);
     };
 
-    if (!userId || isLoading) {
+    const handleRetry = () => {
+        setApiError(null);
+        if (userId) {
+            fetchUserDetails();
+        }
+    };
+
+    // Show loading while getting userId
+    if (!userId) {
+        return (
+            <div className="min-h-screen bg-gray-50 p-8">
+                <div className="flex justify-center items-center py-20">
+                    <Loader2 className="w-8 h-8 animate-spin text-teal-600" />
+                    <span className="ml-2 text-gray-600">Loading user ID...</span>
+                </div>
+            </div>
+        );
+    }
+
+    if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50 p-8">
                 <div className="flex justify-center items-center py-20">
@@ -437,12 +516,42 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
         );
     }
 
-    if (error || !detailedViewData) {
+    if (apiError || fetchError || !detailedViewData) {
+        return (
+            <div className="min-h-screen bg-gray-50 p-8">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center max-w-2xl mx-auto">
+                    <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading User</h2>
+                    <p className="text-red-600 mb-4">{apiError || fetchError || 'User not found'}</p>
+                    <p className="text-sm text-gray-600 mb-4">User ID: {userId}</p>
+                    <p className="text-sm text-gray-600 mb-4">API URL: {baseUrL}/get-user-detailed-view?userId={userId}</p>
+                    <div className="flex gap-4 justify-center">
+                        <button
+                            onClick={handleRetry}
+                            className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+                        >
+                            Retry
+                        </button>
+                        <button
+                            onClick={() => router.back()}
+                            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                        >
+                            Go Back
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const { user, landlord, tenants, occupants } = detailedViewData;
+    
+    // Additional validation for user object
+    if (!user) {
         return (
             <div className="min-h-screen bg-gray-50 p-8">
                 <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-                    <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading User</h2>
-                    <p className="text-red-600">{error || 'User not found'}</p>
+                    <h2 className="text-lg font-semibold text-red-800 mb-2">Invalid User Data</h2>
+                    <p className="text-red-600">User object is missing from response</p>
                     <button
                         onClick={() => router.back()}
                         className="mt-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
@@ -454,7 +563,6 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
         );
     }
 
-    const { user, landlord, tenants, occupants } = detailedViewData;
     const status = getStatusPill(user.enabled);
 
     return (
@@ -489,7 +597,7 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
                         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
                             <div 
                                 className="rounded-full w-20 h-20 sm:w-24 sm:h-24 text-white flex justify-center items-center text-3xl sm:text-4xl font-bold shadow-lg"
-                                style={{ backgroundColor: "#" + user.userId.slice(1, 7) }}
+                                style={{ backgroundColor: user.userId ? "#" + user.userId.slice(1, 7) : '#cccccc' }}
                             >
                                 {user.firstName?.slice(0, 1).toUpperCase()}
                                 {user.lastName?.slice(0, 1).toUpperCase()}
@@ -514,7 +622,7 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
                         </div>
                     </div>
 
-                    {/* User Details Grid */}
+                    {/* User Details Grid - Rest of your JSX remains the same */}
                     <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-4">
                             <div className="flex items-start space-x-3">
@@ -573,7 +681,8 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
                     </div>
                 </div>
 
-                {/* Landlord Section (if user is tenant or occupant) */}
+                {/* Rest of your sections remain exactly the same */}
+                {/* Landlord Section */}
                 {landlord && (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
                         <div 
@@ -600,7 +709,7 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
                     </div>
                 )}
 
-                {/* Tenants Section (if user is Landlord) */}
+                {/* Tenants Section */}
                 {tenants && tenants.length > 0 && (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
                         <div 
@@ -629,7 +738,7 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
                     </div>
                 )}
 
-                {/* Occupants Section (if user is Tenant) */}
+                {/* Occupants Section */}
                 {occupants && occupants.length > 0 && (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div 
@@ -684,7 +793,7 @@ function UserCard({ user, onView }: { user: UserDto; onView: (userId: string) =>
             <div className="flex items-start space-x-4">
                 <div 
                     className="rounded-full w-12 h-12 text-white flex justify-center items-center text-sm font-bold flex-shrink-0"
-                    style={{ backgroundColor: "#" + user.userId.slice(1, 7) }}
+                    style={{ backgroundColor: user.userId ? "#" + user.userId.slice(1, 7) : '#cccccc' }}
                 >
                     {user.firstName?.slice(0, 1).toUpperCase()}
                     {user.lastName?.slice(0, 1).toUpperCase()}
@@ -710,7 +819,7 @@ function UserCard({ user, onView }: { user: UserDto; onView: (userId: string) =>
                     <p className="text-xs text-gray-500 mt-1 truncate">{user.email}</p>
                     <div className="flex items-center justify-between mt-3">
                         <p className="text-xs text-gray-400">
-                            ID: {user.userId.slice(0, 12)}...
+                            ID: {user.userId?.slice(0, 12)}...
                         </p>
                         <button
                             onClick={() => onView(user.userId)}

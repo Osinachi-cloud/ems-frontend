@@ -33,7 +33,7 @@ const ForgotPasswordPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   
   const loginUrl = `${baseUrL}/request-password-reset`;
-  const confirmRequestUrl = `${baseUrL}/validate-reset-code`;
+  const confirmRequestUrl = `${baseUrL}/reset-password`;
   const router = useRouter();
 
   const { data: loginResponseData, isLoading, setIsLoading, callApi } = useFetch('POST', authDetails, loginUrl);
