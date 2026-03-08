@@ -42,13 +42,19 @@ const menuItems = [
                 icon: "/folder.png",
                 label: "Manage Address",
                 href: "/manage-addresses",
-                visible: ["APP_ADMIN", "teacher", "TENANT"],
+                visible: ["APP_ADMIN", "teacher", "TENANT"]
+            },
+            {
+                icon: "/folder.png",
+                label: "Financial Reports",
+                href: "/financial-reports",
+                visible: ["APP_ADMIN"]
             },
             {
                 icon: "/Setting 2.png",
                 label: "Account Settings",
                 href: "/list/settings",
-                visible: ["APP_ADMIN", "TENANT"], // Fixed the extra comma
+                visible: ["APP_ADMIN", "TENANT"]
             },
         ],
     },
