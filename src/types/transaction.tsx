@@ -4,6 +4,12 @@ export enum TransactionStatus {
     FAILED = 'FAILED'
 }
 
+export enum Designation {
+    PENDING = 'LANDLORD',
+    SUCCESS = 'TENANT',
+    FAILED = 'OCCUPANT'
+}
+
 export interface Transaction {
     reference: string;
     createdAt: string;
@@ -25,4 +31,5 @@ export interface TransactionFilters {
     fromDate?: string;
     toDate?: string;
     userId?: string;
+    designation?:Designation;
 }

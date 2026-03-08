@@ -2,12 +2,13 @@
 
 import { formatNumberToNaira } from "@/app/utils/moneyUtils";
 import UserCard from "@/components/UserCard";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 // import PaymentModal from "./paymentModal";
 import { useFetch } from "@/hooks/useFetch";
 import { baseUrL } from "@/env/URLs";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import TransactionsPage from "./transactions";
+import Link from "next/link";
 // import "./page.css"
 // import TransactionsPage from "../my-dashboard/transaction";
 // import TransactionsPage from "./transaction";
@@ -101,7 +102,16 @@ const AdminPage = () => {
                     {/* USER CARDS */}
                     <div>
                         <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, Alex SuperAdmin!</h1>
-                        <h6 className="text-xl text-teal-600 mb-4">Role: {getUserDetails()?.designation}</h6>
+                        <h6 className="text-xl text-teal-600 mb-4 flex justify-between">
+                            <span>
+                                Role: {getUserDetails()?.designation}
+
+                            </span>
+                            <Link className="bg-blue-500 text-white text-[12px] px-[10px] rounded-md text-nowrap h-fit" href={"/financial-reports"}>
+                                Financial Reports
+                            </Link>
+
+                        </h6>
                     </div>
 
                     {/* Elegant Date Filter */}
