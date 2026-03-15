@@ -275,7 +275,7 @@ const LoginPage = () => {
         errorToast(apiResponseData.error || 'Login failed');
       }
     } catch (e) {
-      errorToast('An error occurred or Poor Internet');
+      errorToast('An error occurred or No Internet');
     } finally {
       setIsLoading(false);
     }
