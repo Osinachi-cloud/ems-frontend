@@ -1,14 +1,23 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { ReactElement } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { baseUrL } from '@/env/URLs';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/stores/store';
 import { errorToast, successToast } from '@/hooks/UseToast';
 import 'react-toastify/dist/ReactToastify.css';
-import './page.css';
-import { useFetch } from '@/hooks/useFetch'
+import { isPublicRoute } from '../config/publicRoutes';
+import { 
+    Mail, 
+    KeyRound, 
+    Lock, 
+    Eye, 
+    EyeOff, 
+    ArrowRight,
+    ArrowLeft,
+    CheckCircle2,
+    XCircle,
+    Send
+} from 'lucide-react';
 
 type ForgotPasswordPageForm = {
   email: string;
@@ -18,7 +27,6 @@ type ForgotPasswordPageForm = {
 }
 
 const ForgotPasswordPage = () => {
-
   const initialState: ForgotPasswordPageForm = {
     email: "",
     resetCode: "",
@@ -26,65 +34,96 @@ const ForgotPasswordPage = () => {
     confirmPassword: ""
   };
 
-  const [authDetails, setAuthDetails] = useState(initialState);
+  const [formData, setFormData] = useState(initialState);
   const [isOtpSent, setIsOtpSent] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
-  const dispatch = useDispatch<AppDispatch>();
+  const [showPasswords, setShowPasswords] = useState({
+    password: false,
+    confirmPassword: false
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [resendTimer, setResendTimer] = useState(0);
   
-  const loginUrl = `${baseUrL}/request-password-reset`;
-  const confirmRequestUrl = `${baseUrL}/reset-password`;
+  const requestOtpUrl = `${baseUrL}/request-password-reset`;
+  const resetPasswordUrl = `${baseUrL}/reset-password`;
   const router = useRouter();
+  const pathname = usePathname();
 
-  const { data: loginResponseData, isLoading, setIsLoading, callApi } = useFetch('POST', authDetails, loginUrl);
-  console.log(loginResponseData);
-  errorToast(loginResponseData?.message);
+  // Debug logging
+  useEffect(() => {
+    console.log('Current pathname:', pathname);
+    console.log('Is public route:', isPublicRoute(pathname));
+  }, [pathname]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handlePost();
-    console.log({ loginResponseData });
-    console.log('Form values', authDetails);
+    handlePasswordReset();
   }
 
-  const handleTogglePasswordVisibility = () => {
-    setIsPasswordVisible((prev) => !prev);
-  };
-
-  const handleToggleConfirmPasswordVisibility = () => {
-    setIsConfirmPasswordVisible((prev) => !prev);
+  const togglePasswordVisibility = (field: 'password' | 'confirmPassword') => {
+    setShowPasswords(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
   };
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const value = evt.target.value;
-    setAuthDetails({
-      ...authDetails,
-      [evt.target.name]: value
-    });
-  }
+    const { name, value } = evt.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
 
-  const handlePost = async () => {
+    // Calculate password strength when password changes
+    if (name === 'password') {
+      calculatePasswordStrength(value);
+    }
+  };
+
+  const calculatePasswordStrength = (password: string) => {
+    let strength = 0;
+    if (password.length >= 8) strength += 25;
+    if (password.match(/[a-z]+/)) strength += 25;
+    if (password.match(/[A-Z]+/)) strength += 25;
+    if (password.match(/[0-9]+/)) strength += 25;
+    if (password.match(/[$@#&!]+/)) strength += 25;
+    setPasswordStrength(Math.min(strength, 100));
+  };
+
+  const handlePasswordReset = async () => {
+    // Validate based on current step
+    if (!isOtpSent) {
+      if (!formData.email) {
+        errorToast('Please enter your email address');
+        return;
+      }
+    } else {
+      if (!formData.resetCode || !formData.password || !formData.confirmPassword) {
+        errorToast('Please fill in all fields');
+        return;
+      }
+      if (formData.password !== formData.confirmPassword) {
+        errorToast('Passwords do not match');
+        return;
+      }
+      if (formData.password.length < 8) {
+        errorToast('Password must be at least 8 characters long');
+        return;
+      }
+    }
+
     setIsLoading(true);
     try {
-      // Determine which URL and request body to use based on OTP state
-      const url = isOtpSent ? confirmRequestUrl : loginUrl;
+      const url = isOtpSent ? resetPasswordUrl : requestOtpUrl;
       
-      // Prepare request body based on OTP state
-      let requestBody: any;
-      if (isOtpSent) {
-        // Include all 4 fields when OTP is sent
-        requestBody = {
-          email: authDetails.email,
-          resetCode: authDetails.resetCode,
-          password: authDetails.password,
-          confirmPassword: authDetails.confirmPassword
-        };
-      } else {
-        // Include only email when requesting OTP
-        requestBody = {
-          email: authDetails.email
-        };
-      }
+      const requestBody = isOtpSent ? {
+        email: formData.email,
+        resetCode: formData.resetCode,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword
+      } : {
+        email: formData.email
+      };
 
       const apiResponse = await fetch(url, {
         method: 'POST',
@@ -92,196 +131,370 @@ const ForgotPasswordPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestBody)
-      })
+      });
 
-      let apiResponseData: any = await apiResponse.json();
-      console.log(apiResponseData);
-      setIsLoading(false);
+      const responseData = await apiResponse.json();
 
       if (apiResponse.ok) {
         if (!isOtpSent) {
-          // First call - OTP was sent successfully
+          // OTP sent successfully
           setIsOtpSent(true);
-          successToast(apiResponseData.message || 'OTP sent to your email');
+          successToast(responseData.message || 'OTP sent to your email');
+          // Start resend timer
+          setResendTimer(60);
+          const timer = setInterval(() => {
+            setResendTimer(prev => {
+              if (prev <= 1) {
+                clearInterval(timer);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
         } else {
-          // Second call - Password reset successful
-          successToast(apiResponseData.message || 'Password reset successful');
-          router.push('/login'); // Redirect to login page
+          // Password reset successful
+          successToast(responseData.message || 'Password reset successful!');
+          setTimeout(() => {
+            router.push('/login');
+          }, 2000);
         }
       } else {
-        errorToast(apiResponseData.error || 'Something went wrong');
+        errorToast(responseData.error || responseData.message || 'Something went wrong');
       }
-
     } catch (e) {
-      console.log(e);
+      console.error('Error:', e);
+      errorToast('Error processing request');
+    } finally {
       setIsLoading(false);
-      errorToast("Error processing request");
     }
-  }
+  };
 
-  // Validate form before submission
+  const handleResendCode = async () => {
+    if (resendTimer > 0 || isLoading) return;
+    
+    try {
+      const apiResponse = await fetch(requestOtpUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: formData.email })
+      });
+
+      const responseData = await apiResponse.json();
+      
+      if (apiResponse.ok) {
+        successToast(responseData.message || 'OTP resent successfully');
+        setResendTimer(60);
+        const timer = setInterval(() => {
+          setResendTimer(prev => {
+            if (prev <= 1) {
+              clearInterval(timer);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      } else {
+        errorToast(responseData.message || 'Failed to resend OTP');
+      }
+    } catch (error) {
+      errorToast('Error resending OTP');
+    }
+  };
+
+  const getStrengthColor = () => {
+    if (passwordStrength <= 25) return 'bg-red-400';
+    if (passwordStrength <= 50) return 'bg-orange-400';
+    if (passwordStrength <= 75) return 'bg-yellow-400';
+    return 'bg-green-400';
+  };
+
+  const getStrengthText = () => {
+    if (passwordStrength <= 25) return 'Weak';
+    if (passwordStrength <= 50) return 'Fair';
+    if (passwordStrength <= 75) return 'Good';
+    return 'Strong';
+  };
+
+  const doPasswordsMatch = formData.password && formData.confirmPassword 
+    ? formData.password === formData.confirmPassword 
+    : null;
+
   const isFormValid = () => {
     if (!isOtpSent) {
-      // Only email is required for OTP request
-      return authDetails.email.trim() !== '';
-    } else {
-      // All fields are required for password reset
-      return (
-        authDetails.email.trim() !== '' &&
-        authDetails.resetCode.trim() !== '' &&
-        authDetails.password.trim() !== '' &&
-        authDetails.confirmPassword.trim() !== '' &&
-        authDetails.password === authDetails.confirmPassword
-      );
+      return formData.email.trim() !== '';
     }
-  }
-
-  useEffect(() => {
-    // Optional: Clear OTP fields when email changes
-    if (!isOtpSent) {
-      setAuthDetails(prev => ({
-        ...prev,
-        resetCode: "",
-        password: "",
-        confirmPassword: ""
-      }));
-    }
-  }, [authDetails.email, isOtpSent]);
+    return (
+      formData.email.trim() !== '' &&
+      formData.resetCode.trim() !== '' &&
+      formData.password.trim() !== '' &&
+      formData.confirmPassword.trim() !== '' &&
+      formData.password === formData.confirmPassword &&
+      formData.password.length >= 8
+    );
+  };
 
   return (
-    <>
-      <div className="grid h-[100vh] w-full">
-        <form className="sm:w-[28%] w-[90%] mx-auto my-auto" onSubmit={handleSubmit}>
-          <div className='mb-[2rem]'>
-            <h1 className='text-center text-[#171717] text-[32px] font-[600]'>
-              {isOtpSent ? 'Reset Password' : 'Forgot Password?'}
-            </h1>
-            <p className='text-center text-[#53545C] text-[14px] font-[300] mx-[2rem]'>
-              {isOtpSent 
-                ? 'Enter the OTP sent to your email and your new password' 
-                : 'Please enter your email and a link will be sent to your mail to reset your password.'
-              }
-            </p>
-          </div>
-
-          {/* Email Field - Always Visible */}
-          <div>
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Your email
-            </label>
-            <div className="my-[1.5rem] flex w-[100%] items-center border border-gray-300 rounded-lg">
-              <input
-                className="text-gray-900 bg-[#fff] text-sm rounded-lg block w-full p-2.5 py-3.5"
-                type="email"
-                id="email"
-                name="email"
-                value={authDetails.email}
-                onChange={handleChange}
-                placeholder="Email Address"
-                required
-              />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 py-8 px-4 sm:px-6 lg:px-8 flex items-center">
+      <div className="max-w-md w-full mx-auto">
+        {/* Simple white card with very light blue shadow */}
+        <div className="bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-blue-50/50 overflow-hidden">
+          
+          {/* Minimalist header with very light blue */}
+          <div className="bg-blue-50/30 px-6 sm:px-8 py-5 border-b border-blue-100/50">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 bg-blue-100/50 rounded-lg">
+                {isOtpSent ? (
+                  <Lock className="w-5 h-5 text-teal-600" />
+                ) : (
+                  <KeyRound className="w-5 h-5 text-teal-600" />
+                )}
+              </div>
+              <div>
+                <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
+                  {isOtpSent ? 'Reset Password' : 'Forgot Password?'}
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+                  {isOtpSent 
+                    ? 'Enter the OTP and your new password'
+                    : 'We\'ll send a code to reset your password'
+                  }
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* OTP Field - Only when OTP is sent */}
-          {isOtpSent && (
-            <div>
-              <label htmlFor="resetCode" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                OTP Code
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-5">
+            {/* Email Field - Always Visible */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                Email <span className="text-red-400">*</span>
               </label>
-              <div className="my-[1.5rem] flex w-[100%] items-center border border-gray-300 rounded-lg">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-4 w-4 text-gray-400" />
+                </div>
                 <input
-                  className="text-gray-900 bg-[#fff] text-sm rounded-lg block w-full p-2.5 py-3.5"
-                  type="text"
-                  id="resetCode"
-                  name="resetCode"
-                  value={authDetails.resetCode}
+                  type="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleChange}
-                  placeholder="Enter OTP"
                   required
+                  placeholder="john@example.com"
+                  className="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-gray-200 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                  disabled={isOtpSent && isLoading} 
                 />
               </div>
             </div>
-          )}
 
-          {/* Password Fields - Only when OTP is sent */}
-          {isOtpSent && (
-            <>
-              <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  New Password
+            {/* OTP Field - Only when OTP is sent */}
+            {isOtpSent && (
+              <div className="space-y-1.5">
+                <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                  OTP Code <span className="text-red-400">*</span>
                 </label>
-                <div className="my-[1.5rem] flex w-[100%] items-center border border-gray-300 rounded-lg">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <KeyRound className="h-4 w-4 text-gray-400" />
+                  </div>
                   <input
-                    className="text-gray-900 bg-[#fff] text-sm rounded-lg block w-full p-2.5 py-3.5"
-                    type={isPasswordVisible ? "text" : "password"}
-                    id="password"
-                    name="password"
-                    value={authDetails.password}
+                    type="text"
+                    name="resetCode"
+                    value={formData.resetCode}
                     onChange={handleChange}
-                    placeholder="New Password"
                     required
+                    placeholder="Enter 5-digit code"
+                    maxLength={5}
+                    className="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-gray-200 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
                   />
+                </div>
+                
+                {/* Resend Code Link */}
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-xs text-gray-500">
+                    Didn't receive code?
+                  </p>
                   <button
                     type="button"
-                    onClick={handleTogglePasswordVisibility}
-                    className="px-3 text-gray-600"
+                    onClick={handleResendCode}
+                    disabled={resendTimer > 0 || isLoading}
+                    className="text-xs text-teal-600 hover:text-teal-700 font-medium transition-colors disabled:text-gray-400 disabled:cursor-not-allowed"
                   >
-                    {isPasswordVisible ? 'Hide' : 'Show'}
+                    {resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend'}
                   </button>
                 </div>
               </div>
+            )}
 
-              <div>
-                <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Confirm Password
-                </label>
-                <div className="my-[1.5rem] flex w-[100%] items-center border border-gray-300 rounded-lg">
-                  <input
-                    className="text-gray-900 bg-[#fff] text-sm rounded-lg block w-full p-2.5 py-3.5"
-                    type={isConfirmPasswordVisible ? "text" : "password"}
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={authDetails.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="Confirm Password"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={handleToggleConfirmPasswordVisibility}
-                    className="px-3 text-gray-600"
-                  >
-                    {isConfirmPasswordVisible ? 'Hide' : 'Show'}
-                  </button>
+            {/* Password Fields - Only when OTP is sent */}
+            {isOtpSent && (
+              <>
+                {/* New Password Field */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                    New Password <span className="text-red-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Lock className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <input
+                      type={showPasswords.password ? 'text' : 'password'}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                      placeholder="••••••••"
+                      className="w-full pl-9 pr-10 py-2.5 text-sm bg-white border border-gray-200 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => togglePasswordVisibility('password')}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      {showPasswords.password ? (
+                        <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Password Strength Indicator */}
+                  {formData.password && (
+                    <div className="mt-2 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-1 flex-1">
+                          {[1, 2, 3, 4].map((level) => (
+                            <div
+                              key={level}
+                              className={`h-1 flex-1 rounded-full transition-colors ${
+                                passwordStrength >= level * 25 
+                                  ? getStrengthColor() 
+                                  : 'bg-gray-200'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs font-medium text-gray-500 ml-2">
+                          {getStrengthText()}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                {authDetails.password !== authDetails.confirmPassword && authDetails.confirmPassword && (
-                  <p className="text-red-500 text-sm mt-1">Passwords do not match</p>
-                )}
-              </div>
-            </>
-          )}
 
-          <div className='mt-[3rem]'>
+                {/* Confirm Password Field */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                    Confirm Password <span className="text-red-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Lock className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <input
+                      type={showPasswords.confirmPassword ? 'text' : 'password'}
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required
+                      placeholder="••••••••"
+                      className="w-full pl-9 pr-10 py-2.5 text-sm bg-white border border-gray-200 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => togglePasswordVisibility('confirmPassword')}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      {showPasswords.confirmPassword ? (
+                        <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                      )}
+                    </button>
+                    
+                    {/* Password Match Indicator */}
+                    {doPasswordsMatch !== null && (
+                      <div className="absolute inset-y-0 right-12 flex items-center">
+                        {doPasswordsMatch ? (
+                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        ) : (
+                          <XCircle className="h-4 w-4 text-red-500" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {doPasswordsMatch === false && (
+                    <p className="text-xs text-red-500 mt-1">Passwords do not match</p>
+                  )}
+                </div>
+              </>
+            )}
+
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading || !isFormValid()}
-              className="w-full flex justify-center gap-6 text-white bg-[#37393f] focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-3.5 text-center disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="w-full mt-6 relative py-2.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-lg shadow-md transition-colors disabled:bg-teal-500 disabled:cursor-not-allowed"
             >
-              <span>
-                {isOtpSent ? 'Reset Password' : 'Send OTP'}
+              <span className="flex items-center justify-center gap-2">
+                {isLoading ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>{isOtpSent ? 'Resetting...' : 'Sending...'}</span>
+                  </>
+                ) : (
+                  <>
+                    {isOtpSent ? (
+                      <>
+                        <Lock className="w-4 h-4" />
+                        <span>Reset Password</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Send OTP</span>
+                      </>
+                    )}
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
               </span>
-              {isLoading && <span className="spinner"></span>}
             </button>
-          </div>
-        </form>
-      </div>
-    </>
-  )
-}
 
-ForgotPasswordPage.getLayout = function getLayout(page: ReactElement) {
-  // return <LayoutGuest>{page}</LayoutGuest>
+            {/* Back to Login Link */}
+            <p className="text-center text-xs text-gray-500 pt-2">
+              <a 
+                href="/login" 
+                className="text-teal-600 hover:text-teal-700 font-medium transition-colors inline-flex items-center gap-1"
+              >
+                <ArrowLeft className="w-3 h-3" />
+                Back to login
+              </a>
+            </p>
+
+            {/* Step Indicator */}
+            <div className="flex justify-center gap-2 pt-2">
+              <div className={`h-1 w-12 rounded-full ${!isOtpSent ? 'bg-teal-600' : 'bg-gray-200'}`} />
+              <div className={`h-1 w-12 rounded-full ${isOtpSent ? 'bg-teal-600' : 'bg-gray-200'}`} />
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <style jsx>{`
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active{
+          -webkit-box-shadow: 0 0 0 30px white inset !important;
+          -webkit-text-fill-color: #374151 !important;
+        }
+      `}</style>
+    </div>
+  )
 }
 
 export default ForgotPasswordPage
