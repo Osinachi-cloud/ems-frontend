@@ -8,8 +8,6 @@ import { usePost } from "@/hooks/usePost";
 import { baseUrL } from "@/env/URLs";
 import { Response } from "@/types/reponse";
 import { FeedbackMessage } from "./feedback";
-// import { Product } from "@/types/product";
-// import { AlertTriangle } from "lucide-react";
 import React from "react";
 
 interface ProductFormProps {

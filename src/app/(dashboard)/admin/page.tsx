@@ -17,11 +17,11 @@ const AdminPage = () => {
       <div className="w-full flex flex-col gap-8">
         {/* USER CARDS */}
         <div className="grid md:grid-cols-5 gap-4">
-          <UserCard country="Total" customerCount={120000} />
+          {/* <UserCard country="Total" customerCount={120000} />
           <UserCard country="Nigeria" customerCount={12} />
           <UserCard country="Canada" customerCount={1000} />
           <UserCard country="China" customerCount={2000} />
-          <UserCard country="UK" customerCount={3000} />
+          <UserCard country="UK" customerCount={3000} /> */}
         </div>
         {/* MIDDLE CHARTS */}
         <div className="flex gap-4 flex-col lg:flex-row">

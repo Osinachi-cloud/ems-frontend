@@ -2,7 +2,7 @@
 
 import { formatNumberToNaira } from "@/app/utils/moneyUtils";
 import UserCard from "@/components/UserCard";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import PaymentModal from "./paymentModal";
 import { useFetch } from "@/hooks/useFetch";
 import { baseUrL } from "@/env/URLs";
@@ -10,7 +10,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import "./page.css"
 import TransactionsPage from "./transaction";
 
-export const AdminPage = () => {
+const AdminPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
 

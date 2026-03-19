@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Search, Filter, Download, Eye, Loader2, Calendar, X, CheckCircle, Clock, XCircle, DollarSign, User, Zap } from 'lucide-react';
 import { useFetch } from '@/hooks/useFetch';
@@ -398,6 +397,22 @@ const TransactionsPage: React.FC = () => {
               />
             </div>
 
+            {/* New Designation Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Designation</label>
+              <select
+                value={tempFilters.designation || ''}
+                onChange={(e) => handleFilterChange('designation', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white"
+              >
+                <option value="">All Designations</option>
+                <option value="LANDLORD">Landlord</option>
+                <option value="TENANT">Tenant</option>
+                <option value="OCCUPANT">Occupant</option>
+                {/* Add more designation options as needed based on your system */}
+              </select>
+            </div>
+
             <div className="col-span-1">
               <label className="block text-sm font-medium text-gray-700 mb-1">From Date</label>
               <input
@@ -517,7 +532,7 @@ const TransactionsPage: React.FC = () => {
                 ))}
                 {paginatedTransactions.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="text-center py-10 text-gray-500 text-lg">
+                    <td colSpan={8} className="text-center py-10 text-gray-500 text-lg">
                       {transactionCount === 0 ? "No transactions found." : "No transactions match your filters."}
                     </td>
                   </tr>
