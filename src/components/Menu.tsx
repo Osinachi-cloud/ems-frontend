@@ -65,13 +65,13 @@ const menuItems = [
     {
         title: "1",
         items: [
-            {
-                icon: "/profile.png",
-                label: "Profile",
-                href: "/profile",
-                visible: ["APP_ADMIN", "ESTATE_ADMIN", "SUPERADMIN_ADMIN", "TENANT", "LANDLORD", "OCCUPANT"]
+            // {
+            //     icon: "/profile.png",
+            //     label: "Profile",
+            //     href: "/profile",
+            //     visible: ["APP_ADMIN", "ESTATE_ADMIN", "SUPERADMIN_ADMIN", "TENANT", "LANDLORD", "OCCUPANT"]
 
-            },
+            // },
             {
                 icon: "/logout.png",
                 label: "Logout",

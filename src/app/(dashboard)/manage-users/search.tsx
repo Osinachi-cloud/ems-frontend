@@ -26,8 +26,8 @@
 //                 onClick={() => setIsExpanded(!isExpanded)}
 //             >
 //                 <div className="flex items-center space-x-3">
-//                     <div className="p-2 bg-teal-50 rounded-lg">
-//                         <Filter className="w-4 h-4 text-teal-600" />
+//                     <div className="p-2 bg-blue-50 rounded-lg">
+//                         <Filter className="w-4 h-4 text-blue-600" />
 //                     </div>
 //                     <div>
 //                         <h2 className="text-sm font-semibold text-gray-800">Search Users</h2>
@@ -35,7 +35,7 @@
 //                     </div>
 //                 </div>
 //                 <div className="flex items-center space-x-2">
-//                     <div className={`w-2 h-2 rounded-full ${isExpanded ? 'bg-teal-500' : 'bg-gray-300'}`} />
+//                     <div className={`w-2 h-2 rounded-full ${isExpanded ? 'bg-blue-500' : 'bg-gray-300'}`} />
 //                     <button
 //                         type="button"
 //                         onClick={(e) => {
@@ -63,7 +63,7 @@
 //                                     placeholder="Enter first name..."
 //                                     value={filters.firstName}
 //                                     onChange={handleFilterChange}
-//                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+//                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
 //                                 />
 //                             </div>
                             
@@ -75,7 +75,7 @@
 //                                     placeholder="Enter last name..."
 //                                     value={filters.lastName}
 //                                     onChange={handleFilterChange}
-//                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+//                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
 //                                 />
 //                             </div>
                             
@@ -87,7 +87,7 @@
 //                                     placeholder="user@example.com"
 //                                     value={filters.email.replace("%40", "")}
 //                                     onChange={handleFilterChange}
-//                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+//                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
 //                                 />
 //                             </div>
                             
@@ -97,7 +97,7 @@
 //                                     name="isActive"
 //                                     value={filters.isActive}
 //                                     onChange={handleFilterChange}
-//                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors appearance-none bg-white"
+//                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
 //                                 >
 //                                     <option value="">All Status</option>
 //                                     <option value="true">Active</option>
@@ -113,7 +113,7 @@
 //                                     placeholder="Enter role ID..."
 //                                     value={filters.roleId}
 //                                     onChange={handleFilterChange}
-//                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+//                                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
 //                                 />
 //                             </div>
 //                         </div>
@@ -128,7 +128,7 @@
 //                             </button>
 //                             <button
 //                                 type="submit"
-//                                 className="flex items-center space-x-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
+//                                 className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
 //                             >
 //                                 <Search className="w-4 h-4" />
 //                                 <span>Apply Filters</span>

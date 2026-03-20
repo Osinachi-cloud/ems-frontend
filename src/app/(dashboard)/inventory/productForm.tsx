@@ -111,13 +111,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
             }
 
             if (apiResponse?.success) {
-                setResponse({ success: apiResponse.success, message: apiResponse.message });
+                setResponse({ success: apiResponse?.success, message: apiResponse.message });
                 
                 setTimeout(() => {
                     onSuccess(); 
                 }, 1000); 
             } else {
-                setResponse({ success: apiResponse.success, message: apiResponse?.error || `Failed to ${isEditMode ? 'update' : 'create'} product.` });
+                setResponse({ success: apiResponse?.success, message: apiResponse?.error || `Failed to ${isEditMode ? 'update' : 'create'} product.` });
             }
         } catch (error) {
             console.error('Submission error:', error);
@@ -127,7 +127,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
     
     return (
         <form onSubmit={handleSubmit} className="space-y-3">
-            {response && <FeedbackMessage success={response.success} message={response.message} />}
+            {response && <FeedbackMessage success={response?.success} message={response?.message} />}
 
             {/* Compact grid layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -194,7 +194,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
                     checked={product.publishStatus}
                     onChange={handleChange}
                     disabled={loading}
-                    className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                 />
                 <label htmlFor="publishStatus" className="text-sm text-gray-700">
                     Publish Product
@@ -220,7 +220,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
 
             <button
                 type="submit"
-                className="w-full flex items-center justify-center px-4 py-2 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition duration-300 disabled:bg-teal-400 disabled:cursor-not-allowed mt-2"
+                className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 disabled:bg-blue-400 disabled:cursor-not-allowed mt-2"
                 disabled={loading}
             >
                 {loading ? (
@@ -280,7 +280,7 @@ const FormInput: React.FC<FormInputProps> = React.memo(({
     compact = false 
 }) => {
     
-    const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150 shadow-sm text-sm ${
+    const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm text-sm ${
         error ? 'border-red-500' : 'border-gray-300'
     } ${compact ? 'text-sm' : ''}`;
     
@@ -298,7 +298,7 @@ const FormInput: React.FC<FormInputProps> = React.memo(({
                 className={`${inputClasses} appearance-none`}
                 disabled={loading}
             >
-                <option value="" disabled>Select Designation Role</option>
+                <option value="" disabled>Select Category</option>
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
                         {option.label}

@@ -67,8 +67,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                 onClick={() => setIsExpanded(!isExpanded)}
             >
                 <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-teal-50 rounded-lg">
-                        <Filter className="w-4 h-4 text-teal-600" />
+                    <div className="p-2 bg-blue-50 rounded-lg">
+                        <Filter className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
                         <h2 className="text-sm font-semibold text-gray-800">Financial Report Filters</h2>
@@ -82,7 +82,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                             onExport();
                         }}
                         disabled={isExporting}
-                        className="flex items-center space-x-1 px-3 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-medium rounded-lg transition-colors disabled:opacity-50"
+                        className="flex items-center space-x-1 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-medium rounded-lg transition-colors disabled:opacity-50"
                     >
                         {isExporting ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -91,14 +91,14 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                                 <Download className="w-3.5 h-3.5" />
                                 <span>Export Excel</span>
                                 {activeFilterCount > 0 && (
-                                    <span className="ml-1 bg-teal-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                    <span className="ml-1 bg-blue-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                                         {activeFilterCount}
                                     </span>
                                 )}
                             </>
                         )}
                     </button>
-                    <div className={`w-2 h-2 rounded-full ${isExpanded ? 'bg-teal-500' : 'bg-gray-300'}`} />
+                    <div className={`w-2 h-2 rounded-full ${isExpanded ? 'bg-blue-500' : 'bg-gray-300'}`} />
                 </div>
             </div>
 
@@ -110,12 +110,12 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                         return (
                             <span
                                 key={key}
-                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-teal-50 text-teal-700 border border-teal-200"
+                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200"
                             >
                                 <span className="capitalize">{key}:</span> {formatDisplayValue(key, value)}
                                 <button
                                     onClick={() => handleClearFilter(key as keyof FinancialReportFilters)}
-                                    className="ml-1 text-teal-500 hover:text-teal-700"
+                                    className="ml-1 text-blue-500 hover:text-blue-700"
                                 >
                                     <X className="w-3 h-3" />
                                 </button>
@@ -139,7 +139,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                                         name="fromDate"
                                         value={localFilters.fromDate || ''}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     />
                                 </div>
                                 <span className="text-gray-400">to</span>
@@ -149,7 +149,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                                         name="toDate"
                                         value={localFilters.toDate || ''}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     />
                                 </div>
                             </div>
@@ -162,7 +162,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                                 name="status"
                                 value={localFilters.status || ''}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                             >
                                 <option value="">All Statuses</option>
                                 {TRANSACTION_STATUSES.map(status => (
@@ -180,7 +180,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                                 name="designation"
                                 value={localFilters.designation || ''}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                             >
                                 <option value="">All Designations</option>
                                 {DESIGNATIONS.map(designation => (
@@ -200,7 +200,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                                 value={localFilters.productName || ''}
                                 onChange={handleInputChange}
                                 placeholder="Enter product name..."
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
 
@@ -213,7 +213,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                                 value={localFilters.userId || ''}
                                 onChange={handleInputChange}
                                 placeholder="Enter user ID..."
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
 
@@ -226,7 +226,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                                 value={localFilters.estateId || ''}
                                 onChange={handleInputChange}
                                 placeholder="Enter estate ID..."
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
                     </div>
@@ -252,7 +252,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                         <button
                             type="button"
                             onClick={handleApplyFilters}
-                            className="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 flex items-center"
+                            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 flex items-center"
                         >
                             <Search className="w-4 h-4 mr-2" />
                             Apply Filters

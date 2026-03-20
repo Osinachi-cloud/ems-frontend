@@ -47,31 +47,31 @@ interface Address {
     isPrimary: boolean;
 }
 
-interface EstatesResponse {
-    message: string;
-    statusCode: number;
-    error: string | null;
-    timestamp: string;
-    data: {
-        page: number;
-        size: number;
-        total: number;
-        data: Estate[];
-    };
-}
+// interface EstatesResponse {
+//     message: string;
+//     statusCode: number;
+//     error: string | null;
+//     timestamp: string;
+//     data: {
+//         page: number;
+//         size: number;
+//         total: number;
+//         data: Estate[];
+//     };
+// }
 
-interface AddressesResponse {
-    message: string;
-    statusCode: number;
-    error: string | null;
-    timestamp: string;
-    data: {
-        page: number;
-        size: number;
-        total: number;
-        data: Address[];
-    };
-}
+// interface AddressesResponse {
+//     message: string;
+//     statusCode: number;
+//     error: string | null;
+//     timestamp: string;
+//     data: {
+//         page: number;
+//         size: number;
+//         total: number;
+//         data: Address[];
+//     };
+// }
 
 enum Designation {
     LANDLORD = "LANDLORD",
@@ -264,6 +264,11 @@ const SignUp = () => {
             designation: userInfo.designation
         };
 
+        if(userInfo.phoneNumber && userInfo.phoneNumber.startsWith("0")){
+            const newPhone = userInfo.phoneNumber.replace("0", "+234");
+            signupData.phoneNumber = newPhone;
+        }
+
         if (userInfo.designation === Designation.TENANT) {
             signupData.landlordId = userInfo.landlordId;
         } else if (userInfo.designation === Designation.OCCUPANT) {
@@ -365,7 +370,7 @@ const SignUp = () => {
                     <div className="bg-blue-50/30 px-6 sm:px-8 py-5 border-b border-blue-100/50">
                         <div className="flex items-center gap-2.5">
                             <div className="p-2 bg-blue-100/50 rounded-lg">
-                                <Building2 className="w-5 h-5 text-teal-600" />
+                                <Building2 className="w-5 h-5 text-blue-600" />
                             </div>
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Create account</h1>
@@ -378,29 +383,29 @@ const SignUp = () => {
                     {userInfo.estateId && (
                         <div className="px-6 sm:px-8 pt-5">
                             <div className="flex items-center gap-1 sm:gap-2 text-xs">
-                                <span className={`flex items-center gap-1 ${userInfo.estateId ? 'text-teal-600' : 'text-gray-400'}`}>
-                                    <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${userInfo.estateId ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                                <span className={`flex items-center gap-1 ${userInfo.estateId ? 'text-blue-600' : 'text-gray-400'}`}>
+                                    <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${userInfo.estateId ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
                                         {userInfo.estateId ? '✓' : '1'}
                                     </span>
                                     <span className="hidden sm:inline">Estate</span>
                                 </span>
                                 <ChevronRight className="w-3 h-3 text-gray-300" />
-                                <span className={`flex items-center gap-1 ${userInfo.addressId ? 'text-teal-600' : 'text-gray-400'}`}>
-                                    <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${userInfo.addressId ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                                <span className={`flex items-center gap-1 ${userInfo.addressId ? 'text-blue-600' : 'text-gray-400'}`}>
+                                    <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${userInfo.addressId ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
                                         {userInfo.addressId ? '✓' : '2'}
                                     </span>
                                     <span className="hidden sm:inline">Address</span>
                                 </span>
                                 <ChevronRight className="w-3 h-3 text-gray-300" />
-                                <span className={`flex items-center gap-1 ${userInfo.designation ? 'text-teal-600' : 'text-gray-400'}`}>
-                                    <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${userInfo.designation ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                                <span className={`flex items-center gap-1 ${userInfo.designation ? 'text-blue-600' : 'text-gray-400'}`}>
+                                    <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${userInfo.designation ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
                                         {userInfo.designation ? '✓' : '3'} 
                                     </span>
                                     <span className="hidden sm:inline">Role</span> 
                                 </span>
                                 <ChevronRight className="w-3 h-3 text-gray-300" />
-                                <span className={`flex items-center gap-1 ${userInfo.firstName ? 'text-teal-600' : 'text-gray-400'}`}>
-                                    <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${userInfo.firstName ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                                <span className={`flex items-center gap-1 ${userInfo.firstName ? 'text-blue-600' : 'text-gray-400'}`}>
+                                    <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${userInfo.firstName ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
                                         {userInfo.firstName ? '✓' : '4'}
                                     </span>
                                     <span className="hidden sm:inline">Details</span>
@@ -485,7 +490,7 @@ const SignUp = () => {
                         {userInfo.estateId && userInfo.addressId && (
                             <div className="space-y-1.5 animate-[fadeIn_0.3s_ease]">
                                 <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
-                                    Role <span className="text-red-400">*</span>
+                                    Category <span className="text-red-400">*</span>
                                 </label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -498,7 +503,7 @@ const SignUp = () => {
                                         required
                                         className="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 appearance-none"
                                     >
-                                        <option value="" className="text-gray-500">Select your role</option>
+                                        <option value="" className="text-gray-500">Select your category</option>
                                         {Object.values(Designation)?.map((designation) => (
                                             <option key={designation} value={designation} className="text-gray-700">
                                                 {formatDesignationDisplay(designation)}
@@ -717,11 +722,11 @@ const SignUp = () => {
                             )}
                         </div>
 
-                        {/* Submit button - updated to teal */}
+                        {/* Submit button - updated to blue */}
                         <button
                             type="submit"
                             disabled={isLoading || !userInfo.estateId || !userInfo.addressId || !userInfo.designation}
-                            className="w-full mt-4 relative py-2.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-lg shadow-md transition-colors disabled:bg-teal-500 disabled:cursor-not-allowed"
+                            className="w-full mt-4 relative py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-lg shadow-md transition-colors disabled:bg-blue-500 disabled:cursor-not-allowed"
                         >
                             <span className="flex items-center justify-center gap-2">
                                 {isLoading ? (

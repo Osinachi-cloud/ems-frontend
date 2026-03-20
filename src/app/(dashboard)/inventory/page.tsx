@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { PlusCircle, Loader2, Package, Edit, AlertTriangle, CheckCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { PlusCircle, Loader2, Package, Edit } from 'lucide-react';
 import { useFetch } from '@/hooks/useFetch';
 import { PaginationControls } from './pagination';
 import { Modal } from './modal';
@@ -9,8 +9,6 @@ import { Modal } from './modal';
 import { Product } from '@/types/product';
 import { baseUrL } from '@/env/URLs';
 import { formatNumberToNaira } from '@/app/utils/moneyUtils';
-import { usePost } from '@/hooks/usePost';
-import { Response } from "@/types/reponse";
 import ProductForm from './productForm';
 
 const ITEMS_PER_PAGE = 5;
@@ -59,12 +57,12 @@ const InventoryPage: React.FC = () => {
             {/* Page Header and Action */}
             <div className="flex justify-between items-center mb-6 border-b pb-4">
                 <div className="flex items-center space-x-3">
-                    <Package className="w-8 h-8 text-teal-600" />
+                    <Package className="w-8 h-8 text-blue-600" />
                     <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Product Inventory</h1>
                 </div>
                 <button
                     onClick={openCreateModal}
-                    className="flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-teal-600 text-white font-bold text-sm rounded-lg shadow-md hover:bg-teal-700 transition duration-300"
+                    className="flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 text-white font-bold text-sm rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
                 >
                     <PlusCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
                     <span className="hidden sm:inline">Add Product</span>
@@ -74,7 +72,7 @@ const InventoryPage: React.FC = () => {
 
             {/* Loading/Error State */}
             {productsLoading && (
-                <div className="text-center py-10 text-teal-600">
+                <div className="text-center py-10 text-blue-600">
                     <Loader2 className="w-8 h-8 mx-auto mb-3 animate-spin" />
                     <p className="font-semibold">Loading products...</p>
                 </div>
@@ -106,7 +104,7 @@ const InventoryPage: React.FC = () => {
                                 {paginatedProducts.map((product: Product) => (
                                     <tr
                                         key={product.productId}
-                                        className="block sm:table-row hover:bg-teal-50 transition duration-150 border-b"
+                                        className="block sm:table-row hover:bg-blue-50 transition duration-150 border-b"
                                     >
                                         <td className="px-4 py-3 sm:py-4 sm:px-6 block sm:table-cell whitespace-normal text-gray-900">
                                             <span className="sm:hidden text-xs font-semibold text-gray-500 block">Product Name:</span>
@@ -146,7 +144,7 @@ const InventoryPage: React.FC = () => {
                                             <span className="sm:hidden text-xs font-semibold text-gray-500 inline-block w-1/4">Actions:</span>
                                             <button
                                                 onClick={() => openEditModal(product)}
-                                                className="text-teal-600 hover:text-teal-900 p-1 rounded-full hover:bg-teal-100 transition"
+                                                className="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition"
                                                 aria-label={`Edit ${product.name}`}
                                             >
                                                 <Edit className="w-4 h-4" />
@@ -385,7 +383,7 @@ export default InventoryPage;
 //                     checked={product.publishStatus}
 //                     onChange={handleChange}
 //                     disabled={loading}
-//                     className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+//                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
 //                 />
 //                 <label htmlFor="publishStatus" className="text-sm text-gray-700">
 //                     Publish Product
@@ -411,7 +409,7 @@ export default InventoryPage;
 
 //             <button
 //                 type="submit"
-//                 className="w-full flex items-center justify-center px-4 py-2 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition duration-300 disabled:bg-teal-400 disabled:cursor-not-allowed mt-2"
+//                 className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 disabled:bg-blue-400 disabled:cursor-not-allowed mt-2"
 //                 disabled={loading}
 //             >
 //                 {loading ? (
@@ -471,7 +469,7 @@ export default InventoryPage;
 //     compact = false 
 // }) => {
     
-//     const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150 shadow-sm text-sm ${
+//     const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm text-sm ${
 //         error ? 'border-red-500' : 'border-gray-300'
 //     } ${compact ? 'text-sm' : ''}`;
     

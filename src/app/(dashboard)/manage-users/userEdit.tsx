@@ -149,7 +149,7 @@
 //                 <div className="relative">
 //                     <button
 //                         type="button"
-//                         className={`w-full px-3 py-2 text-left bg-white border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 ${
+//                         className={`w-full px-3 py-2 text-left bg-white border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 ${
 //                             errors.role 
 //                                 ? 'border-red-300' 
 //                                 : 'border-gray-300'
@@ -173,7 +173,7 @@
 //                         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-auto">
 //                             {roleLoading ? (
 //                                 <div className="flex items-center justify-center py-2 px-3">
-//                                     <Loader2 className="w-4 h-4 mr-2 animate-spin text-teal-600" />
+//                                     <Loader2 className="w-4 h-4 mr-2 animate-spin text-blue-600" />
 //                                     <span className="text-sm text-gray-500">Loading...</span>
 //                                 </div>
 //                             ) : roles?.data?.data?.length > 0 ? (
@@ -182,7 +182,7 @@
 //                                         key={r.id}
 //                                         className={`px-3 py-2 cursor-pointer text-sm transition-colors duration-150 ${
 //                                             user.role === r.name
-//                                                 ? 'bg-teal-50 text-teal-900'
+//                                                 ? 'bg-blue-50 text-blue-900'
 //                                                 : 'hover:bg-gray-50 text-gray-900'
 //                                         }`}
 //                                         onClick={() => handleRoleSelect(r.name)}
@@ -190,7 +190,7 @@
 //                                         <div className="flex items-center justify-between">
 //                                             <span>{r.name}</span>
 //                                             {user.role === r.name && (
-//                                                 <CheckCircle className="w-4 h-4 text-teal-600" />
+//                                                 <CheckCircle className="w-4 h-4 text-blue-600" />
 //                                             )}
 //                                         </div>
 //                                     </div>
@@ -219,7 +219,7 @@
 //                     checked={user.enabled}
 //                     onChange={handleChange}
 //                     disabled={updateLoading}
-//                     className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+//                     className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
 //                 />
 //                 <div>
 //                     <label className="text-sm font-medium text-gray-700">Account Enabled</label>
@@ -241,7 +241,7 @@
 //             {/* Submit Button */}
 //             <button
 //                 type="submit"
-//                 className="w-full flex items-center justify-center px-4 py-3 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition duration-300 disabled:bg-teal-400 disabled:cursor-not-allowed"
+//                 className="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 disabled:bg-blue-400 disabled:cursor-not-allowed"
 //                 disabled={updateLoading}
 //             >
 //                 {updateLoading ? (
@@ -469,7 +469,7 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                     <div className="relative">
                         <button
                             type="button"
-                            className={`w-full px-3 py-2.5 text-left bg-white border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all ${
+                            className={`w-full px-3 py-2.5 text-left bg-white border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
                                 errors.role 
                                     ? 'border-red-300 bg-red-50' 
                                     : 'border-gray-300 hover:border-gray-400'
@@ -495,7 +495,7 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                                 <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
                                     {roleLoading ? (
                                         <div className="flex items-center justify-center py-3 px-4">
-                                            <Loader2 className="w-4 h-4 mr-2 animate-spin text-teal-600" />
+                                            <Loader2 className="w-4 h-4 mr-2 animate-spin text-blue-600" />
                                             <span className="text-sm text-gray-500">Loading...</span>
                                         </div>
                                     ) : roles?.data?.data?.length > 0 ? (
@@ -504,7 +504,7 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                                                 key={r.id}
                                                 className={`px-4 py-2.5 cursor-pointer text-sm transition-colors duration-150 ${
                                                     user.role === r.name
-                                                        ? 'bg-teal-50 text-teal-700 font-medium'
+                                                        ? 'bg-blue-50 text-blue-700 font-medium'
                                                         : 'hover:bg-gray-50 text-gray-700'
                                                 }`}
                                                 onClick={() => handleRoleSelect(r.name)}
@@ -512,7 +512,7 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                                                 <div className="flex items-center justify-between">
                                                     <span>{r.name}</span>
                                                     {user.role === r.name && (
-                                                        <CheckCircle className="w-4 h-4 text-teal-600" />
+                                                        <CheckCircle className="w-4 h-4 text-blue-600" />
                                                     )}
                                                 </div>
                                             </div>
@@ -537,12 +537,12 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                 {/* Designation Dropdown */}
                 <div className="space-y-1.5">
                     <label className="block text-xs font-medium text-gray-700">
-                        Designation <span className="text-red-500">*</span>
+                        Category <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
                         <button
                             type="button"
-                            className={`w-full px-3 py-2.5 text-left bg-white border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all ${
+                            className={`w-full px-3 py-2.5 text-left bg-white border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
                                 errors.designation 
                                     ? 'border-red-300 bg-red-50' 
                                     : 'border-gray-300 hover:border-gray-400'
@@ -571,7 +571,7 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                                             key={designation}
                                             className={`px-4 py-2.5 cursor-pointer text-sm transition-colors duration-150 ${
                                                 user.designation === designation
-                                                    ? 'bg-teal-50 text-teal-700 font-medium'
+                                                    ? 'bg-blue-50 text-blue-700 font-medium'
                                                     : 'hover:bg-gray-50 text-gray-700'
                                             }`}
                                             onClick={() => handleDesignationSelect(designation)}
@@ -579,7 +579,7 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                                             <div className="flex items-center justify-between">
                                                 <span>{formatDesignationDisplay(designation)}</span>
                                                 {user.designation === designation && (
-                                                    <CheckCircle className="w-4 h-4 text-teal-600" />
+                                                    <CheckCircle className="w-4 h-4 text-blue-600" />
                                                 )}
                                             </div>
                                         </div>
@@ -607,7 +607,7 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                         checked={user.enabled}
                         onChange={handleChange}
                         disabled={updateLoading}
-                        className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
                     />
                 </div>
                 <div className="flex-1">
@@ -659,7 +659,7 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
             {/* Submit Button */}
             <button
                 type="submit"
-                className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-teal-600 to-teal-700 text-white font-semibold rounded-lg shadow-md hover:from-teal-700 hover:to-teal-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-teal-600 disabled:hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+                className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg shadow-md hover:from-blue-700 hover:to-blue-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-blue-600 disabled:hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 disabled={updateLoading}
             >
                 {updateLoading ? (
@@ -688,7 +688,7 @@ export default UserEditForm
 
 const InputField: React.FC<InputFieldProps> = React.memo(({ name, label, type = 'text', error, value, onChange, disabled }) => {
 
-    const inputClasses = `w-full px-4 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150 shadow-sm ${error ? 'border-red-500' : 'border-gray-300'}`;
+    const inputClasses = `w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm ${error ? 'border-red-500' : 'border-gray-300'}`;
 
     let inputElement;
 
@@ -701,7 +701,7 @@ const InputField: React.FC<InputFieldProps> = React.memo(({ name, label, type = 
                     type="checkbox"
                     checked={value as boolean}
                     onChange={onChange}
-                    className="h-5 w-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+                    className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     disabled={disabled}
                 />
                 <label htmlFor={name} className="ml-3 text-sm text-gray-900 font-semibold">

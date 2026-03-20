@@ -117,7 +117,7 @@ export function AddressStatistics({ onStatClick }: AddressStatisticsProps) {
 
                 {/* Apartments */}
                 <div
-                    className="bg-gradient-to-br from-cyan-500 to-teal-600 rounded-xl p-2 md:p-3 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
+                    className="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl p-2 md:p-3 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
                 >
                     <div className="flex items-center justify-between">
                         <div>

@@ -31,13 +31,13 @@ export const BreakdownTables: React.FC<BreakdownTablesProps> = ({ summary }) => 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-2">
-                        <Package className="w-5 h-5 text-teal-600" />
+                        <Package className="w-5 h-5 text-blue-600" />
                         <h3 className="text-lg font-semibold text-gray-900">Revenue by Product</h3>
                     </div>
                     {summary.productBreakdown.length > 5 && (
                         <button
                             onClick={() => setShowAllProducts(!showAllProducts)}
-                            className="text-sm text-teal-600 hover:text-teal-700 flex items-center"
+                            className="text-sm text-blue-600 hover:text-blue-700 flex items-center"
                         >
                             {showAllProducts ? (
                                 <>Show Less <ChevronUp className="w-4 h-4 ml-1" /></>
@@ -58,7 +58,7 @@ export const BreakdownTables: React.FC<BreakdownTablesProps> = ({ summary }) => 
                                 <div className="flex-1">
                                     <div className="flex justify-between items-center mb-1">
                                         <span className="font-medium text-gray-900">{product.productName}</span>
-                                        <span className="text-sm font-semibold text-teal-600">
+                                        <span className="text-sm font-semibold text-blue-600">
                                             {formatNumberToNaira(product.completedRevenue)}
                                         </span>
                                     </div>
@@ -85,13 +85,13 @@ export const BreakdownTables: React.FC<BreakdownTablesProps> = ({ summary }) => 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-2">
-                        <Users className="w-5 h-5 text-teal-600" />
+                        <Users className="w-5 h-5 text-blue-600" />
                         <h3 className="text-lg font-semibold text-gray-900">Revenue by Designation</h3>
                     </div>
                     {summary.designationBreakdown.length > 5 && (
                         <button
                             onClick={() => setShowAllDesignations(!showAllDesignations)}
-                            className="text-sm text-teal-600 hover:text-teal-700 flex items-center"
+                            className="text-sm text-blue-600 hover:text-blue-700 flex items-center"
                         >
                             {showAllDesignations ? (
                                 <>Show Less <ChevronUp className="w-4 h-4 ml-1" /></>
@@ -124,7 +124,7 @@ export const BreakdownTables: React.FC<BreakdownTablesProps> = ({ summary }) => 
                                         <span className="font-medium text-gray-900">
                                             {getDesignationIcon(item.designation)} {item.designation}
                                         </span>
-                                        <span className="text-sm font-semibold text-teal-600">
+                                        <span className="text-sm font-semibold text-blue-600">
                                             {formatNumberToNaira(item.completedRevenue)}
                                         </span>
                                     </div>
@@ -142,7 +142,7 @@ export const BreakdownTables: React.FC<BreakdownTablesProps> = ({ summary }) => 
                         );
                     })}
                     {designationsToShow.length === 0 && (
-                        <p className="text-gray-500 text-center py-4">No designation data available</p>
+                        <p className="text-gray-500 text-center py-4">No Category data available</p>
                     )}
                 </div>
             </div>

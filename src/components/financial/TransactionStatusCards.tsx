@@ -75,7 +75,7 @@ export const TransactionStatusCards: React.FC<TransactionStatusCardsProps> = ({ 
                         <p className="text-2xl font-bold text-gray-900 mb-1">{card.value}</p>
                         <p className="text-sm text-gray-600 mb-1">{card.label} Transactions</p>
                         {card.amount > 0 && (
-                            <p className="text-xs font-medium text-teal-600">
+                            <p className="text-xs font-medium text-blue-600">
                                 {new Intl.NumberFormat('en-NG', {
                                     style: 'currency',
                                     currency: 'NGN',

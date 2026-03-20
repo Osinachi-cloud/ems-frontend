@@ -149,7 +149,7 @@ const VerifyOTPPage = () => {
                     <div className="bg-blue-50/30 px-6 sm:px-8 py-5 border-b border-blue-100/50">
                         <div className="flex items-center gap-2.5">
                             <div className="p-2 bg-blue-100/50 rounded-lg">
-                                <KeyRound className="w-5 h-5 text-teal-600" />
+                                <KeyRound className="w-5 h-5 text-blue-600" />
                             </div>
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Verify Your Email</h1>
@@ -161,9 +161,9 @@ const VerifyOTPPage = () => {
                     <form onSubmit={handleVerify} className="p-6 sm:p-8 space-y-6">
                         {/* Email Display */}
                         {email && (
-                            <div className="bg-teal-50/50 rounded-lg p-3 border border-teal-100/50">
+                            <div className="bg-blue-50/50 rounded-lg p-3 border border-blue-100/50">
                                 <div className="flex items-center gap-2">
-                                    <Mail className="w-4 h-4 text-teal-600" />
+                                    <Mail className="w-4 h-4 text-blue-600" />
                                     <span className="text-sm text-gray-600">Code sent to:</span>
                                     <span className="text-sm font-medium text-gray-800">{email}</span>
                                 </div>
@@ -217,7 +217,7 @@ const VerifyOTPPage = () => {
                         <button
                             type="submit"
                             disabled={!isOtpComplete || isLoading || !email}
-                            className="w-full relative py-2.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-lg shadow-md transition-colors disabled:bg-teal-500 disabled:cursor-not-allowed"
+                            className="w-full relative py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-lg shadow-md transition-colors disabled:bg-blue-500 disabled:cursor-not-allowed"
                         >
                             <span className="flex items-center justify-center gap-2">
                                 {isLoading ? (
@@ -243,7 +243,7 @@ const VerifyOTPPage = () => {
                                     type="button"
                                     onClick={handleResendCode}
                                     disabled={resendTimer > 0 || isLoading}
-                                    className="text-teal-600 hover:text-teal-700 font-medium transition-colors disabled:text-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-1"
+                                    className="text-blue-600 hover:text-blue-700 font-medium transition-colors disabled:text-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-1"
                                 >
                                     <RefreshCw className={`w-3 h-3 ${resendTimer > 0 ? 'animate-spin' : ''}`} />
                                     Resend
@@ -260,7 +260,7 @@ const VerifyOTPPage = () => {
                         <p className="text-center text-xs text-gray-400 pt-2 border-t border-gray-100">
                             <a 
                                 href="/login" 
-                                className="text-gray-500 hover:text-teal-600 transition-colors"
+                                className="text-gray-500 hover:text-blue-600 transition-colors"
                             >
                                 ← Back to login
                             </a>

@@ -298,7 +298,7 @@ const LoginPage = () => {
           <div className="bg-blue-50/30 px-6 sm:px-8 py-5 border-b border-blue-100/50">
             <div className="flex items-center gap-2.5">
               <div className="p-2 bg-blue-100/50 rounded-lg">
-                <Building2 className="w-5 h-5 text-teal-600" />
+                <Building2 className="w-5 h-5 text-blue-600" />
               </div>
               <div>
                 <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Welcome back</h1>
@@ -365,17 +365,17 @@ const LoginPage = () => {
             <div className="flex justify-end">
               <a 
                 href="/forgotpassword" 
-                className="text-xs text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
               >
                 Forgot password?
               </a>
             </div>
 
-            {/* Submit Button - Teal to match signup */}
+            {/* Submit Button - blue to match signup */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-2 relative py-2.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-lg shadow-md transition-colors disabled:bg-teal-500 disabled:cursor-not-allowed"
+              className="w-full mt-2 relative py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-lg shadow-md transition-colors disabled:bg-blue-500 disabled:cursor-not-allowed"
             >
               <span className="flex items-center justify-center gap-2">
                 {isLoading ? (
@@ -398,7 +398,7 @@ const LoginPage = () => {
               Don't have an account?{' '}
               <a 
                 href="/signup" 
-                className="text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
               >
                 Create account
               </a>
