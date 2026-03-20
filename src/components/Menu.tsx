@@ -12,13 +12,13 @@ const menuItems = [
                 icon: "/Vector.png",
                 label: "My Dashboard",
                 href: "/my-dashboard",
-                visible: ["TENANT"],
+                visible: ["TENANT", "LANDLORD", "OCCUPANT"],
             },
             {
                 icon: "/Vector.png",
                 label: "My Profile",
                 href: "/my-profile",
-                visible: ["APP_ADMIN", "TENANT", "LANDLORD"],
+                visible: ["APP_ADMIN", "TENANT", "LANDLORD", , "OCCUPANT"],
             },
             {
                 icon: "/Bag.png",
