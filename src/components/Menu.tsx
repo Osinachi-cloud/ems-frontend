@@ -35,27 +35,30 @@ const menuItems = [
             },
             {
                 icon: "/folder.png",
-                label: "Inventory",
+                label: "Fee Category",
                 href: "/inventory",
-                visible: ["APP_ADMIN", "teacher", "TENANT"],
+                visible: ["APP_ADMIN", "ESTATE_ADMIN", "SUPERADMIN_ADMIN"],
+
             },
             {
                 icon: "/folder.png",
                 label: "Manage Address",
                 href: "/manage-addresses",
-                visible: ["APP_ADMIN", "teacher", "TENANT"]
+                visible: ["APP_ADMIN", "ESTATE_ADMIN", "SUPERADMIN_ADMIN"],
+
             },
             {
                 icon: "/folder.png",
                 label: "Financial Reports",
                 href: "/financial-reports",
-                visible: ["APP_ADMIN"]
+                visible: ["ESTATE_ADMIN", "SUPERADMIN_ADMIN"]
             },
             {
                 icon: "/Setting 2.png",
                 label: "Account Settings",
                 href: "/list/settings",
-                visible: ["APP_ADMIN", "TENANT"]
+                visible: ["APP_ADMIN", "ESTATE_ADMIN", "SUPERADMIN_ADMIN", "TENANT", "LANDLORD", "OCCUPANT"],
+
             },
         ],
     },
@@ -66,13 +69,14 @@ const menuItems = [
                 icon: "/profile.png",
                 label: "Profile",
                 href: "/profile",
-                visible: ["APP_ADMIN", "teacher", "student", "parent", "TENANT"],
+                visible: ["APP_ADMIN", "ESTATE_ADMIN", "SUPERADMIN_ADMIN", "TENANT", "LANDLORD", "OCCUPANT"]
+
             },
             {
                 icon: "/logout.png",
                 label: "Logout",
                 href: "/logout",
-                visible: ["APP_ADMIN", "teacher", "student", "parent", "TENANT"],
+                visible: ["APP_ADMIN", "ESTATE_ADMIN", "SUPERADMIN_ADMIN", "TENANT", "LANDLORD", "OCCUPANT"]
             },
         ],
     },
