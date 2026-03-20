@@ -189,7 +189,7 @@ const CreateRoleForm: React.FC<CreateRoleFormProps> = ({ onSuccess, onClose }) =
                     name="name"
                     value={role.name}
                     onChange={handleChange}
-                    className={`px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
                     disabled={createLoading}
                 />
                 {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
@@ -202,7 +202,7 @@ const CreateRoleForm: React.FC<CreateRoleFormProps> = ({ onSuccess, onClose }) =
                     rows={2} // Kept at 2 rows
                     value={role.description}
                     onChange={handleChange}
-                    className={`px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 resize-none ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 resize-none ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
                     disabled={createLoading}
                 />
                 {errors.description && <p className="text-xs text-red-500">{errors.description}</p>}
@@ -213,7 +213,7 @@ const CreateRoleForm: React.FC<CreateRoleFormProps> = ({ onSuccess, onClose }) =
                 <label className="text-[12px] font-medium text-gray-700">Select Permissions</label>
                 
                 {permissionsLoading ? (
-                    <div className="text-center py-4 text-teal-600">
+                    <div className="text-center py-4 text-blue-600">
                         <Loader2 className="w-5 h-5 mx-auto mb-2 animate-spin" />
                         <p className="text-xs">Loading permissions...</p>
                     </div>
@@ -234,7 +234,7 @@ const CreateRoleForm: React.FC<CreateRoleFormProps> = ({ onSuccess, onClose }) =
                                                     key={permission.id} 
                                                     // Reduced p-2 to p-1.5
                                                     className={`flex items-center justify-between p-1.5 rounded-lg cursor-pointer transition ${
-                                                        isSelected ? 'bg-teal-50 hover:bg-teal-100' : 'hover:bg-gray-50'
+                                                        isSelected ? 'bg-blue-50 hover:bg-blue-100' : 'hover:bg-gray-50'
                                                     }`}
                                                     onClick={() => handleTogglePermission(permission.id)}
                                                 >
@@ -243,7 +243,7 @@ const CreateRoleForm: React.FC<CreateRoleFormProps> = ({ onSuccess, onClose }) =
                                                         <span className="text-xs text-gray-500">{permission.description}</span>
                                                     </div>
                                                     {isSelected 
-                                                        ? <CheckSquare className="w-4 h-4 text-teal-600 flex-shrink-0" />
+                                                        ? <CheckSquare className="w-4 h-4 text-blue-600 flex-shrink-0" />
                                                         : <Square className="w-4 h-4 text-gray-400 flex-shrink-0" />
                                                     }
                                                 </div>
@@ -261,7 +261,7 @@ const CreateRoleForm: React.FC<CreateRoleFormProps> = ({ onSuccess, onClose }) =
                 )}
                 
                 {selectedPermissionIds.size > 0 && (
-                    <p className="text-xs text-teal-600 font-medium">
+                    <p className="text-xs text-blue-600 font-medium">
                         {selectedPermissionIds.size} permission(s) selected
                     </p>
                 )}
@@ -270,7 +270,7 @@ const CreateRoleForm: React.FC<CreateRoleFormProps> = ({ onSuccess, onClose }) =
             <button
                 type="submit"
                 // Reduced py-3 to py-2.5
-                className="w-full flex items-center justify-center px-4 py-2.5 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition disabled:bg-teal-400"
+                className="w-full flex items-center justify-center px-4 py-2.5 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition disabled:bg-blue-400"
                 disabled={createLoading || permissionsLoading}
             >
                 {createLoading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <PlusCircle className="w-5 h-5 mr-2" />}
@@ -356,7 +356,7 @@ const EditPermissionsForm: React.FC<EditPermissionsFormProps> = ({ onSuccess, in
 
     if (permissionsLoading) {
         return (
-            <div className="text-center py-10 text-teal-600">
+            <div className="text-center py-10 text-blue-600">
                 <Loader2 className="w-6 h-6 mx-auto mb-3 animate-spin" />
                 <p className="font-semibold">Fetching permissions...</p>
             </div>
@@ -382,7 +382,7 @@ const EditPermissionsForm: React.FC<EditPermissionsFormProps> = ({ onSuccess, in
                                     <div 
                                         key={permission.name} 
                                         // Reduced p-2 to p-1.5
-                                        className={`flex items-center justify-between p-1.5 rounded-lg cursor-pointer transition ${isSelected ? 'bg-teal-50 hover:bg-teal-100' : 'hover:bg-gray-50'}`}
+                                        className={`flex items-center justify-between p-1.5 rounded-lg cursor-pointer transition ${isSelected ? 'bg-blue-50 hover:bg-blue-100' : 'hover:bg-gray-50'}`}
                                         onClick={() => handleTogglePermission(permission.name)}
                                     >
                                         <div className="flex flex-col">
@@ -390,7 +390,7 @@ const EditPermissionsForm: React.FC<EditPermissionsFormProps> = ({ onSuccess, in
                                             <span className="text-xs text-gray-500">{permission.description}</span>
                                         </div>
                                         {isSelected 
-                                            ? <CheckSquare className="w-4 h-4 text-teal-600" /> 
+                                            ? <CheckSquare className="w-4 h-4 text-blue-600" /> 
                                             : <Square className="w-4 h-4 text-gray-400" /> // Reduced icon size to w-4 h-4
                                         }
                                     </div>
@@ -406,7 +406,7 @@ const EditPermissionsForm: React.FC<EditPermissionsFormProps> = ({ onSuccess, in
             <button
                 type="submit"
                 // Reduced py-3 to py-2.5
-                className="w-full flex items-center justify-center px-4 py-2.5 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition disabled:bg-teal-400"
+                className="w-full flex items-center justify-center px-4 py-2.5 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition disabled:bg-blue-400"
                 disabled={updateLoading}
             >
                 {updateLoading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Edit className="w-5 h-5 mr-2" />}
@@ -547,7 +547,7 @@ const RoleManagementPage: React.FC = () => {
                                 key={index + 1}
                                 onClick={() => goToPage(index + 1)}
                                 className={`w-10 h-10 rounded-lg font-semibold transition ${currentPage === index + 1
-                                    ? 'bg-teal-600 text-white shadow-lg'
+                                    ? 'bg-blue-600 text-white shadow-lg'
                                     : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
                                     }`}
                                 aria-label={`Go to page ${index + 1}`}
@@ -576,12 +576,12 @@ const RoleManagementPage: React.FC = () => {
             {/* Page Header and Action */}
             <div className="flex justify-between items-center mb-6 border-b pb-4">
                 <div className="flex items-center space-x-3">
-                    <Key className="w-8 h-8 text-teal-600" />
+                    <Key className="w-8 h-8 text-blue-600" />
                     <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Role Management</h1>
                 </div>
                 <button
                     onClick={openCreateModal}
-                    className="flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-teal-600 text-white font-bold text-sm rounded-lg shadow-md hover:bg-teal-700 transition duration-300"
+                    className="flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 text-white font-bold text-sm rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
                 >
                     <PlusCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
                     <span className="hidden sm:inline">Create Role</span>
@@ -591,7 +591,7 @@ const RoleManagementPage: React.FC = () => {
 
             {/* Loading/Error State */}
             {rolesLoading && (
-                <div className="text-center py-10 text-teal-600">
+                <div className="text-center py-10 text-blue-600">
                     <Loader2 className="w-8 h-8 mx-auto mb-3 animate-spin" />
                     <p className="font-semibold">Loading roles...</p>
                 </div>
@@ -620,11 +620,11 @@ const RoleManagementPage: React.FC = () => {
                                 {paginatedRoles.map((role: RoleDto) => (
                                     <tr
                                         key={role.id}
-                                        className="block sm:table-row hover:bg-teal-50 transition duration-150 border-b"
+                                        className="block sm:table-row hover:bg-blue-50 transition duration-150 border-b"
                                     >
                                         <td className="px-4 py-3 sm:py-4 sm:px-6 block sm:table-cell whitespace-normal text-gray-900">
                                             <span className="sm:hidden text-xs font-semibold text-gray-500 block">Role Name:</span>
-                                            <span className="font-bold text-teal-700">{role.name}</span>
+                                            <span className="font-bold text-blue-700">{role.name}</span>
                                         </td>
                                         <td className="px-4 py-1 sm:py-4 sm:px-6 block sm:table-cell text-sm text-gray-600 max-w-xs truncate">
                                             <span className="sm:hidden text-xs font-semibold text-gray-500 block">Description:</span>
@@ -640,7 +640,7 @@ const RoleManagementPage: React.FC = () => {
                                             <span className="sm:hidden text-xs font-semibold text-gray-500 inline-block w-1/4">Actions:</span>
                                             <button
                                                 onClick={() => openEditModal(role)}
-                                                className="text-teal-600 hover:text-teal-900 p-1 rounded-full hover:bg-teal-100 transition"
+                                                className="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition"
                                                 aria-label={`Edit permissions for ${role.name}`}
                                                 title="Edit Permissions"
                                             >

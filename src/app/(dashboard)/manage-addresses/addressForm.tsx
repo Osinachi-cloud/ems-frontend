@@ -60,7 +60,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ onSuccess, onClose }) => {
                 country: estate.data.country || '',
                 state: estate.data.state || '',
                 city: estate.data.city || '',
-                estateId: estate.data.estateId || estateId, // Store the estateId for submission
+                estateId: estate.data.estateId || estateId,
             }));
         }
     }, [estate, estateId]);
@@ -117,7 +117,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ onSuccess, onClose }) => {
             <div className="grid grid-cols-1 md:grid-cols-1 gap-2">
                 <FormInput
                     label="Country"
-                    name="country" // Fixed: should be the field name, not the value
+                    name="country"
                     value={address.country}
                     handleChange={handleChange}
                     loading={createLoading || estateLoading}
@@ -176,7 +176,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ onSuccess, onClose }) => {
             />
             <button
                 type="submit"
-                className="w-full flex items-center justify-center px-4 py-2 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition duration-300 disabled:bg-teal-400 disabled:cursor-not-allowed mt-2"
+                className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 disabled:bg-blue-400 disabled:cursor-not-allowed mt-2"
                 disabled={createLoading || estateLoading}
             >
                 {createLoading ? (
@@ -221,7 +221,7 @@ const FormInput: React.FC<FormInputProps> = React.memo(({
     readOnly = false
 }) => {
 
-    const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150 shadow-sm text-sm ${error ? 'border-red-500' : 'border-gray-300'
+    const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm text-sm ${error ? 'border-red-500' : 'border-gray-300'
         } ${compact ? 'text-sm' : ''} ${readOnly ? 'bg-gray-100 cursor-not-allowed' : ''}`;
 
     let inputElement;

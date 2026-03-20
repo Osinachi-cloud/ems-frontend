@@ -60,7 +60,7 @@
 //         return (
 //             <div className="min-h-screen bg-gray-50 p-8">
 //                 <div className="flex justify-center items-center py-20">
-//                     <Loader2 className="w-8 h-8 animate-spin text-teal-600" />
+//                     <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
 //                     <span className="ml-2 text-gray-600">Loading user details...</span>
 //                 </div>
 //             </div>
@@ -101,7 +101,7 @@
 //                                 <ArrowLeft className="w-5 h-5 text-gray-600" />
 //                             </button>
 //                             <div className="flex items-center space-x-3">
-//                                 <Users className="w-6 h-6 text-teal-600" />
+//                                 <Users className="w-6 h-6 text-blue-600" />
 //                                 <h1 className="text-xl sm:text-2xl font-bold text-gray-900">User Profile</h1>
 //                             </div>
 //                         </div>
@@ -115,7 +115,7 @@
 //             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 //                 {/* Main User Card */}
 //                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-//                     <div className="bg-gradient-to-r from-teal-50 via-blue-50 to-indigo-50 px-6 py-8">
+//                     <div className="bg-gradient-to-r from-blue-50 via-blue-50 to-indigo-50 px-6 py-8">
 //                         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
 //                             <div 
 //                                 className="rounded-full w-20 h-20 sm:w-24 sm:h-24 text-white flex justify-center items-center text-3xl sm:text-4xl font-bold shadow-lg"
@@ -131,7 +131,7 @@
 //                                             {user.firstName} {user.lastName}
 //                                         </h2>
 //                                         <div className="flex flex-wrap items-center gap-2 mt-2">
-//                                             <span className="px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm font-medium">
+//                                             <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
 //                                                 {user.role?.name || 'No Role'}
 //                                             </span>
 //                                             <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
@@ -263,13 +263,13 @@
 //                 {occupants && occupants.length > 0 && (
 //                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
 //                         <div 
-//                             className="bg-teal-50 px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-teal-100/50 transition-colors"
+//                             className="bg-blue-50 px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-blue-100/50 transition-colors"
 //                             onClick={() => toggleSection('occupants')}
 //                         >
 //                             <div className="flex items-center space-x-3">
-//                                 <UserIcon className="w-5 h-5 text-teal-600" />
+//                                 <UserIcon className="w-5 h-5 text-blue-600" />
 //                                 <h3 className="font-semibold text-gray-800">Occupants / Family Members</h3>
-//                                 <span className="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full">
+//                                 <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
 //                                     {occupants.length}
 //                                 </span>
 //                             </div>
@@ -344,7 +344,7 @@
 //                         </p>
 //                         <button
 //                             onClick={() => onView(user.userId)}
-//                             className="text-xs text-teal-600 hover:text-teal-800 font-medium flex items-center"
+//                             className="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center"
 //                         >
 //                             View Profile
 //                         </button>
@@ -498,7 +498,7 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
         return (
             <div className="min-h-screen bg-gray-50 p-8">
                 <div className="flex justify-center items-center py-20">
-                    <Loader2 className="w-8 h-8 animate-spin text-teal-600" />
+                    <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
                     <span className="ml-2 text-gray-600">Loading user ID...</span>
                 </div>
             </div>
@@ -509,7 +509,7 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
         return (
             <div className="min-h-screen bg-gray-50 p-8">
                 <div className="flex justify-center items-center py-20">
-                    <Loader2 className="w-8 h-8 animate-spin text-teal-600" />
+                    <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
                     <span className="ml-2 text-gray-600">Loading user details...</span>
                 </div>
             </div>
@@ -527,7 +527,7 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
                     <div className="flex gap-4 justify-center">
                         <button
                             onClick={handleRetry}
-                            className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                         >
                             Retry
                         </button>
@@ -579,7 +579,7 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
                                 <ArrowLeft className="w-5 h-5 text-gray-600" />
                             </button>
                             <div className="flex items-center space-x-3">
-                                <Users className="w-6 h-6 text-teal-600" />
+                                <Users className="w-6 h-6 text-blue-600" />
                                 <h1 className="text-xl sm:text-2xl font-bold text-gray-900">User Profile</h1>
                             </div>
                         </div>
@@ -593,7 +593,7 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Main User Card */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-                    <div className="bg-gradient-to-r from-teal-50 via-blue-50 to-indigo-50 px-6 py-8">
+                    <div className="bg-gradient-to-r from-blue-50 via-blue-50 to-indigo-50 px-6 py-8">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
                             <div 
                                 className="rounded-full w-20 h-20 sm:w-24 sm:h-24 text-white flex justify-center items-center text-3xl sm:text-4xl font-bold shadow-lg"
@@ -609,7 +609,7 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
                                             {user.firstName} {user.lastName}
                                         </h2>
                                         <div className="flex flex-wrap items-center gap-2 mt-2">
-                                            <span className="px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm font-medium">
+                                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                                                 {user.role?.name || 'No Role'}
                                             </span>
                                             <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
@@ -742,13 +742,13 @@ export default function UserDetailsPage({ params }: { params: Promise<{ userId: 
                 {occupants && occupants.length > 0 && (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div 
-                            className="bg-teal-50 px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-teal-100/50 transition-colors"
+                            className="bg-blue-50 px-6 py-4 flex items-center justify-between cursor-pointer hover:bg-blue-100/50 transition-colors"
                             onClick={() => toggleSection('occupants')}
                         >
                             <div className="flex items-center space-x-3">
-                                <UserIcon className="w-5 h-5 text-teal-600" />
+                                <UserIcon className="w-5 h-5 text-blue-600" />
                                 <h3 className="font-semibold text-gray-800">Occupants / Family Members</h3>
-                                <span className="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full">
+                                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
                                     {occupants.length}
                                 </span>
                             </div>
@@ -823,7 +823,7 @@ function UserCard({ user, onView }: { user: UserDto; onView: (userId: string) =>
                         </p>
                         <button
                             onClick={() => onView(user.userId)}
-                            className="text-xs text-teal-600 hover:text-teal-800 font-medium flex items-center"
+                            className="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center"
                         >
                             View Profile
                         </button>

@@ -761,7 +761,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
       const response = await initializePayment();
       setApiPaymentResponse(response);
 
-      console.log("Payment initialization response:", response);
+      console.log("Payment initialization resp:", response, "resp::==>", paymentResponse);
 
       // if (response?.success) {
       if (paymentResponse?.success) {

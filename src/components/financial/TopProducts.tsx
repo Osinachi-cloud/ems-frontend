@@ -23,9 +23,9 @@ export const TopProducts: React.FC<TopProductsProps> = ({ products }) => {
         .slice(0, 3);
 
     return (
-        <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl shadow-sm border border-teal-100 p-6">
+        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl shadow-sm border border-blue-100 p-6">
             <div className="flex items-center space-x-2 mb-4">
-                <Award className="w-5 h-5 text-teal-600" />
+                <Award className="w-5 h-5 text-blue-600" />
                 <h3 className="text-lg font-semibold text-gray-900">Top Performing Products</h3>
             </div>
             <div className="space-y-4">
@@ -45,7 +45,7 @@ export const TopProducts: React.FC<TopProductsProps> = ({ products }) => {
                             <div className="flex-1">
                                 <div className="flex justify-between items-center mb-1">
                                     <span className="font-semibold text-gray-900">{product.productName}</span>
-                                    <span className="text-sm font-bold text-teal-600">
+                                    <span className="text-sm font-bold text-blue-600">
                                         {formatNumberToNaira(product.completedRevenue)}
                                     </span>
                                 </div>

@@ -45,7 +45,7 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({ currentP
                             key={index + 1}
                             onClick={() => goToPage(index + 1)}
                             className={`w-10 h-10 rounded-lg font-semibold transition ${currentPage === index + 1
-                                ? 'bg-teal-600 text-white shadow-lg'
+                                ? 'bg-blue-600 text-white shadow-lg'
                                 : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
                                 }`}
                             aria-label={`Go to page ${index + 1}`}

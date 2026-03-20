@@ -53,7 +53,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
                             </div>
                             <div className="w-full bg-gray-100 rounded-full h-2.5">
                                 <div
-                                    className="bg-gradient-to-r from-teal-500 to-teal-600 h-2.5 rounded-full transition-all duration-500"
+                                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-2.5 rounded-full transition-all duration-500"
                                     style={{ width: `${percentage}%` }}
                                 ></div>
                             </div>

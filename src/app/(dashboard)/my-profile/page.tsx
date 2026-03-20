@@ -26,7 +26,7 @@ const UserDetailModal = ({ user, onClose }: any) => {
                 {/* Modal Header */}
                 <div className="flex justify-between items-center border-b pb-3 mb-4">
                     <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-                        <UserCheck className="w-6 h-6 mr-2 text-teal-600" />
+                        <UserCheck className="w-6 h-6 mr-2 text-blue-600" />
                         User Details
                     </h2>
                     <button
@@ -128,9 +128,9 @@ export default function MyProfile() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                 {/* 1. Main Profile Details (Left Column) */}
-                <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-xl border-t-4 border-teal-500 h-fit">
+                <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-xl border-t-4 border-blue-500 h-fit">
                     <div className="flex items-center space-x-4 mb-6">
-                        <UserCheck className="w-10 h-10 text-teal-600 bg-teal-100 p-2 rounded-full" />
+                        <UserCheck className="w-10 h-10 text-blue-600 bg-blue-100 p-2 rounded-full" />
                         <div>
                             <p className="text-2xl font-bold text-gray-900">{currentUserProfile?.firstName || 'User Name'}</p>
                             <p className="text-sm font-semibold text-yellow-600">{currentUserProfile?.role?.name}</p>
@@ -176,7 +176,7 @@ export default function MyProfile() {
                 {(currentUserProfile?.subUsersList && currentUserProfile.subUsersList.length > 0) ? (
                     <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-xl border-t-4 border-blue-500">
                         <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                            <Users className="w-6 h-6 mr-3 text-teal-600" />
+                            <Users className="w-6 h-6 mr-3 text-blue-600" />
                             Subordinate Users ({currentUserProfile?.subUsersList?.length})
                         </h3>
                         <p className="text-sm text-gray-600 mb-4">

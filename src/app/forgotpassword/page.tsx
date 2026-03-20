@@ -246,9 +246,9 @@ const ForgotPasswordPage = () => {
             <div className="flex items-center gap-2.5">
               <div className="p-2 bg-blue-100/50 rounded-lg">
                 {isOtpSent ? (
-                  <Lock className="w-5 h-5 text-teal-600" />
+                  <Lock className="w-5 h-5 text-blue-600" />
                 ) : (
-                  <KeyRound className="w-5 h-5 text-teal-600" />
+                  <KeyRound className="w-5 h-5 text-blue-600" />
                 )}
               </div>
               <div>
@@ -319,7 +319,7 @@ const ForgotPasswordPage = () => {
                     type="button"
                     onClick={handleResendCode}
                     disabled={resendTimer > 0 || isLoading}
-                    className="text-xs text-teal-600 hover:text-teal-700 font-medium transition-colors disabled:text-gray-400 disabled:cursor-not-allowed"
+                    className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors disabled:text-gray-400 disabled:cursor-not-allowed"
                   >
                     {resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend'}
                   </button>
@@ -437,7 +437,7 @@ const ForgotPasswordPage = () => {
             <button
               type="submit"
               disabled={isLoading || !isFormValid()}
-              className="w-full mt-6 relative py-2.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-lg shadow-md transition-colors disabled:bg-teal-500 disabled:cursor-not-allowed"
+              className="w-full mt-6 relative py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-lg shadow-md transition-colors disabled:bg-blue-500 disabled:cursor-not-allowed"
             >
               <span className="flex items-center justify-center gap-2">
                 {isLoading ? (
@@ -468,7 +468,7 @@ const ForgotPasswordPage = () => {
             <p className="text-center text-xs text-gray-500 pt-2">
               <a 
                 href="/login" 
-                className="text-teal-600 hover:text-teal-700 font-medium transition-colors inline-flex items-center gap-1"
+                className="text-blue-600 hover:text-blue-700 font-medium transition-colors inline-flex items-center gap-1"
               >
                 <ArrowLeft className="w-3 h-3" />
                 Back to login
@@ -477,8 +477,8 @@ const ForgotPasswordPage = () => {
 
             {/* Step Indicator */}
             <div className="flex justify-center gap-2 pt-2">
-              <div className={`h-1 w-12 rounded-full ${!isOtpSent ? 'bg-teal-600' : 'bg-gray-200'}`} />
-              <div className={`h-1 w-12 rounded-full ${isOtpSent ? 'bg-teal-600' : 'bg-gray-200'}`} />
+              <div className={`h-1 w-12 rounded-full ${!isOtpSent ? 'bg-blue-600' : 'bg-gray-200'}`} />
+              <div className={`h-1 w-12 rounded-full ${isOtpSent ? 'bg-blue-600' : 'bg-gray-200'}`} />
             </div>
           </form>
         </div>

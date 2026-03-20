@@ -76,7 +76,7 @@ export const usePost = (methodType: string, body: any, url: string, route: strin
             const dataResponse = await apiResponse.json();
             successToast(dataResponse?.message); 
             setData(dataResponse?.message);
-            console.log(`✅ Post Instance ${instanceId.current} - Success:`, dataResponse);
+            console.log(`✅ Successful Post Instance ${instanceId.current} - Success:`, dataResponse);
             
             if (route !== null && route !== undefined) {
                 router.push(`/${route}`);

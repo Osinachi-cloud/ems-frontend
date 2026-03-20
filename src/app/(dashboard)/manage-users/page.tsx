@@ -156,14 +156,14 @@ const UserManagementPage: React.FC = () => {
         <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
                 <div className="flex items-center space-x-3">
-                    <Users className="w-8 h-8 text-teal-600" />
+                    <Users className="w-8 h-8 text-blue-600" />
                     <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">User Management</h1>
                 </div>
                 <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                     <button
                         onClick={() => handleDownload(true)}
                         disabled={isDownloading}
-                        className="relative group flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white text-xs sm:text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none"
+                        className="relative group flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-xs sm:text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none"
                     >
                         {isDownloading ? (
                             <>
@@ -203,7 +203,7 @@ const UserManagementPage: React.FC = () => {
             />
 
             {usersLoading && (
-                <div className="text-center py-10 text-teal-600">
+                <div className="text-center py-10 text-blue-600">
                     <Loader2 className="w-8 h-8 mx-auto mb-3 animate-spin" />
                     <p className="font-semibold">Loading users...</p>
                 </div>
@@ -236,7 +236,7 @@ const UserManagementPage: React.FC = () => {
                                     return (
                                         <tr
                                             key={user.userId}
-                                            className="block py-2 sm:py-0 sm:table-row hover:bg-teal-50 transition duration-150 border-b cursor-pointer"
+                                            className="block py-2 sm:py-0 sm:table-row hover:bg-blue-50 transition duration-150 border-b cursor-pointer"
                                             onClick={() => router.push(`/users/${user.userId}`)}
                                         >
                                             <td className="px-[2px] py-4 sm:py-4 sm:px-2 hidden sm:table-cell whitespace-normal text-gray-900">
@@ -271,7 +271,7 @@ const UserManagementPage: React.FC = () => {
                                             <td className="px-4 py-0 sm:py-4 sm:px-6 block sm:table-cell whitespace-nowrap text-sm">
                                                 <div className='flex gap-4'>
                                                     <span className="sm:hidden text-xs font-semibold text-gray-500 inline-block mr-[2px] w-1/4">Designation:</span>
-                                                    <span className="font-medium text-teal-600 sm:text-[14px] text-[10px] ml-[2px]">{user.designation}</span>
+                                                    <span className="font-medium text-blue-600 sm:text-[14px] text-[10px] ml-[2px]">{user.designation}</span>
                                                 </div>
                                             </td>
                                             <td className="px-4 py-0 sm:py-4 sm:px-6 block sm:table-cell whitespace-nowrap">
@@ -288,14 +288,14 @@ const UserManagementPage: React.FC = () => {
                                                             e.stopPropagation();
                                                             router.push(`/users/${user.userId}`);
                                                         }}
-                                                        className="text-teal-600 hover:text-teal-900 p-1 rounded-full hover:bg-teal-100 transition"
+                                                        className="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition"
                                                         aria-label={`View ${user.firstName} details`}
                                                     >
                                                         <Eye className="w-4 h-4" />
                                                     </button>
                                                     <button
                                                         onClick={(e) => openEditModal(user, e)}
-                                                        className="text-teal-600 hover:text-teal-900 p-1 rounded-full hover:bg-teal-100 transition"
+                                                        className="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition"
                                                         aria-label={`Edit ${user.firstName}`}
                                                     >
                                                         <Edit className="w-4 h-4" />
@@ -378,8 +378,8 @@ const SearchFilterComponent: React.FC<{
                 onClick={() => setIsExpanded(!isExpanded)}
             >
                 <div className="flex items-center space-x-3 min-w-0">
-                    <div className="p-2 bg-teal-50 rounded-lg flex-shrink-0">
-                        <Filter className="w-4 h-4 text-teal-600" />
+                    <div className="p-2 bg-blue-50 rounded-lg flex-shrink-0">
+                        <Filter className="w-4 h-4 text-blue-600" />
                     </div>
                     <div className="min-w-0">
                         <h2 className="text-sm font-semibold text-gray-800 truncate">Search Users</h2>
@@ -390,7 +390,7 @@ const SearchFilterComponent: React.FC<{
                     <button
                         onClick={handleDownloadClick}
                         disabled={isDownloading}
-                        className="flex items-center space-x-1 px-2 sm:px-3 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center space-x-1 px-2 sm:px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Download with current filters"
                     >
                         {isDownloading ? (
@@ -400,14 +400,14 @@ const SearchFilterComponent: React.FC<{
                                 <Download className="w-3.5 h-3.5" />
                                 <span className="xs:inline">Export</span>
                                 {activeFilterCount > 0 && (
-                                    <span className="ml-1 bg-teal-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                    <span className="ml-1 bg-blue-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                                         {activeFilterCount}
                                     </span>
                                 )}
                             </>
                         )}
                     </button>
-                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${isExpanded ? 'bg-teal-500' : 'bg-gray-300'}`} />
+                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${isExpanded ? 'bg-blue-500' : 'bg-gray-300'}`} />
                     <button
                         type="button"
                         onClick={(e) => {
@@ -435,7 +435,7 @@ const SearchFilterComponent: React.FC<{
                                     placeholder="Enter first name..."
                                     value={filters.firstName}
                                     onChange={handleFilterChange}
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 />
                             </div>
 
@@ -447,7 +447,7 @@ const SearchFilterComponent: React.FC<{
                                     placeholder="Enter last name..."
                                     value={filters.lastName}
                                     onChange={handleFilterChange}
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 />
                             </div>
 
@@ -459,7 +459,7 @@ const SearchFilterComponent: React.FC<{
                                     placeholder="user@example.com"
                                     value={filters.email.replace("%40", "")}
                                     onChange={handleFilterChange}
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 />
                             </div>
 
@@ -469,7 +469,7 @@ const SearchFilterComponent: React.FC<{
                                     name="isActive"
                                     value={filters.isActive}
                                     onChange={handleFilterChange}
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors appearance-none bg-white"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
                                 >
                                     <option value="">All Status</option>
                                     <option value="true">Active</option>
@@ -485,7 +485,7 @@ const SearchFilterComponent: React.FC<{
                                     placeholder="Enter role ID..."
                                     value={filters.roleId}
                                     onChange={handleFilterChange}
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 />
                             </div>
 
@@ -495,7 +495,7 @@ const SearchFilterComponent: React.FC<{
                                     name="designation"
                                     value={filters.designation}
                                     onChange={handleFilterChange}
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors appearance-none bg-white"
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
                                 >
                                     <option value="">Designation</option>
                                     <option value="LANDLORD">Landlord</option>
@@ -519,7 +519,7 @@ const SearchFilterComponent: React.FC<{
                                     type="button"
                                     onClick={handleDownloadClick}
                                     disabled={isDownloading}
-                                    className="flex items-center justify-center space-x-2 px-4 py-2 bg-teal-100 hover:bg-teal-200 text-teal-800 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isDownloading ? (
                                         <>
@@ -531,7 +531,7 @@ const SearchFilterComponent: React.FC<{
                                             <Download className="w-4 h-4" />
                                             <span>Download Filtered</span>
                                             {activeFilterCount > 0 && (
-                                                <span className="ml-1 bg-teal-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                                <span className="ml-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                                                     {activeFilterCount}
                                                 </span>
                                             )}
@@ -541,7 +541,7 @@ const SearchFilterComponent: React.FC<{
                             </div>
                             <button
                                 type="submit"
-                                className="flex items-center justify-center space-x-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
+                                className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                             >
                                 <Search className="w-4 h-4" />
                                 <span>Apply Filters</span>

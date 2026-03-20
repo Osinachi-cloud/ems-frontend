@@ -4,7 +4,7 @@
 
 // const InputField: React.FC<InputFieldProps> = React.memo(({ name, label, type = 'text', error, value, onChange, disabled }) => {
 
-//     const inputClasses = `w-full px-4 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150 shadow-sm ${error ? 'border-red-500' : 'border-gray-300'}`;
+//     const inputClasses = `w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm ${error ? 'border-red-500' : 'border-gray-300'}`;
 
 //     let inputElement;
 
@@ -17,7 +17,7 @@
 //                     type="checkbox"
 //                     checked={value as boolean}
 //                     onChange={onChange}
-//                     className="h-5 w-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+//                     className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
 //                     disabled={disabled}
 //                 />
 //                 <label htmlFor={name} className="ml-3 text-sm text-gray-900 font-semibold">

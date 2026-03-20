@@ -52,12 +52,12 @@ const ManageAddressesPage: React.FC = () => {
             {/* Page Header and Action */}
             <div className="flex justify-between items-center mb-6 border-b pb-4">
                 <div className="flex items-center space-x-3">
-                    <MapPin className="w-8 h-8 text-teal-600" />
+                    <MapPin className="w-8 h-8 text-blue-600" />
                     <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Manage Addresses</h1>
                 </div>
                 <button
                     onClick={openCreateModal}
-                    className="flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-teal-600 text-white font-bold text-sm rounded-lg shadow-md hover:bg-teal-700 transition duration-300"
+                    className="flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 text-white font-bold text-sm rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
                 >
                     <PlusCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
                     <span className="hidden sm:inline">Add Address</span>
@@ -70,7 +70,7 @@ const ManageAddressesPage: React.FC = () => {
 
             {/* Loading/Error State */}
             {addressesLoading && (
-                <div className="text-center py-10 text-teal-600">
+                <div className="text-center py-10 text-blue-600">
                     <Loader2 className="w-8 h-8 mx-auto mb-3 animate-spin" />
                     <p className="font-semibold">Loading addresses...</p>
                 </div>
@@ -102,7 +102,7 @@ const ManageAddressesPage: React.FC = () => {
                                 {paginatedAddresses.map((address: Address, index: number) => (
                                     <tr
                                         key={address.addressId || index}
-                                        className="block sm:table-row hover:bg-teal-50 transition duration-150 border-b"
+                                        className="block sm:table-row hover:bg-blue-50 transition duration-150 border-b"
                                     >
                                         <td className="px-4 py-3 sm:py-4 sm:px-6 block sm:table-cell text-sm text-gray-900 max-w-xs truncate">
                                             <span className="sm:hidden text-xs font-semibold text-gray-500 block">Full Address:</span>

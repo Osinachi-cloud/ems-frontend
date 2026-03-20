@@ -110,8 +110,8 @@ const FinancialReportsPage: React.FC = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 gap-4">
                 <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-teal-100 rounded-lg">
-                        <TrendingUp className="w-6 h-6 text-teal-600" />
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                        <TrendingUp className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
                         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Financial Reports</h1>
@@ -123,7 +123,7 @@ const FinancialReportsPage: React.FC = () => {
 
                 {/* Date Range Display */}
                 <div className="flex items-center space-x-2 text-sm bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200">
-                    <Calendar className="w-4 h-4 text-teal-600" />
+                    <Calendar className="w-4 h-4 text-blue-600" />
                     <span className="font-medium text-gray-700">
                         {filters.fromDate ? new Date(filters.fromDate).toLocaleDateString() : 'Start'} - {filters.toDate ? new Date(filters.toDate).toLocaleDateString() : 'End'}
                     </span>
@@ -155,7 +155,7 @@ const FinancialReportsPage: React.FC = () => {
             {/* Loading State */}
             {reportLoading && (
                 <div className="text-center py-12">
-                    <Loader2 className="w-12 h-12 mx-auto mb-4 animate-spin text-teal-600" />
+                    <Loader2 className="w-12 h-12 mx-auto mb-4 animate-spin text-blue-600" />
                     <p className="text-lg font-semibold text-gray-700">Generating your financial report...</p>
                     <p className="text-sm text-gray-500 mt-2">This may take a moment</p>
                 </div>
@@ -169,17 +169,17 @@ const FinancialReportsPage: React.FC = () => {
                         <div className="flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center space-x-4">
                                 <div className="flex items-center space-x-2 text-sm">
-                                    <Calendar className="w-4 h-4 text-teal-600" />
+                                    <Calendar className="w-4 h-4 text-blue-600" />
                                     <span className="text-gray-600">Period:</span>
                                     <span className="font-semibold text-gray-900">{reportSummary.dateRangeLabel}</span>
                                 </div>
                                 <div className="flex items-center space-x-2 text-sm">
-                                    <Clock className="w-4 h-4 text-teal-600" />
+                                    <Clock className="w-4 h-4 text-blue-600" />
                                     <span className="text-gray-600">Generated:</span>
                                     <span className="font-semibold text-gray-900">{reportSummary.generatedAt}</span>
                                 </div>
                             </div>
-                            <div className="text-sm bg-teal-50 text-teal-700 px-3 py-1 rounded-full">
+                            <div className="text-sm bg-blue-50 text-blue-700 px-3 py-1 rounded-full">
                                 {reportSummary.totalTransactionCount} Total Transactions
                             </div>
                         </div>
@@ -208,24 +208,24 @@ const FinancialReportsPage: React.FC = () => {
                     <BreakdownTables summary={reportSummary} />
 
                     {/* Summary Footer */}
-                    <div className="mt-6 p-4 bg-teal-50 rounded-lg border border-teal-200 flex flex-wrap items-center justify-between gap-4">
+                    <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200 flex flex-wrap items-center justify-between gap-4">
                         <div className="flex items-center space-x-2">
                             <span className="text-sm text-gray-600">Report Period:</span>
-                            <span className="text-sm font-semibold text-teal-700">
+                            <span className="text-sm font-semibold text-blue-700">
                                 {reportSummary.dateRangeLabel}
                             </span>
                         </div>
                         <div className="flex items-center space-x-4">
                             <div className="flex items-center space-x-2">
                                 <span className="text-sm text-gray-600">Total Revenue:</span>
-                                <span className="text-lg font-bold text-teal-700">
+                                <span className="text-lg font-bold text-blue-700">
                                     {formatNumberToNaira(reportSummary.totalCompletedRevenue)}
                                 </span>
                             </div>
                             <button
                                 onClick={handleExport}
                                 disabled={isExporting}
-                                className="flex items-center space-x-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50"
+                                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50"
                             >
                                 {isExporting ? (
                                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -258,7 +258,7 @@ const FinancialReportsPage: React.FC = () => {
                                 toDate: defaultRange.toDate
                             });
                         }}
-                        className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
                         Reset to Default Range
                     </button>

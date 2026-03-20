@@ -22,7 +22,7 @@ const AdminPage = () => {
         {/* USER CARDS */}
         <div>
           <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, Alex SuperAdmin!</h1>
-          <h6 className="text-xl text-teal-600 mb-4">Role: SuperAdmin</h6>
+          <h6 className="text-xl text-blue-600 mb-4">Role: SuperAdmin</h6>
         </div>
         <div className="grid md:grid-cols-5 gap-2">
           {/* <UserCard country="My Total Paid" customerCount={120000} /> */}
@@ -31,12 +31,12 @@ const AdminPage = () => {
           {/* <UserCard country="China" customerCount={2000} /> */}
 
           {feeAmount > 0 && (
-                    <div className="bg-white px-6 py-4 rounded-xl shadow-lg border border-teal-200">
+                    <div className="bg-white px-6 py-4 rounded-xl shadow-lg border border-blue-200">
                       <h2 className="text-sm font-semibold text-gray-700 mb-4 whitespace-nowrap">Monthly Fee</h2>
-             {/* <p className="mb-4 text-gray-600">Your current monthly fee is <span className="font-bold text-teal-600">${feeAmount}</span> based on your role as a **{"Admin"}**.</p> */}
+             {/* <p className="mb-4 text-gray-600">Your current monthly fee is <span className="font-bold text-blue-600">${feeAmount}</span> based on your role as a **{"Admin"}**.</p> */}
                       <button
                         onClick={() => console.log("pay")}
-                        className="px-6 py-2 bg-teal-600 text-sm text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition duration-300"
+                        className="px-6 py-2 bg-blue-600 text-sm text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
                       >
                         Pay {formatNumberToNaira(feeAmount)}
                       </button>
@@ -254,14 +254,14 @@ export default AdminPage;
 
 //     return (
 //       <div className="w-full lg:w-64 bg-gray-800 text-white flex flex-col p-4 shadow-xl">
-//         <div className="mb-8 p-3 text-2xl font-bold text-teal-400 border-b border-gray-700">
+//         <div className="mb-8 p-3 text-2xl font-bold text-blue-400 border-b border-gray-700">
 //           Estate Management (Mock)
 //         </div>
 //         <nav className="flex-grow">
 //           {navItems.filter(item => item.roles.includes(userProfile?.role)).map((item) => (
 //             <button
 //               key={item.name}
-//               className={`flex items-center w-full px-4 py-3 my-1 rounded-lg transition duration-200 ${currentView === item.name.toLowerCase().replace(/\s/g, '') ? 'bg-teal-600' : 'hover:bg-gray-700'}`}
+//               className={`flex items-center w-full px-4 py-3 my-1 rounded-lg transition duration-200 ${currentView === item.name.toLowerCase().replace(/\s/g, '') ? 'bg-blue-600' : 'hover:bg-gray-700'}`}
 //               onClick={() => setCurrentView(item.name.toLowerCase().replace(/\s/g, ''))}
 //             >
 //               <item.icon className="w-5 h-5 mr-3" />
@@ -318,7 +318,7 @@ export default AdminPage;
 //         return [
 //           { title: 'My Tenants', value: tenantCount, icon: Users, color: 'border-blue-500' },
 //           { title: 'Outstanding Payments', value: unpaidCount, icon: DollarSign, color: 'border-red-500' },
-//           { title: 'My Fee', value: `$${feeAmount}`, icon: DollarSign, color: 'border-teal-500' },
+//           { title: 'My Fee', value: `$${feeAmount}`, icon: DollarSign, color: 'border-blue-500' },
 //         ];
 //       }
 //       if (role === 'Tenant' || role === 'Occupant') {
@@ -328,7 +328,7 @@ export default AdminPage;
 //         return [
 //           { title: 'My Total Paid', value: `$${totalPaid}`, icon: DollarSign, color: 'border-green-500' },
 //           { title: 'Payments Count', value: paidCount, icon: FileText, color: 'border-blue-500' },
-//           { title: 'Monthly Fee', value: `$${feeAmount}`, icon: DollarSign, color: 'border-teal-500' },
+//           { title: 'Monthly Fee', value: `$${feeAmount}`, icon: DollarSign, color: 'border-blue-500' },
 //         ];
 //       }
 //       return [
@@ -342,7 +342,7 @@ export default AdminPage;
 //     return (
 //       <div className="p-6 bg-gray-50 flex-grow rounded-lg min-h-screen">
 //         <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, {userProfile?.name}!</h1>
-//         <p className="text-xl text-teal-600 mb-8">Role: {role}</p>
+//         <p className="text-xl text-blue-600 mb-8">Role: {role}</p>
 
 //         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 //           {stats.map((stat, index) => (
@@ -352,12 +352,12 @@ export default AdminPage;
 
 //         {/* Action Section */}
 //         {feeAmount > 0 && (
-//           <div className="bg-white p-6 rounded-xl shadow-lg border border-teal-200">
+//           <div className="bg-white p-6 rounded-xl shadow-lg border border-blue-200">
 //             <h2 className="text-2xl font-semibold text-gray-700 mb-4">Monthly Fee Payment</h2>
-//             <p className="mb-4 text-gray-600">Your current monthly fee is <span className="font-bold text-teal-600">${feeAmount}</span> based on your role as a **{role}**.</p>
+//             <p className="mb-4 text-gray-600">Your current monthly fee is <span className="font-bold text-blue-600">${feeAmount}</span> based on your role as a **{role}**.</p>
 //             <button
 //               onClick={() => handlePayFee(feeAmount)}
-//               className="px-6 py-3 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition duration-300"
+//               className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
 //             >
 //               Pay Monthly Fee (${feeAmount})
 //             </button>
@@ -406,8 +406,8 @@ export default AdminPage;
 //           </div>
 //           <div className="max-h-96 overflow-y-auto">
 //             {filteredUsers.map(user => (
-//               <div key={user.id} className="flex py-2 border-b border-gray-200 hover:bg-teal-50 transition">
-//                 <div className="w-1/6 font-medium text-teal-600">{user.role}</div>
+//               <div key={user.id} className="flex py-2 border-b border-gray-200 hover:bg-blue-50 transition">
+//                 <div className="w-1/6 font-medium text-blue-600">{user.role}</div>
 //                 <div className="w-2/6">
 //                   <span className="font-semibold">{user.name}</span>
 //                   <span className="text-xs block text-gray-500">ID: {user.id}</span>
@@ -473,8 +473,8 @@ export default AdminPage;
 //   const MyProfileView = () => (
 //     <div className="p-6 bg-white flex-grow rounded-lg min-h-screen">
 //       <h1 className="text-3xl font-extrabold text-gray-800 mb-6">My Profile Details</h1>
-//       <div className="bg-gray-50 p-8 rounded-xl shadow-lg border-t-4 border-teal-500 max-w-lg">
-//         <p className="text-2xl font-bold mb-4 text-teal-700">{userProfile?.name || 'User Name'}</p>
+//       <div className="bg-gray-50 p-8 rounded-xl shadow-lg border-t-4 border-blue-500 max-w-lg">
+//         <p className="text-2xl font-bold mb-4 text-blue-700">{userProfile?.name || 'User Name'}</p>
 //         <div className="space-y-3 text-gray-700">
 //           <p><strong>Unique ID:</strong> <span className="text-sm bg-gray-200 p-1 rounded font-mono">{userId}</span></p>
 //           <p><strong>Assigned Role:</strong> <span className="font-extrabold text-lg text-yellow-600">{userProfile?.role}</span></p>
@@ -494,7 +494,7 @@ export default AdminPage;
 //               ))}
 //               {filteredUsers.length <= 1 && <li className="text-gray-500">No users found under your management.</li>}
 //             </ul>
-//             <p className="text-xs mt-2 text-teal-600">
+//             <p className="text-xs mt-2 text-blue-600">
 //               *Landlords see Tenants and their Occupants. Tenants see their Occupants.
 //             </p>
 //           </div>
@@ -542,7 +542,7 @@ export default AdminPage;
 //       <main className="flex-grow p-4 lg:p-8">
 //         {/* Mobile Header and Sidebar Toggle */}
 //         <div className="lg:hidden flex justify-between items-center mb-4 bg-white p-3 rounded-lg shadow">
-//           <h1 className="text-xl font-bold text-teal-600">Portal (Mock)</h1>
+//           <h1 className="text-xl font-bold text-blue-600">Portal (Mock)</h1>
 //           <button
 //             onClick={() => { /* Implement Mobile Menu Toggle if desired */ }}
 //             className="p-2 text-gray-800 bg-gray-200 rounded-lg"
@@ -726,14 +726,14 @@ export default AdminPage;
 
 //     return (
 //       <div className="w-full lg:w-64 bg-gray-800 text-white flex flex-col p-4 shadow-xl">
-//         <div className="mb-8 p-3 text-2xl font-bold text-teal-400 border-b border-gray-700">
+//         <div className="mb-8 p-3 text-2xl font-bold text-blue-400 border-b border-gray-700">
 //           Estate Management (Mock)
 //         </div>
 //         <nav className="flex-grow">
 //           {navItems.filter(item => item.roles.includes(userProfile?.role)).map((item) => (
 //             <button
 //               key={item.name}
-//               className={`flex items-center w-full px-4 py-3 my-1 rounded-lg transition duration-200 ${currentView === item.name.toLowerCase().replace(/\s/g, '') ? 'bg-teal-600' : 'hover:bg-gray-700'}`}
+//               className={`flex items-center w-full px-4 py-3 my-1 rounded-lg transition duration-200 ${currentView === item.name.toLowerCase().replace(/\s/g, '') ? 'bg-blue-600' : 'hover:bg-gray-700'}`}
 //               onClick={() => setCurrentView(item.name.toLowerCase().replace(/\s/g, ''))}
 //             >
 //               <item.icon className="w-5 h-5 mr-3" />
@@ -790,7 +790,7 @@ export default AdminPage;
 //         return [
 //           { title: 'My Tenants', value: tenantCount, icon: Users, color: 'border-blue-500' },
 //           { title: 'Outstanding Payments', value: unpaidCount, icon: DollarSign, color: 'border-red-500' },
-//           { title: 'My Fee', value: `$${feeAmount}`, icon: DollarSign, color: 'border-teal-500' },
+//           { title: 'My Fee', value: `$${feeAmount}`, icon: DollarSign, color: 'border-blue-500' },
 //         ];
 //       }
 //       if (role === 'Tenant' || role === 'Occupant') {
@@ -800,7 +800,7 @@ export default AdminPage;
 //         return [
 //           { title: 'My Total Paid', value: `$${totalPaid}`, icon: DollarSign, color: 'border-green-500' },
 //           { title: 'Payments Count', value: paidCount, icon: FileText, color: 'border-blue-500' },
-//           { title: 'Monthly Fee', value: `$${feeAmount}`, icon: DollarSign, color: 'border-teal-500' },
+//           { title: 'Monthly Fee', value: `$${feeAmount}`, icon: DollarSign, color: 'border-blue-500' },
 //         ];
 //       }
 //       return [
@@ -814,7 +814,7 @@ export default AdminPage;
 //     return (
 //       <div className="p-6 bg-gray-50 flex-grow rounded-lg min-h-screen">
 //         <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, {userProfile?.name}!</h1>
-//         <p className="text-xl text-teal-600 mb-8">Role: {role}</p>
+//         <p className="text-xl text-blue-600 mb-8">Role: {role}</p>
 
 //         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 //           {stats.map((stat, index) => (
@@ -824,12 +824,12 @@ export default AdminPage;
 
 //         {/* Action Section */}
 //         {feeAmount > 0 && (
-//           <div className="bg-white p-6 rounded-xl shadow-lg border border-teal-200">
+//           <div className="bg-white p-6 rounded-xl shadow-lg border border-blue-200">
 //             <h2 className="text-2xl font-semibold text-gray-700 mb-4">Monthly Fee Payment</h2>
-//             <p className="mb-4 text-gray-600">Your current monthly fee is <span className="font-bold text-teal-600">${feeAmount}</span> based on your role as a **{role}**.</p>
+//             <p className="mb-4 text-gray-600">Your current monthly fee is <span className="font-bold text-blue-600">${feeAmount}</span> based on your role as a **{role}**.</p>
 //             <button
 //               onClick={() => handlePayFee(feeAmount)}
-//               className="px-6 py-3 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700 transition duration-300"
+//               className="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
 //             >
 //               Pay Monthly Fee (${feeAmount})
 //             </button>
@@ -878,8 +878,8 @@ export default AdminPage;
 //           </div>
 //           <div className="max-h-96 overflow-y-auto">
 //             {filteredUsers.map(user => (
-//               <div key={user.id} className="flex py-2 border-b border-gray-200 hover:bg-teal-50 transition">
-//                 <div className="w-1/6 font-medium text-teal-600">{user.role}</div>
+//               <div key={user.id} className="flex py-2 border-b border-gray-200 hover:bg-blue-50 transition">
+//                 <div className="w-1/6 font-medium text-blue-600">{user.role}</div>
 //                 <div className="w-2/6">
 //                   <span className="font-semibold">{user.name}</span>
 //                   <span className="text-xs block text-gray-500">ID: {user.id}</span>
@@ -954,9 +954,9 @@ export default AdminPage;
 //         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
 //           {/* 1. Main Profile Details (Left Column) */}
-//           <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-xl border-t-4 border-teal-500 h-fit">
+//           <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-xl border-t-4 border-blue-500 h-fit">
 //             <div className="flex items-center space-x-4 mb-6">
-//               <UserCheck className="w-10 h-10 text-teal-600 bg-teal-100 p-2 rounded-full" />
+//               <UserCheck className="w-10 h-10 text-blue-600 bg-blue-100 p-2 rounded-full" />
 //               <div>
 //                 <p className="text-2xl font-bold text-gray-900">{userProfile?.name || 'User Name'}</p>
 //                 <p className="text-sm font-semibold text-yellow-600">{userProfile?.role}</p>
@@ -1002,7 +1002,7 @@ export default AdminPage;
 //           {(userProfile?.role === 'Landlord' || userProfile?.role === 'Tenant') ? (
 //             <div className="lg:col-span-2 bg-gray-50 p-6 rounded-xl shadow-inner border border-gray-200">
 //               <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-//                 <Users className="w-6 h-6 mr-3 text-teal-600" />
+//                 <Users className="w-6 h-6 mr-3 text-blue-600" />
 //                 Subordinate Users ({subordinates.length})
 //               </h3>
 //               <p className="text-sm text-gray-600 mb-4">
@@ -1089,7 +1089,7 @@ export default AdminPage;
 //       <main className="flex-grow p-4 lg:p-8">
 //         {/* Mobile Header and Sidebar Toggle */}
 //         <div className="lg:hidden flex justify-between items-center mb-4 bg-white p-3 rounded-lg shadow">
-//           <h1 className="text-xl font-bold text-teal-600">Portal (Mock)</h1>
+//           <h1 className="text-xl font-bold text-blue-600">Portal (Mock)</h1>
 //           <button
 //             onClick={() => { /* Implement Mobile Menu Toggle if desired */ }}
 //             className="p-2 text-gray-800 bg-gray-200 rounded-lg"

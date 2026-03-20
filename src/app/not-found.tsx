@@ -50,14 +50,14 @@ export default function NotFound() {
 
     return (
         <div 
-            className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 flex items-center justify-center p-3 sm:p-4 relative overflow-y-auto"
+            className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-50 flex items-center justify-center p-3 sm:p-4 relative overflow-y-auto"
             onMouseMove={handleMouseMove}
         >
             {/* Simplified Background for Mobile */}
             <div className="absolute inset-0 overflow-hidden">
                 {/* Floating Numbers - Smaller on mobile */}
                 <div 
-                    className="absolute text-[120px] sm:text-[200px] md:text-[300px] font-black text-teal-100/20 select-none"
+                    className="absolute text-[120px] sm:text-[200px] md:text-[300px] font-black text-blue-100/20 select-none"
                     style={{
                         transform: !isMobile ? `translate(${mousePosition.x * 2}px, ${mousePosition.y * 2}px)` : 'none',
                         top: '50%',
@@ -71,7 +71,7 @@ export default function NotFound() {
                 </div>
 
                 {/* Animated Circles - Reduced opacity on mobile */}
-                <div className="absolute top-0 left-0 w-32 sm:w-64 h-32 sm:h-64 bg-teal-200/20 sm:bg-teal-200/30 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute top-0 left-0 w-32 sm:w-64 h-32 sm:h-64 bg-blue-200/20 sm:bg-blue-200/30 rounded-full blur-3xl animate-pulse"></div>
                 <div className="absolute bottom-0 right-0 w-48 sm:w-96 h-48 sm:h-96 bg-cyan-200/20 sm:bg-cyan-200/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
             </div>
 
@@ -84,7 +84,7 @@ export default function NotFound() {
             >
                 {/* Decorative Header - Adjusted for mobile */}
                 <div className="absolute -top-3 sm:-top-4 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-auto">
-                    <div className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white px-3 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg flex items-center justify-center space-x-1 sm:space-x-2">
+                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg flex items-center justify-center space-x-1 sm:space-x-2">
                         <Compass className="w-3 h-3 sm:w-4 sm:h-4 animate-spin-slow" />
                         <span>Page Not Found</span>
                     </div>
@@ -104,10 +104,10 @@ export default function NotFound() {
                                         animationDelay: `${index * 0.2}s`
                                     }}
                                 >
-                                    <div className="text-6xl sm:text-8xl md:text-9xl font-black bg-gradient-to-b from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                                    <div className="text-6xl sm:text-8xl md:text-9xl font-black bg-gradient-to-b from-blue-600 to-cyan-600 bg-clip-text text-transparent">
                                         {digit}
                                     </div>
-                                    <div className="absolute -inset-2 sm:-inset-3 bg-gradient-to-r from-teal-400/20 to-cyan-400/20 rounded-full blur-xl -z-10"></div>
+                                    <div className="absolute -inset-2 sm:-inset-3 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-full blur-xl -z-10"></div>
                                 </div>
                             ))}
                         </div>
@@ -132,7 +132,7 @@ export default function NotFound() {
                     {/* Search Suggestion - Mobile optimized */}
                     <div className="bg-gray-50/90 sm:bg-gray-50/80 rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-4 sm:mb-8 border border-gray-200/50">
                         <div className="flex items-center justify-center sm:justify-start space-x-2 text-gray-600 mb-2 sm:mb-3">
-                            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-teal-500 flex-shrink-0" />
+                            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
                             <span className="text-xs sm:text-sm font-medium">Quick Links</span>
                         </div>
                         
@@ -141,7 +141,7 @@ export default function NotFound() {
                             {quickLinks.map((link) => {
                                 const Icon = link.icon;
                                 const colorClasses = {
-                                    teal: 'bg-teal-50 text-teal-700 hover:bg-teal-100 border-teal-200',
+                                    teal: 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200',
                                     blue: 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200',
                                     green: 'bg-green-50 text-green-700 hover:bg-green-100 border-green-200',
                                     purple: 'bg-purple-50 text-purple-700 hover:bg-purple-100 border-purple-200'
@@ -165,7 +165,7 @@ export default function NotFound() {
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-4">
                         <button
                             onClick={() => router.back()}
-                            className="group flex items-center justify-center space-x-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-white border-2 border-teal-500 text-teal-600 rounded-xl hover:bg-teal-50 transition-all duration-300 hover:shadow-lg text-sm sm:text-base font-medium"
+                            className="group flex items-center justify-center space-x-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-white border-2 border-blue-500 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-300 hover:shadow-lg text-sm sm:text-base font-medium"
                         >
                             <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
                             <span>Go Back</span>
@@ -173,7 +173,7 @@ export default function NotFound() {
                         
                         <Link
                             href="/"
-                            className="group flex items-center justify-center space-x-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-xl hover:from-teal-700 hover:to-cyan-700 transition-all duration-300 hover:shadow-lg hover:shadow-teal-200 text-sm sm:text-base font-medium"
+                            className="group flex items-center justify-center space-x-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 hover:shadow-lg hover:shadow-blue-200 text-sm sm:text-base font-medium"
                         >
                             <Home className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
                             <span>Return Home</span>
@@ -187,7 +187,7 @@ export default function NotFound() {
                 </div>
 
                 {/* Decorative Bottom */}
-                <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 w-16 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full"></div>
+                <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 w-16 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full"></div>
             </div>
 
             <style jsx>{`

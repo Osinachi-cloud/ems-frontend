@@ -27,7 +27,7 @@
 //     compact = false 
 // }) => {
     
-//     const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-teal-500 focus:border-teal-500 transition duration-150 shadow-sm text-sm ${
+//     const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm text-sm ${
 //         error ? 'border-red-500' : 'border-gray-300'
 //     } ${compact ? 'text-sm' : ''}`;
     

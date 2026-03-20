@@ -102,7 +102,7 @@ const AdminPage = () => {
                     {/* USER CARDS */}
                     <div>
                         <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Welcome, Alex SuperAdmin!</h1>
-                        <h6 className="text-xl text-teal-600 mb-4 flex justify-between">
+                        <h6 className="text-xl text-blue-600 mb-4 flex justify-between">
                             <span>
                                 Role: {getUserDetails()?.designation}
 
@@ -115,10 +115,10 @@ const AdminPage = () => {
                     </div>
 
                     {/* Elegant Date Filter */}
-                    <div className="bg-gradient-to-r from-teal-50 to-cyan-50 p-4 rounded-lg border border-teal-200 shadow-sm">
+                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200 shadow-sm">
                         <div className="flex flex-col sm:flex-row sm:items-end gap-4">
                             <div className="flex-1">
-                                <h3 className="text-sm font-semibold text-teal-800 mb-3 flex items-center">
+                                <h3 className="text-sm font-semibold text-blue-800 mb-3 flex items-center">
                                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
@@ -131,7 +131,7 @@ const AdminPage = () => {
                                             type="date"
                                             value={dateRange.fromDate}
                                             onChange={(e) => handleDateFilterChange('fromDate', e.target.value)}
-                                            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                         />
                                     </div>
                                     <div className="flex-1">
@@ -140,7 +140,7 @@ const AdminPage = () => {
                                             type="date"
                                             value={dateRange.toDate}
                                             onChange={(e) => handleDateFilterChange('toDate', e.target.value)}
-                                            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
+                                            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                         />
                                     </div>
                                     {isDateFilterActive && (
@@ -155,7 +155,7 @@ const AdminPage = () => {
                                     )}
                                 </div>
                                 {isDateFilterActive && (
-                                    <div className="mt-2 text-xs text-teal-600">
+                                    <div className="mt-2 text-xs text-blue-600">
                                         {dateRange.fromDate && dateRange.toDate
                                             ? `Showing transactions from ${new Date(dateRange.fromDate).toLocaleDateString()} to ${new Date(dateRange.toDate).toLocaleDateString()}`
                                             : dateRange.fromDate
