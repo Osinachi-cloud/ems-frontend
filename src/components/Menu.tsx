@@ -12,25 +12,26 @@ const menuItems = [
                 icon: "/Vector.png",
                 label: "My Dashboard",
                 href: "/my-dashboard",
-                visible: ["APP_ADMIN", "teacher", "student", "parent", "TENANT"],
+                visible: ["TENANT"],
             },
             {
                 icon: "/Vector.png",
                 label: "My Profile",
                 href: "/my-profile",
-                visible: ["APP_ADMIN", "teacher", "student", "parent", "TENANT"],
+                visible: ["APP_ADMIN", "TENANT", "LANDLORD"],
             },
             {
                 icon: "/Bag.png",
                 label: "Estate Transactions",
                 href: "/estate-transaction-overview",
-                visible: ["APP_ADMIN", "teacher", "TENANT"],
+                visible: ["APP_ADMIN", "ESTATE_ADMIN", "SUPERADMIN_ADMIN"],
             },
             {
                 icon: "/Bag.png",
                 label: "Users Management",
                 href: "/manage-users",
-                visible: ["APP_ADMIN", "teacher", "TENANT"],
+                visible: ["APP_ADMIN", "ESTATE_ADMIN", "SUPERADMIN_ADMIN"],
+
             },
             {
                 icon: "/folder.png",
