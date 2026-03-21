@@ -49,11 +49,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
     }), [product, initialProduct]);
     
     const { 
+        data: createProductResponse,
         callApi: createProductApi, 
         isLoading: createLoading 
     } = usePost("POST", product, `${baseUrL}/create-product`, null); 
     
     const { 
+        data: updateProductResponse,
         callApi: updateProductApi, 
         isLoading: updateLoading 
     } = usePost("PUT", fullProduct, `${baseUrL}/update-product`, null); 
@@ -110,6 +112,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
                 apiResponse = await createProductApi();
             }
 
+            console.log("log test:", createProductResponse, updateProductResponse)
+
             if (apiResponse?.success) {
                 setResponse({ success: apiResponse?.success, message: apiResponse.message });
                 
@@ -117,7 +121,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
                     onSuccess(); 
                 }, 1000); 
             } else {
-                setResponse({ success: apiResponse?.success, message: apiResponse?.error || `Failed to ${isEditMode ? 'update' : 'create'} product.` });
+                // setResponse({ success: apiResponse?.success, message: apiResponse?.error || `Failed to ${isEditMode ? 'update' : 'create'} product.` });
             }
         } catch (error) {
             console.error('Submission error:', error);
