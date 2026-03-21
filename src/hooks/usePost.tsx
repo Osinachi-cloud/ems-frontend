@@ -69,13 +69,14 @@ export const usePost = (methodType: string, body: any, url: string, route: strin
             }
 
             if (!apiResponse.ok) {
-                const errorText = await apiResponse.text();
-                throw new Error(`HTTP error! status: ${apiResponse.status}, message: ${errorText}`);
+            const res = await apiResponse.json();
+            console.log("log log test 1", res)
+                throw new Error(`error: ${res.error}`);
             }
 
             const dataResponse = await apiResponse.json();
             successToast(dataResponse?.message); 
-            setData(dataResponse?.message);
+            setData(dataResponse);
             console.log(`✅ Successful Post Instance ${instanceId.current} - Success:`, dataResponse);
             
             if (route !== null && route !== undefined) {
@@ -164,7 +165,7 @@ export const usePostWithoutRouting = (methodType: string, body: any, url: string
 
             const dataResponse = await apiResponse.json();
             successToast(dataResponse?.message); 
-            setData(dataResponse?.message);
+            setData(dataResponse);
             console.log(`✅ Post Instance ${instanceId.current} - Success:`, dataResponse);
 
         } catch (e: any) {
