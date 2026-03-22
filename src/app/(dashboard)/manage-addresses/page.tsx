@@ -66,7 +66,7 @@ const ManageAddressesPage: React.FC = () => {
             </div>
 
             {/* Statistics */}
-            <AddressStatistics />
+            {/* <AddressStatistics /> */}
 
             {/* Loading/Error State */}
             {addressesLoading && (

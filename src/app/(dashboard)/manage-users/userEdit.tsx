@@ -272,6 +272,7 @@ import { FeedbackMessage } from "../inventory/feedback";
 import { useFetch } from "@/hooks/useFetch";
 import { InputFieldProps } from "@/types/reponse";
 import React from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 // Enum for Designation (should match your backend)
 enum Designation {
@@ -289,12 +290,12 @@ interface UserFormProps {
 }
 
 const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser }) => {
-    const [user, setUser] = useState<{ 
-        firstName: string, 
-        lastName: string, 
-        enabled: boolean, 
+    const [user, setUser] = useState<{
+        firstName: string,
+        lastName: string,
+        enabled: boolean,
         role: string,
-        designation: string 
+        designation: string
     }>({
         firstName: initialUser.firstName || '',
         lastName: initialUser.lastName || '',
@@ -374,6 +375,9 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
         return newErrors;
     };
 
+    // Call this at the top level of your component
+    const { value, getUserDetails, setValue: setStoredValue, removeValue: removeStoredValue } = useLocalStorage("userDetails", null);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setResponse(null);
@@ -387,16 +391,31 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
         setErrors({});
 
         try {
-            const apiResponse: any = await updateUserApi();
+            // Get token from the already available function
+            const token = getUserDetails()?.accessToken;
 
-            console.log("apiResponse ====>", apiResponse);
+            const apiResponse = await fetch(`${baseUrL}/update-user?email=${initialUser.email}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : '',
+                },
+                body: JSON.stringify(userUpdateBody)
+            });
 
-            if (apiResponse?.statusCode === 200 || apiResponse?.success) {
+            const responseData = await apiResponse.json();
+
+            console.log("apiResponse ====>", responseData);
+            
+
+            if (apiResponse.ok && (responseData?.statusCode === 200 || responseData?.success)) {
                 setResponse({
                     success: true,
-                    message: apiResponse.message || "User updated successfully.",
-                    data: apiResponse
+                    message: responseData.message || "User updated successfully.",
+                    data: responseData
                 });
+                setStoredValue(responseData.data);
+
 
                 setTimeout(() => {
                     onSuccess();
@@ -404,15 +423,15 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
             } else {
                 setResponse({
                     success: false,
-                    message: apiResponse?.error || `Failed to update user.`,
-                    data: apiResponse
+                    message: responseData?.error || `Failed to update user.`,
+                    data: responseData
                 });
             }
         } catch (error) {
             console.error('Submission error:', error);
             setResponse({
                 success: false,
-                message: error || 'An unexpected network error occurred.'
+                message: error instanceof Error ? error.message : 'An unexpected network error occurred.'
             });
         }
     };
@@ -469,11 +488,10 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                     <div className="relative">
                         <button
                             type="button"
-                            className={`w-full px-3 py-2.5 text-left bg-white border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
-                                errors.role 
-                                    ? 'border-red-300 bg-red-50' 
+                            className={`w-full px-3 py-2.5 text-left bg-white border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${errors.role
+                                    ? 'border-red-300 bg-red-50'
                                     : 'border-gray-300 hover:border-gray-400'
-                            } ${updateLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                                } ${updateLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                             onClick={() => !updateLoading && setIsRoleDropdownOpen(!isRoleDropdownOpen)}
                             disabled={updateLoading}
                         >
@@ -481,10 +499,9 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                                 <span className={`${user.role ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
                                     {user.role || "Select role"}
                                 </span>
-                                <ChevronDown 
-                                    className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
-                                        isRoleDropdownOpen ? 'transform rotate-180' : ''
-                                    }`}
+                                <ChevronDown
+                                    className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isRoleDropdownOpen ? 'transform rotate-180' : ''
+                                        }`}
                                 />
                             </div>
                         </button>
@@ -502,11 +519,10 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                                         roles.data.data.map((r: any) => (
                                             <div
                                                 key={r.id}
-                                                className={`px-4 py-2.5 cursor-pointer text-sm transition-colors duration-150 ${
-                                                    user.role === r.name
+                                                className={`px-4 py-2.5 cursor-pointer text-sm transition-colors duration-150 ${user.role === r.name
                                                         ? 'bg-blue-50 text-blue-700 font-medium'
                                                         : 'hover:bg-gray-50 text-gray-700'
-                                                }`}
+                                                    }`}
                                                 onClick={() => handleRoleSelect(r.name)}
                                             >
                                                 <div className="flex items-center justify-between">
@@ -542,11 +558,10 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                     <div className="relative">
                         <button
                             type="button"
-                            className={`w-full px-3 py-2.5 text-left bg-white border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
-                                errors.designation 
-                                    ? 'border-red-300 bg-red-50' 
+                            className={`w-full px-3 py-2.5 text-left bg-white border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${errors.designation
+                                    ? 'border-red-300 bg-red-50'
                                     : 'border-gray-300 hover:border-gray-400'
-                            } ${updateLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                                } ${updateLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                             onClick={() => !updateLoading && setIsDesignationDropdownOpen(!isDesignationDropdownOpen)}
                             disabled={updateLoading}
                         >
@@ -554,10 +569,9 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                                 <span className={`${user.designation ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
                                     {user.designation ? formatDesignationDisplay(user.designation) : "Select designation"}
                                 </span>
-                                <ChevronDown 
-                                    className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
-                                        isDesignationDropdownOpen ? 'transform rotate-180' : ''
-                                    }`}
+                                <ChevronDown
+                                    className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isDesignationDropdownOpen ? 'transform rotate-180' : ''
+                                        }`}
                                 />
                             </div>
                         </button>
@@ -569,11 +583,10 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                                     {Object.values(Designation).map((designation) => (
                                         <div
                                             key={designation}
-                                            className={`px-4 py-2.5 cursor-pointer text-sm transition-colors duration-150 ${
-                                                user.designation === designation
+                                            className={`px-4 py-2.5 cursor-pointer text-sm transition-colors duration-150 ${user.designation === designation
                                                     ? 'bg-blue-50 text-blue-700 font-medium'
                                                     : 'hover:bg-gray-50 text-gray-700'
-                                            }`}
+                                                }`}
                                             onClick={() => handleDesignationSelect(designation)}
                                         >
                                             <div className="flex items-center justify-between">
@@ -615,14 +628,13 @@ const UserEditForm: React.FC<UserFormProps> = ({ onSuccess, onClose, initialUser
                         Account Enabled
                     </label>
                     <p className="text-xs text-gray-500 mt-0.5">
-                        {user.enabled 
-                            ? 'User can access the system and perform actions' 
+                        {user.enabled
+                            ? 'User can access the system and perform actions'
                             : 'User account is disabled and cannot access the system'}
                     </p>
                 </div>
-                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                    user.enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                }`}>
+                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${user.enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
                     {user.enabled ? 'Active' : 'Inactive'}
                 </span>
             </div>

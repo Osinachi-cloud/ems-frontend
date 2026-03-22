@@ -9,11 +9,12 @@ import { baseUrL } from "@/env/URLs";
 import { Response } from "@/types/reponse";
 import { FeedbackMessage } from "./feedback";
 import React from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 interface ProductFormProps {
     onSuccess: () => void;
     onClose: () => void;
-    initialProduct?: Product; 
+    initialProduct?: Product;
 }
 
 const designationOptions = [
@@ -29,10 +30,10 @@ const initialProductState: Omit<Product, 'productId' | 'estate' | 'productImage'
     designation: '',
     publishStatus: false,
     transactionCharge: 0,
-    
+
 };
 
-const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialProduct}) => {
+const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialProduct }) => {
 
     const cleanInitialProduct = initialProduct ? (({ productId, productImage, ...rest }) => rest)(initialProduct) : initialProductState;
     const [product, setProduct] = useState<Omit<Product, 'productId' | 'estate' | 'productImage'>>(cleanInitialProduct);
@@ -42,23 +43,23 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
     const isEditMode = !!initialProduct;
     const submitButtonText = isEditMode ? 'Save Changes' : 'Submit Product';
 
-    const fullProduct: Product = useMemo(() => ({ 
-        ...product, 
-        productId: initialProduct?.productId || '', 
+    const fullProduct: Product = useMemo(() => ({
+        ...product,
+        productId: initialProduct?.productId || '',
         productImage: initialProduct?.productImage || null,
     }), [product, initialProduct]);
-    
-    const { 
+
+    const {
         data: createProductResponse,
-        callApi: createProductApi, 
-        isLoading: createLoading 
-    } = usePost("POST", product, `${baseUrL}/create-product`, null); 
-    
-    const { 
+        callApi: createProductApi,
+        isLoading: createLoading
+    } = usePost("POST", product, `${baseUrL}/create-product`, null);
+
+    const {
         data: updateProductResponse,
-        callApi: updateProductApi, 
-        isLoading: updateLoading 
-    } = usePost("PUT", fullProduct, `${baseUrL}/update-product`, null); 
+        callApi: updateProductApi,
+        isLoading: updateLoading
+    } = usePost("PUT", fullProduct, `${baseUrL}/update-product`, null);
 
     const loading = createLoading || updateLoading;
 
@@ -73,8 +74,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
         const { name, value, type } = e.target;
         setProduct(prev => ({
             ...prev,
-            [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : 
-                    (name === 'price' || name === 'transactionCharge') ? parseFloat(value) : value,
+            [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked :
+                (name === 'price' || name === 'transactionCharge') ? parseFloat(value) : value,
         }));
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
@@ -91,44 +92,81 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
         return newErrors;
     };
 
+    // At the top level of your component
+    const { getUserDetails } = useLocalStorage("userDetails", null);
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setResponse(null);
 
+        setIsLoading(true); // Start loading
+
         const validationErrors = validateForm(product);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
+            setIsLoading(false); // Stop loading
             return;
         }
 
         setErrors({});
 
         try {
+            const token = getUserDetails()?.accessToken;
+
             let apiResponse: any;
 
-            if (isEditMode && initialProduct) {
-                apiResponse = await updateProductApi(); 
-            } else {
-                apiResponse = await createProductApi();
-            }
+            const url = isEditMode && initialProduct
+                ? `${baseUrL}/update-product`
+                : `${baseUrL}/create-product`;
 
-            console.log("log test:", createProductResponse, updateProductResponse)
+            const method = isEditMode && initialProduct ? "PUT" : "POST";
+            const body = isEditMode && initialProduct ? fullProduct : product;
 
-            if (apiResponse?.success) {
-                setResponse({ success: apiResponse?.success, message: apiResponse.message });
-                
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : '',
+                },
+                body: JSON.stringify(body)
+            });
+
+            apiResponse = await response.json();
+
+            console.log("API Response:", apiResponse);
+
+            if (response.ok && apiResponse?.success) {
+                setResponse({
+                    success: true,
+                    message: apiResponse.message || `Product ${isEditMode ? 'updated' : 'created'} successfully.`
+                });
+
                 setTimeout(() => {
-                    onSuccess(); 
-                }, 1000); 
+                    if (onClose) {
+                        onClose(); 
+                    }
+                    if (typeof onSuccess === 'function') {
+                        onSuccess();
+                    }
+                }, 1000);
             } else {
-                // setResponse({ success: apiResponse?.success, message: apiResponse?.error || `Failed to ${isEditMode ? 'update' : 'create'} product.` });
+                setResponse({
+                    success: false,
+                    message: apiResponse?.error || `Failed to ${isEditMode ? 'update' : 'create'} product.`
+                });
             }
         } catch (error) {
             console.error('Submission error:', error);
-            setResponse({ success: false, message: 'An unexpected network error occurred.' });
+            setResponse({
+                success: false,
+                message: error instanceof Error ? error.message : 'An unexpected network error occurred.'
+            });
+        } finally {
+            setIsLoading(false); // Stop loading in all cases
         }
     };
-    
+
     return (
         <form onSubmit={handleSubmit} className="space-y-3">
             {response && <FeedbackMessage success={response?.success} message={response?.message} />}
@@ -139,18 +177,18 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
                     label="Product Name"
                     name="name"
                     error={errors.name}
-                    product={product} 
-                    handleChange={handleChange} 
-                    loading={loading} 
+                    product={product}
+                    handleChange={handleChange}
+                    loading={loading}
                     compact
                 />
                 <FormInput
                     label="Product Code"
                     name="code"
                     error={errors.code}
-                    product={product} 
-                    handleChange={handleChange} 
-                    loading={loading} 
+                    product={product}
+                    handleChange={handleChange}
+                    loading={loading}
                     compact
                 />
             </div>
@@ -161,9 +199,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
                     name="price"
                     type="number"
                     error={errors.price}
-                    product={product} 
-                    handleChange={handleChange} 
-                    loading={loading} 
+                    product={product}
+                    handleChange={handleChange}
+                    loading={loading}
                     compact
                 />
                 <FormInput
@@ -171,9 +209,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
                     name="transactionCharge"
                     type="number"
                     error={errors.transactionCharge}
-                    product={product} 
-                    handleChange={handleChange} 
-                    loading={loading} 
+                    product={product}
+                    handleChange={handleChange}
+                    loading={loading}
                     compact
                 />
             </div>
@@ -183,12 +221,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
                 name="designation"
                 options={designationOptions}
                 error={errors.designation}
-                product={product} 
-                handleChange={handleChange} 
-                loading={loading} 
+                product={product}
+                handleChange={handleChange}
+                loading={loading}
                 compact
             />
-            
+
             {/* Compact Publish Status */}
             <div className="flex items-center space-x-2 py-1">
                 <input
@@ -216,9 +254,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSuccess, onClose, initialPr
                 name="description"
                 type="textarea"
                 error={errors.description}
-                product={product} 
-                handleChange={handleChange} 
-                loading={loading} 
+                product={product}
+                handleChange={handleChange}
+                loading={loading}
                 compact
             />
 
@@ -272,22 +310,21 @@ interface FormInputProps {
     compact?: boolean;
 }
 
-const FormInput: React.FC<FormInputProps> = React.memo(({ 
-    label, 
-    name, 
-    type = 'text', 
-    error, 
-    options, 
-    product, 
-    handleChange, 
+const FormInput: React.FC<FormInputProps> = React.memo(({
+    label,
+    name,
+    type = 'text',
+    error,
+    options,
+    product,
+    handleChange,
     loading,
-    compact = false 
+    compact = false
 }) => {
-    
-    const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm text-sm ${
-        error ? 'border-red-500' : 'border-gray-300'
-    } ${compact ? 'text-sm' : ''}`;
-    
+
+    const inputClasses = `w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm text-sm ${error ? 'border-red-500' : 'border-gray-300'
+        } ${compact ? 'text-sm' : ''}`;
+
     const value = product[name] as any;
 
     let inputElement;
