@@ -311,7 +311,7 @@ const LoginPage = () => {
             {/* Email Field */}
             <div className="space-y-1.5">
               <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
-                Email <span className="text-red-400">*</span>
+                Email or Username<span className="text-red-400">*</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
