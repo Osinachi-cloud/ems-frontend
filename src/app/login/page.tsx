@@ -289,20 +289,35 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 py-8 px-4 sm:px-6 lg:px-8 flex items-center">
-      <div className="max-w-md w-full mx-auto">
-        {/* Simple white card with very light blue shadow */}
-        <div className="bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-blue-50/50 overflow-hidden">
+    <div className="min-h-screen relative py-8 px-4 sm:px-6 lg:px-8 flex items-center">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url("https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80")',
+          }}
+        ></div>
+        {/* Dark overlay for better readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/70"></div>
+        {/* Optional: Decorative gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent"></div>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-md w-full mx-auto relative z-10">
+        {/* White card with slight transparency */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl border border-white/20 overflow-hidden">
           
-          {/* Minimalist header with very light blue */}
-          <div className="bg-blue-50/30 px-6 sm:px-8 py-5 border-b border-blue-100/50">
+          {/* Minimalist header */}
+          <div className="bg-blue-50/80 px-6 sm:px-8 py-5 border-b border-blue-100/50">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 bg-blue-100/50 rounded-lg">
+              <div className="p-2 bg-blue-100/80 rounded-lg">
                 <Building2 className="w-5 h-5 text-blue-600" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Welcome back</h1>
-                <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Sign in to your account</p>
+                <h1 className="text-xl sm:text-xl font-semibold text-gray-800">Lekki Gardens Estate</h1>
+                <p className="text-xs sm:text-sm text-gray-600 mt-0.5">Sign in to your account</p>
               </div>
             </div>
           </div>
@@ -310,7 +325,7 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-5">
             {/* Email Field */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+              <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                 Email or Username<span className="text-red-400">*</span>
               </label>
               <div className="relative">
@@ -331,7 +346,7 @@ const LoginPage = () => {
 
             {/* Password Field */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+              <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                 Password <span className="text-red-400">*</span>
               </label>
               <div className="relative">
@@ -371,7 +386,7 @@ const LoginPage = () => {
               </a>
             </div>
 
-            {/* Submit Button - blue to match signup */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
@@ -394,7 +409,7 @@ const LoginPage = () => {
             </button>
 
             {/* Sign up link */}
-            <p className="text-center text-xs text-gray-500 pt-2">
+            <p className="text-center text-xs text-gray-600 pt-2">
               Don't have an account?{' '}
               <a 
                 href="/signup" 
