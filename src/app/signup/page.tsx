@@ -47,32 +47,6 @@ interface Address {
     isPrimary: boolean;
 }
 
-// interface EstatesResponse {
-//     message: string;
-//     statusCode: number;
-//     error: string | null;
-//     timestamp: string;
-//     data: {
-//         page: number;
-//         size: number;
-//         total: number;
-//         data: Estate[];
-//     };
-// }
-
-// interface AddressesResponse {
-//     message: string;
-//     statusCode: number;
-//     error: string | null;
-//     timestamp: string;
-//     data: {
-//         page: number;
-//         size: number;
-//         total: number;
-//         data: Address[];
-//     };
-// }
-
 enum Designation {
     LANDLORD = "LANDLORD",
     TENANT = "TENANT",
@@ -86,7 +60,7 @@ const ITEMS_PER_PAGE = 100; // Increased to get all addresses
 const SignUp = () => {
     const router = useRouter();
 
-    const [userInfo, setUserInfo] = useState({
+        const [userInfo, setUserInfo] = useState({
         firstName: '',
         lastName: '',
         designation: '',
@@ -116,8 +90,8 @@ const SignUp = () => {
     } = useFetch("GET", null, estatesUrl);
 
     // Fetch addresses when estate is selected
-    const addressesUrl = userInfo.estateId 
-        ? `${baseUrL}/get-addresses?estateId=${userInfo.estateId}&page=${currentPage - 1}&size=${ITEMS_PER_PAGE}`
+    const addressesUrl = estates[0]?.estateId
+        ? `${baseUrL}/get-addresses?estateId=${estates && estates[0]?.estateId}&page=${currentPage - 1}&size=${ITEMS_PER_PAGE}`
         : null;
 
     const {
@@ -128,6 +102,7 @@ const SignUp = () => {
     } = useFetch("GET", null, addressesUrl || '');
 
     useEffect(() => {
+        userInfo.estateId = estatesResponse && estatesResponse?.data.data[0]?.estateId;
         if (estatesResponse?.data?.data) {
             setEstates(estatesResponse.data.data);
         }
@@ -263,8 +238,9 @@ const SignUp = () => {
             addressId: userInfo.addressId,
             designation: userInfo.designation
         };
+        console.log("userInfo: ", userInfo, "signupData: ", signupData);
 
-        if(userInfo.phoneNumber && userInfo.phoneNumber.startsWith("0")){
+        if (userInfo.phoneNumber && userInfo.phoneNumber.startsWith("0")) {
             const newPhone = userInfo.phoneNumber.replace("0", "+234");
             signupData.phoneNumber = newPhone;
         }
@@ -328,7 +304,7 @@ const SignUp = () => {
     const getAddressDisplayName = (address: Address): string => {
         const estate = estates.find(e => e.estateId === address.estateId);
         const estateName = estate?.name || 'Estate';
-        
+
         return `${address.street}, ${estateName}`;
     };
 
@@ -361,20 +337,34 @@ const SignUp = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 py-8 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto">
-                {/* Simple white card with very light blue shadow */}
-                <div className="bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-blue-50/50 overflow-hidden">
-                    
-                    {/* Minimalist header with very light blue */}
-                    <div className="bg-blue-50/30 px-6 sm:px-8 py-5 border-b border-blue-100/50">
+        <div className="min-h-screen relative py-8 px-4 sm:px-6 lg:px-8">
+            {/* Background Image with Overlay */}
+            <div className="absolute inset-0 z-0">
+                <div 
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                    style={{
+                        backgroundImage: 'url("https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80")',
+                    }}
+                ></div>
+                {/* Dark overlay for better readability */}
+                <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/70"></div>
+                {/* Optional: Decorative gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent"></div>
+            </div>
+
+            <div className="max-w-2xl mx-auto relative z-10">
+                {/* White card with slight transparency - reduced width */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl border border-white/20 overflow-hidden">
+
+                    {/* Minimalist header */}
+                    <div className="bg-blue-50/80 px-6 sm:px-8 py-5 border-b border-blue-100/50">
                         <div className="flex items-center gap-2.5">
-                            <div className="p-2 bg-blue-100/50 rounded-lg">
+                            <div className="p-2 bg-blue-100/80 rounded-lg">
                                 <Building2 className="w-5 h-5 text-blue-600" />
                             </div>
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">Create account</h1>
-                                <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Join your estate community</p>
+                                <p className="text-xs sm:text-sm text-gray-600 mt-0.5">Join Lekki Atlantic gardens estate, Alabeko</p>
                             </div>
                         </div>
                     </div>
@@ -399,9 +389,9 @@ const SignUp = () => {
                                 <ChevronRight className="w-3 h-3 text-gray-300" />
                                 <span className={`flex items-center gap-1 ${userInfo.designation ? 'text-blue-600' : 'text-gray-400'}`}>
                                     <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${userInfo.designation ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
-                                        {userInfo.designation ? '✓' : '3'} 
+                                        {userInfo.designation ? '✓' : '3'}
                                     </span>
-                                    <span className="hidden sm:inline">Role</span> 
+                                    <span className="hidden sm:inline">Role</span>
                                 </span>
                                 <ChevronRight className="w-3 h-3 text-gray-300" />
                                 <span className={`flex items-center gap-1 ${userInfo.firstName ? 'text-blue-600' : 'text-gray-400'}`}>
@@ -416,8 +406,8 @@ const SignUp = () => {
 
                     <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-5">
                         {/* Estate Selection */}
-                        <div className="space-y-1.5">
-                            <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                        <div className="space-y-1.5 hidden">
+                            <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                                 Estate <span className="text-red-400">*</span>
                             </label>
                             <div className="relative">
@@ -426,18 +416,16 @@ const SignUp = () => {
                                 </div>
                                 <select
                                     name="estateId"
-                                    value={userInfo.estateId}
+                                    value={estates && estates[0]?.estateId}
                                     onChange={handleEstateChange}
                                     required
                                     disabled={isLoadingEstates}
                                     className="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 disabled:bg-gray-50 disabled:text-gray-500 appearance-none"
                                 >
                                     <option value="" className="text-gray-500">Select your estate</option>
-                                    {estates && estates?.map((estate) => (
-                                        <option key={estate.estateId} value={estate.estateId} className="text-gray-700">
-                                            {getEstateDisplayName(estate)}
-                                        </option>
-                                    ))}
+                                    <option value={estates && estates[0]?.estateId} className="text-gray-700">
+                                        {estates && estates[0]?.name}
+                                    </option>
                                 </select>
                             </div>
                             {isLoadingEstates && (
@@ -448,9 +436,9 @@ const SignUp = () => {
                         </div>
 
                         {/* Address Selection */}
-                        {userInfo.estateId && (
+                        {estates && estates[0]?.estateId && (
                             <div className="space-y-1.5 animate-[fadeIn_0.3s_ease]">
-                                <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                                     Address <span className="text-red-400">*</span>
                                 </label>
                                 <div className="relative">
@@ -489,7 +477,7 @@ const SignUp = () => {
                         {/* Designation Selection */}
                         {userInfo.estateId && userInfo.addressId && (
                             <div className="space-y-1.5 animate-[fadeIn_0.3s_ease]">
-                                <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                                     Category <span className="text-red-400">*</span>
                                 </label>
                                 <div className="relative">
@@ -520,7 +508,7 @@ const SignUp = () => {
                                 {/* Landlord Selection */}
                                 {(userInfo.designation === Designation.TENANT || userInfo.designation === Designation.OCCUPANT) && (
                                     <div className="space-y-1.5">
-                                        <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                        <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                                             Landlord <span className="text-red-400">*</span>
                                         </label>
                                         <div className="relative">
@@ -557,7 +545,7 @@ const SignUp = () => {
                                 {/* Tenant Selection - Optional */}
                                 {userInfo.designation === Designation.OCCUPANT && userInfo.landlordId && (
                                     <div className="space-y-1.5">
-                                        <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                        <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                                             Tenant <span className="text-gray-400 text-[10px] ml-1">(Optional)</span>
                                         </label>
                                         <div className="relative">
@@ -587,7 +575,7 @@ const SignUp = () => {
                         {/* Personal Information - Compact grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                             <div className="space-y-1.5">
-                                <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                                     First name <span className="text-red-400">*</span>
                                 </label>
                                 <div className="relative">
@@ -606,7 +594,7 @@ const SignUp = () => {
                                 </div>
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                                     Last name <span className="text-red-400">*</span>
                                 </label>
                                 <div className="relative">
@@ -628,7 +616,7 @@ const SignUp = () => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                                     Email or Username<span className="text-red-400">*</span>
                                 </label>
                                 <div className="relative">
@@ -647,7 +635,7 @@ const SignUp = () => {
                                 </div>
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                                <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                                     Phone <span className="text-red-400">*</span>
                                 </label>
                                 <div className="relative">
@@ -669,7 +657,7 @@ const SignUp = () => {
 
                         {/* Password field - compact */}
                         <div className="space-y-1.5">
-                            <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                            <label className="block text-xs font-medium text-gray-700 uppercase tracking-wide">
                                 Password <span className="text-red-400">*</span>
                             </label>
                             <div className="relative">
@@ -722,7 +710,7 @@ const SignUp = () => {
                             )}
                         </div>
 
-                        {/* Submit button - updated to blue */}
+                        {/* Submit button */}
                         <button
                             type="submit"
                             disabled={isLoading || !userInfo.estateId || !userInfo.addressId || !userInfo.designation}
@@ -744,7 +732,7 @@ const SignUp = () => {
                         </button>
 
                         {/* Sign in link */}
-                        <p className="text-center text-xs text-gray-500 pt-2">
+                        <p className="text-center text-xs text-gray-600 pt-2">
                             Already have an account?{' '}
                             <a href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
                                 Sign in
